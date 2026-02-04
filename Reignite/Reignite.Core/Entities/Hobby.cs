@@ -7,7 +7,6 @@ namespace Reignite.Core.Entities
         public string? IconUrl { get; set; }
 
         // Navigation properties
-        public ICollection<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
         public ICollection<UserHobby> UserHobbies { get; set; } = new List<UserHobby>();
         public ICollection<Project> Projects { get; set; } = new List<Project>();
     }
