@@ -29,7 +29,7 @@ namespace Reignite.Infrastructure.Data.Configurations
                     FirstName = "Admin",
                     LastName = "Korisnik",
                     Username = "admin",
-                    Email = "admin@Reignition.com",
+                    Email = "admin",
                     PhoneNumber = "+38761000000",
                     Role = UserRole.Admin,
                     PasswordHash = "$2a$11$r2qfyc5ic4xn12pabxQnqutUdAnwvk.pZk9868MOTFC4Jo6dQOCPK",
