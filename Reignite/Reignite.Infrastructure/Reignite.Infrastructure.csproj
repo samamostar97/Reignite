@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.23" />
   </ItemGroup>
@@ -23,6 +24,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Reignite.Application\Reignite.Application.csproj" />
     <ProjectReference Include="..\Reignite.Core\Reignite.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Repositories\" />
+    <Folder Include="Mappings\" />
   </ItemGroup>
 
 </Project>
