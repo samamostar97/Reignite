@@ -416,3 +416,8 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+client/src/app/core/README.md
+client/src/app/features/README.md
+client/src/app/layouts/README.md
+client/src/app/shared/README.md
+client/PROJECT_STRUCTURE.md
