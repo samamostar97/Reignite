@@ -1,0 +1,6 @@
+@Reignite.API_HostAddress = http://localhost:5262
+
+GET {{Reignite.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
