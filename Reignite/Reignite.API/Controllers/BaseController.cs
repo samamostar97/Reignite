@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 namespace Reignite.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    [Authorize(Roles="Admin")]
     public class BaseController<T, TDto, TCreateDto, TUpdateDto, TQueryFilter, TKey> : ControllerBase
         where T : class
     {
@@ -17,16 +15,10 @@ namespace Reignite.API.Controllers
         {
             _service = service;
         }
-        [HttpGet("GetAllPaged")]
+        [HttpGet]
         public virtual async Task<ActionResult<PagedResult<TDto>>> GetAllPagedAsync([FromQuery] TQueryFilter filter)
         {
             var list = await _service.GetPagedAsync(filter);
-            return Ok(list);
-        }
-        [HttpGet("GetAll")]
-        public virtual async Task<ActionResult<IEnumerable<TDto>>> GetAllAsync()
-        {
-            var list = await _service.GetAllAsync();
             return Ok(list);
         }
         [HttpGet("{id}")]
@@ -39,10 +31,11 @@ namespace Reignite.API.Controllers
         public virtual async Task<ActionResult<TDto>> Create([FromBody] TCreateDto dto)
         {
             var result = await _service.CreateAsync(dto);
+
             var idProp = result!.GetType().GetProperty("Id");
             var id = idProp?.GetValue(result);
 
-            return CreatedAtAction(nameof(GetById), new { id }, new { id });
+            return CreatedAtAction(nameof(GetById), new { id }, result);
         }
         [HttpPut("{id}")]
         public virtual async Task<ActionResult<TDto>> Update(TKey id, [FromBody] TUpdateDto dto)

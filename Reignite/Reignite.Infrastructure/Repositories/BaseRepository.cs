@@ -41,10 +41,6 @@ namespace Reignite.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public virtual async Task<IEnumerable<T>> GetAllAsync()
-        {
-            return await _dbSet.Where(e => !e.IsDeleted).ToListAsync();
-        }
 
         public virtual async Task<T> GetByIdAsync(TKey id)
         {

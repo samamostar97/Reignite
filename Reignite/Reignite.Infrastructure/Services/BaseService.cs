@@ -43,13 +43,6 @@ namespace Reignite.Infrastructure.Services
         }
 
 
-        public virtual async Task<IEnumerable<TDto>> GetAllAsync()
-        {
-            var entities = await _repository.GetAllAsync();
-            await AfterGetAllAsync(entities);
-            return _mapper.Map<IEnumerable<TDto>>(entities);
-        }
-
         public virtual async Task<TDto> GetByIdAsync(TKey id)
         {
             var entity = await _repository.GetByIdAsync(id);
