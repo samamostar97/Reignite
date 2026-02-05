@@ -24,7 +24,7 @@ export interface UserAuthResponse {
   email: string;
   firstName: string;
   lastName: string;
-  role: string;
+  role: string | number; // Backend sends numeric enum (0=AppUser, 1=Admin)
 }
 
 export interface RefreshRequest {

@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { ProjectService } from '../../core/services/project.service';
-import { Product } from '../../core/models/product.model';
-import { Project } from '../../core/models/project.model';
+import { ProductResponse } from '../../core/models/product.model';
+import { ProjectResponse } from '../../core/models/project.model';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -21,9 +21,9 @@ export class LandingComponent implements OnInit, OnDestroy {
   protected readonly showContent = signal(false);
   protected readonly isOnHeroSection = signal(true);
   protected readonly currentKitIndex = signal(0);
-  protected readonly featuredKits = signal<Product[]>([]);
+  protected readonly featuredKits = signal<ProductResponse[]>([]);
   protected readonly isLoadingKits = signal(true);
-  protected readonly topRatedProjects = signal<Project[]>([]);
+  protected readonly topRatedProjects = signal<ProjectResponse[]>([]);
   protected readonly isLoadingProjects = signal(true);
   protected readonly isMobileView = signal(false);
 
@@ -85,13 +85,13 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   private loadFeaturedKits() {
     this.isLoadingKits.set(true);
-    this.productService.getProducts({ pageSize: 6 }).subscribe({
-      next: (result) => {
-        this.featuredKits.set(result.items);
+    this.productService.getBestSelling(5).subscribe({
+      next: (products) => {
+        this.featuredKits.set(products);
         this.isLoadingKits.set(false);
       },
       error: (err) => {
-        console.error('Failed to load featured kits:', err);
+        console.error('Failed to load best selling kits:', err);
         this.isLoadingKits.set(false);
       }
     });

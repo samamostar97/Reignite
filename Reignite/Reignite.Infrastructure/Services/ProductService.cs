@@ -18,17 +18,28 @@ namespace Reignite.Infrastructure.Services
     public class ProductService : BaseService<Product, ProductResponse, CreateProductRequest, UpdateProductRequest, ProductQueryFilter, int>,IProductService
     {
         private readonly IFileStorageService _fileStorageService;
+        private readonly IRepository<OrderItem, int> _orderItemRepository;
 
-        public ProductService(IRepository<Product, int> repository, IMapper mapper, IFileStorageService fileStorageService) : base(repository, mapper)
+        public ProductService(
+            IRepository<Product, int> repository,
+            IMapper mapper,
+            IFileStorageService fileStorageService,
+            IRepository<OrderItem, int> orderItemRepository) : base(repository, mapper)
         {
             _fileStorageService = fileStorageService;
+            _orderItemRepository = orderItemRepository;
         }
         protected override IQueryable<Product> ApplyFilter(IQueryable<Product> query, ProductQueryFilter filter)
         {
             query = query.Include(x => x.ProductCategory).Include(x=>x.Supplier);
+
             if(!string.IsNullOrEmpty(filter.Search))
-                query=query.Where(x=>x.Name.ToLower().Contains(filter.Search.ToLower()));
-            if (!string.IsNullOrEmpty(filter.OrderBy)) { 
+                query = query.Where(x => x.Name.ToLower().Contains(filter.Search.ToLower()));
+
+            if(filter.ProductCategoryId.HasValue)
+                query = query.Where(x => x.ProductCategoryId == filter.ProductCategoryId.Value);
+
+            if (!string.IsNullOrEmpty(filter.OrderBy)) {
                 query = filter.OrderBy.ToLower() switch
                 {
                     "productname" => query.OrderBy(x => x.Name),
@@ -82,6 +93,35 @@ namespace Reignite.Infrastructure.Services
             await _repository.UpdateAsync(product);
 
             return deleted;
+        }
+
+        public async Task<List<ProductResponse>> GetBestSellingAsync(int count = 5)
+        {
+            var bestSellingProductIds = await _orderItemRepository.AsQueryable()
+                .GroupBy(oi => oi.ProductId)
+                .Select(g => new
+                {
+                    ProductId = g.Key,
+                    TotalQuantity = g.Sum(oi => oi.Quantity)
+                })
+                .OrderByDescending(x => x.TotalQuantity)
+                .Take(count)
+                .Select(x => x.ProductId)
+                .ToListAsync();
+
+            var products = await _repository.AsQueryable()
+                .Include(x => x.ProductCategory)
+                .Include(x => x.Supplier)
+                .Where(p => bestSellingProductIds.Contains(p.Id))
+                .ToListAsync();
+
+            // Maintain the order from best selling
+            var orderedProducts = bestSellingProductIds
+                .Select(id => products.FirstOrDefault(p => p.Id == id))
+                .Where(p => p != null)
+                .ToList();
+
+            return _mapper.Map<List<ProductResponse>>(orderedProducts);
         }
     }
 }

@@ -1,4 +1,7 @@
-export interface Product {
+import { PaginationRequest } from './common.model';
+
+// Response DTO - matches backend ProductResponse
+export interface ProductResponse {
   id: number;
   name: string;
   price: number;
@@ -10,17 +13,28 @@ export interface Product {
   productImageUrl?: string;
 }
 
-export interface PagedResult<T> {
-  items: T[];
-  totalCount: number;
-  pageNumber: number;
-  pageSize: number;
-  totalPages: number;
-}
-
-export interface ProductQueryFilter {
-  pageNumber?: number;
-  pageSize?: number;
+// Query filter - extends PaginationRequest, matches backend ProductQueryFilter
+export interface ProductQueryFilter extends PaginationRequest {
   search?: string;
   orderBy?: string;
+  productCategoryId?: number;
+}
+
+// Request DTOs - match backend
+export interface CreateProductRequest {
+  name: string;
+  price: number;
+  description?: string;
+  productCategoryId: number;
+  supplierId: number;
+  productImageUrl?: string;
+}
+
+export interface UpdateProductRequest {
+  name?: string;
+  price?: number;
+  description?: string;
+  productCategoryId?: number;
+  supplierId?: number;
+  productImageUrl?: string;
 }

@@ -11,5 +11,6 @@ namespace Reignite.Application.IServices
     {
         Task<ProductResponse> UploadImageAsync(int productId, FileUploadRequest fileRequest);
         Task<bool> DeleteImageAsync(int productId);
+        Task<List<ProductResponse>> GetBestSellingAsync(int count = 5);
     }
 }
