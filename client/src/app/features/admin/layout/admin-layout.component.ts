@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
@@ -11,7 +11,8 @@ import { SidebarService } from '../services/sidebar.service';
   standalone: true,
   imports: [CommonModule, RouterOutlet, SidebarComponent, TopbarComponent],
   templateUrl: './admin-layout.component.html',
-  styleUrl: './admin-layout.component.scss'
+  styleUrl: './admin-layout.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminLayoutComponent {
   private readonly router = inject(Router);
@@ -27,6 +28,7 @@ export class AdminLayoutComponent {
     '/admin/categories': 'Kategorije',
     '/admin/projects': 'Projekti',
     '/admin/users': 'Korisnici',
+    '/admin/users/new': 'Novi Korisnik',
     '/admin/orders': 'Narudžbe',
   };
 
@@ -38,6 +40,8 @@ export class AdminLayoutComponent {
       // Check for edit routes
       if (url.includes('/products/') && url.includes('/edit')) {
         this.pageTitle.set('Uredi Proizvod');
+      } else if (url.includes('/users/') && url.includes('/edit')) {
+        this.pageTitle.set('Uredi Korisnika');
       } else {
         this.pageTitle.set(this.pageTitles[url] || 'Admin');
       }

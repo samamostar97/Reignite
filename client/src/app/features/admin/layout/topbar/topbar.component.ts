@@ -1,4 +1,4 @@
-import { Component, inject, input, computed, signal, HostListener, ElementRef } from '@angular/core';
+import { Component, inject, input, computed, signal, HostListener, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -8,7 +8,8 @@ import { AuthService } from '../../../../core/services/auth.service';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './topbar.component.html',
-  styleUrl: './topbar.component.scss'
+  styleUrl: './topbar.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopbarComponent {
   private readonly authService = inject(AuthService);

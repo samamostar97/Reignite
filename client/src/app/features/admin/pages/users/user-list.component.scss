@@ -3,7 +3,7 @@ $flame: #f7931e;
 $ash: #2c1810;
 $smoke: #5a3a2a;
 
-.product-list {
+.user-list {
   animation: fadeIn 0.3s ease-out;
 }
 
@@ -51,6 +51,34 @@ $smoke: #5a3a2a;
   gap: 1rem;
 }
 
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: linear-gradient(135deg, $ember 0%, $flame 100%);
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 8px rgba($ember, 0.3);
+  white-space: nowrap;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba($ember, 0.4);
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
 // Search input
 .search-wrapper {
   position: relative;
@@ -75,7 +103,7 @@ $smoke: #5a3a2a;
     font-size: 0.9rem;
     color: $ash;
     background: #fff;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.2s ease;
 
     &::placeholder {
       color: rgba($ash, 0.4);
@@ -86,34 +114,6 @@ $smoke: #5a3a2a;
       border-color: rgba($ember, 0.4);
       box-shadow: 0 0 0 3px rgba($ember, 0.1);
     }
-  }
-}
-
-// Primary button
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
-  background: linear-gradient(135deg, $ember 0%, $flame 100%);
-  color: #fff;
-  text-decoration: none;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  box-shadow: 0 2px 8px rgba($ember, 0.3);
-  border: none;
-  cursor: pointer;
-
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba($ember, 0.4);
-  }
-
-  svg {
-    width: 18px;
-    height: 18px;
   }
 }
 
@@ -184,7 +184,7 @@ $smoke: #5a3a2a;
 
   p {
     color: $smoke;
-    margin: 0 0 1.5rem 0;
+    margin: 0;
     text-align: center;
   }
 }
@@ -234,93 +234,113 @@ $smoke: #5a3a2a;
   }
 }
 
-// Image cell
-.cell-image {
-  width: 80px;
+// User cell with avatar
+.cell-user {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  min-width: 200px;
 
-  img {
-    width: 56px;
-    height: 56px;
-    object-fit: cover;
-    border-radius: 10px;
-    transition: transform 0.2s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-
-    &:hover {
-      transform: scale(1.1);
-    }
-  }
-
-  .no-image {
-    width: 56px;
-    height: 56px;
-    background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%);
-    border-radius: 10px;
+  .user-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, $ember 0%, $flame 100%);
+    color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-
-    svg {
-      width: 22px;
-      height: 22px;
-      color: #ccc;
-    }
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
   }
-}
 
-// Name cell
-.cell-name {
-  min-width: 200px;
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
 
-  .product-name {
-    display: block;
+  .user-name {
     font-weight: 600;
     color: $ash;
     font-size: 0.95rem;
-    margin-bottom: 0.25rem;
   }
 
-  .product-desc {
-    display: block;
+  .user-username {
     font-size: 0.8rem;
     color: $smoke;
-    line-height: 1.4;
     opacity: 0.8;
   }
 }
 
-// Category badge
+// Email cell
+.cell-email {
+  color: $ash;
+  font-size: 0.9rem;
+}
+
+// Phone cell
+.cell-phone {
+  color: $smoke;
+  font-size: 0.9rem;
+}
+
+// Date cell
+.cell-date {
+  color: $smoke;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+// Stats cell
+.cell-stats {
+  .stats-wrapper {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    color: $smoke;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      opacity: 0.7;
+    }
+  }
+}
+
+// Role badge
 .badge {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
   padding: 0.35rem 0.75rem;
-  background: linear-gradient(135deg, rgba($ember, 0.1) 0%, rgba($flame, 0.08) 100%);
-  color: $ember;
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 600;
-  border: 1px solid rgba($ember, 0.15);
-}
 
-// Price cell
-.cell-price {
-  font-weight: 700;
-  color: $ash;
-  font-size: 1rem;
-  white-space: nowrap;
+  &.role-admin {
+    background: linear-gradient(135deg, rgba($ember, 0.15) 0%, rgba($flame, 0.1) 100%);
+    color: $ember;
+    border: 1px solid rgba($ember, 0.2);
+  }
 
-  .currency {
-    font-weight: 500;
+  &.role-user {
+    background: rgba(0, 0, 0, 0.04);
     color: $smoke;
-    font-size: 0.85rem;
-    margin-left: 0.25rem;
+    border: 1px solid rgba(0, 0, 0, 0.08);
   }
 }
 
 // Actions cell
 .cell-actions {
-  width: 120px;
+  width: 80px;
 
   .actions-wrapper {
     display: flex;
@@ -345,7 +365,7 @@ $smoke: #5a3a2a;
   border-radius: 8px;
   color: $smoke;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  transition: all 0.2s ease;
   text-decoration: none;
 
   &:hover {
@@ -389,7 +409,7 @@ $smoke: #5a3a2a;
   border-radius: 10px;
   color: $ash;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: all 0.2s ease;
 
   &:hover:not(:disabled) {
     background: $ember;
@@ -421,15 +441,15 @@ $smoke: #5a3a2a;
     align-items: stretch;
   }
 
-  .header-actions {
-    flex-direction: column;
-  }
-
   .search-wrapper .search-input {
     width: 100%;
   }
 
-  .cell-name .product-desc {
+  .cell-user .user-username {
+    display: none;
+  }
+
+  .cell-stats {
     display: none;
   }
 }

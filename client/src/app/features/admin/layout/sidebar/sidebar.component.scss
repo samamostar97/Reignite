@@ -17,8 +17,9 @@ $smoke: #5a3a2a;
   left: 0;
   top: 0;
   z-index: 100;
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
+  will-change: width;
+  transition: width 0.12s ease-out;
 
   // Ambient glow effect
   &::before {
@@ -39,20 +40,22 @@ $smoke: #5a3a2a;
   &.collapsed {
     width: $sidebar-collapsed-width;
 
+    // Hide text elements when collapsed
     .logo-text,
     .logo-subtitle,
     .nav-label,
     .badge,
-    .logout-text,
-    .nav-section-label,
-    .nav-section-line {
-      opacity: 0;
-      width: 0;
-      overflow: hidden;
+    .logout-text {
+      display: none;
+    }
+
+    // Hide section dividers completely
+    .nav-section {
+      display: none;
     }
 
     .sidebar-header {
-      padding: 1.5rem 0;
+      padding: 1.25rem 0;
       align-items: center;
     }
 
@@ -63,9 +66,8 @@ $smoke: #5a3a2a;
 
     .nav-item {
       justify-content: center;
-      padding: 0.875rem;
-      margin: 0.125rem auto;
-      width: calc(100% - 1rem);
+      padding: 0.75rem;
+      margin: 0.25rem 1rem;
 
       .nav-icon {
         margin: 0;
@@ -74,17 +76,16 @@ $smoke: #5a3a2a;
 
     .logout-btn {
       justify-content: center;
-      padding: 0.875rem;
-      margin: 0 0.5rem;
-    }
+      padding: 0.75rem;
+      margin: 0 1rem;
 
-    .nav-section {
-      padding: 0.5rem;
-      justify-content: center;
+      svg {
+        margin: 0;
+      }
     }
 
     .sidebar-footer {
-      padding: 1rem 0.5rem;
+      padding: 1rem;
     }
   }
 }
@@ -117,7 +118,6 @@ $smoke: #5a3a2a;
   position: relative;
   flex-shrink: 0;
   box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
-  animation: pulse-glow 3s ease-in-out infinite;
 
   svg {
     width: 24px;
@@ -125,7 +125,7 @@ $smoke: #5a3a2a;
     color: #fff;
   }
 
-  // Glow ring
+  // Static glow ring (animations removed for performance)
   &::after {
     content: '';
     position: absolute;
@@ -134,27 +134,6 @@ $smoke: #5a3a2a;
     background: linear-gradient(135deg, $ember, $flame);
     opacity: 0.3;
     z-index: -1;
-    animation: ring-pulse 3s ease-in-out infinite;
-  }
-}
-
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
-  }
-  50% {
-    box-shadow: 0 4px 30px rgba(255, 107, 53, 0.6);
-  }
-}
-
-@keyframes ring-pulse {
-  0%, 100% {
-    opacity: 0.3;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.5;
-    transform: scale(1.05);
   }
 }
 
@@ -165,7 +144,6 @@ $smoke: #5a3a2a;
   color: #fff;
   font-family: 'Georgia', serif;
   text-transform: uppercase;
-  transition: opacity 0.2s, width 0.3s;
 }
 
 .logo-subtitle {
@@ -174,7 +152,6 @@ $smoke: #5a3a2a;
   letter-spacing: 0.15em;
   margin-top: 0.5rem;
   text-transform: uppercase;
-  transition: opacity 0.2s, width 0.3s;
   padding-left: 54px;
 }
 
@@ -193,7 +170,6 @@ $smoke: #5a3a2a;
     letter-spacing: 0.15em;
     font-weight: 600;
     white-space: nowrap;
-    transition: opacity 0.2s, width 0.3s;
   }
 
   &-line {
@@ -241,7 +217,7 @@ $smoke: #5a3a2a;
   font-weight: 500;
   border-radius: 10px;
   position: relative;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: color 0.15s ease;
   overflow: hidden;
 
   // Hover background animation
@@ -323,7 +299,6 @@ $smoke: #5a3a2a;
 .nav-label {
   flex: 1;
   white-space: nowrap;
-  transition: opacity 0.2s, width 0.3s;
 }
 
 .badge {
@@ -336,7 +311,6 @@ $smoke: #5a3a2a;
   letter-spacing: 0.05em;
   font-weight: 600;
   border: 1px solid rgba(255, 107, 53, 0.2);
-  transition: opacity 0.2s, width 0.3s;
 }
 
 // Footer
@@ -374,7 +348,7 @@ $smoke: #5a3a2a;
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: color 0.15s ease, background-color 0.15s ease;
 
   &:hover {
     color: #ff4444;
@@ -388,11 +362,7 @@ $smoke: #5a3a2a;
   svg {
     width: 22px;
     height: 22px;
-    transition: transform 0.25s ease;
-  }
-
-  .logout-text {
-    transition: opacity 0.2s, width 0.3s;
+    transition: transform 0.15s ease;
   }
 }
 
@@ -412,7 +382,7 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.25s ease, left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background-color 0.12s ease, border-color 0.12s ease, color 0.12s ease, left 0.12s ease-out;
   z-index: 200;
 
   &.collapsed {

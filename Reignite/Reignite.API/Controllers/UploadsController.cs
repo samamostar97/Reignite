@@ -16,11 +16,13 @@ namespace Reignite.API.Controllers
 
         private readonly IProductService _productService;
         private readonly IProjectService _projectService;
+        private readonly IUserService _userService;
 
-        public UploadsController(IProductService productService, IProjectService projectService)
+        public UploadsController(IProductService productService, IProjectService projectService, IUserService userService)
         {
             _productService = productService;
             _projectService = projectService;
+            _userService = userService;
         }
 
         [HttpPost("products/{productId:int}")]
@@ -72,6 +74,29 @@ namespace Reignite.API.Controllers
                 return Forbid();
 
             await _projectService.DeleteImageAsync(projectId);
+            return NoContent();
+        }
+
+        [HttpPost("users/{userId:int}")]
+        [Authorize(Roles = "Admin")]
+        [RequestSizeLimit(MaxImageBytes)]
+        [RequestFormLimits(MultipartBodyLengthLimit = MaxImageBytes)]
+        public async Task<IActionResult> UploadUserImage(int userId, IFormFile file)
+        {
+            var validationResult = ValidateFile(file);
+            if (validationResult != null)
+                return validationResult;
+
+            var fileRequest = CreateFileRequest(file);
+            var result = await _userService.UploadImageAsync(userId, fileRequest);
+            return Ok(new { fileUrl = result.ProfileImageUrl });
+        }
+
+        [HttpDelete("users/{userId:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteUserImage(int userId)
+        {
+            await _userService.DeleteImageAsync(userId);
             return NoContent();
         }
 

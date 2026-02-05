@@ -1,5 +1,6 @@
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
+using Reignite.Application.Common;
 using Reignite.Application.DTOs.Request;
 using Reignite.Application.DTOs.Response;
 using Reignite.Application.Filters;
@@ -11,30 +12,43 @@ namespace Reignite.Infrastructure.Services
 {
     public class UserService : BaseService<User, UserResponse, CreateUserRequest, UpdateUserRequest, UserQueryFilter, int>, IUserService
     {
-        public UserService(IRepository<User, int> repository, IMapper mapper) : base(repository, mapper)
+        private readonly IFileStorageService _fileStorageService;
+
+        public UserService(
+            IRepository<User, int> repository,
+            IMapper mapper,
+            IFileStorageService fileStorageService) : base(repository, mapper)
         {
+            _fileStorageService = fileStorageService;
         }
 
         public override async Task<UserResponse> CreateAsync(CreateUserRequest dto)
         {
-            // Check if email already exists
-            var existingUser = await _repository.AsQueryable()
-                .FirstOrDefaultAsync(u => u.Email == dto.Email);
-
-            if (existingUser != null)
-                throw new InvalidOperationException("Korisnik sa ovim emailom već postoji.");
-
-            // Check if username already exists
-            existingUser = await _repository.AsQueryable()
-                .FirstOrDefaultAsync(u => u.Username == dto.Username);
-
-            if (existingUser != null)
-                throw new InvalidOperationException("Korisničko ime je već zauzeto.");
-
             var user = _mapper.Map<User>(dto);
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
             await _repository.AddAsync(user);
+
+            return await GetByIdWithCountsAsync(user.Id);
+        }
+
+        public async Task<UserResponse> CreateWithImageAsync(CreateUserRequest dto, FileUploadRequest? imageRequest)
+        {
+            var user = _mapper.Map<User>(dto);
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+
+            await _repository.AddAsync(user);
+
+            if (imageRequest != null && imageRequest.FileStream != null && imageRequest.FileSize > 0)
+            {
+                var uploadResult = await _fileStorageService.UploadAsync(imageRequest, "users", user.Id.ToString());
+
+                if (uploadResult.Success)
+                {
+                    user.ProfileImageUrl = uploadResult.FileUrl;
+                    await _repository.UpdateAsync(user);
+                }
+            }
 
             return await GetByIdWithCountsAsync(user.Id);
         }
@@ -91,6 +105,54 @@ namespace Reignite.Infrastructure.Services
             response.ProjectCount = user.Projects.Count;
 
             return response;
+        }
+
+        public async Task<UserResponse> UploadImageAsync(int userId, FileUploadRequest fileRequest)
+        {
+            var user = await _repository.AsQueryable()
+                .Include(u => u.Orders)
+                .Include(u => u.Projects)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+                throw new KeyNotFoundException("Korisnik nije pronađen.");
+
+            if (!string.IsNullOrEmpty(user.ProfileImageUrl))
+            {
+                await _fileStorageService.DeleteAsync(user.ProfileImageUrl);
+            }
+
+            var uploadResult = await _fileStorageService.UploadAsync(fileRequest, "users", userId.ToString());
+
+            if (!uploadResult.Success)
+                throw new InvalidOperationException(uploadResult.ErrorMessage);
+
+            user.ProfileImageUrl = uploadResult.FileUrl;
+            await _repository.UpdateAsync(user);
+
+            var response = _mapper.Map<UserResponse>(user);
+            response.OrderCount = user.Orders.Count;
+            response.ProjectCount = user.Projects.Count;
+
+            return response;
+        }
+
+        public async Task<bool> DeleteImageAsync(int userId)
+        {
+            var user = await _repository.GetByIdAsync(userId);
+
+            if (user == null)
+                throw new KeyNotFoundException("Korisnik nije pronađen.");
+
+            if (string.IsNullOrEmpty(user.ProfileImageUrl))
+                return false;
+
+            var deleted = await _fileStorageService.DeleteAsync(user.ProfileImageUrl);
+
+            user.ProfileImageUrl = null;
+            await _repository.UpdateAsync(user);
+
+            return deleted;
         }
     }
 }

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -16,7 +16,8 @@ interface NavItem {
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.scss'
+  styleUrl: './sidebar.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidebarComponent {
   private readonly authService = inject(AuthService);
@@ -36,7 +37,7 @@ export class SidebarComponent {
   ];
 
   protected readonly managementNavItems: NavItem[] = [
-    { label: 'Korisnici', route: '/admin/users', icon: 'users', placeholder: true },
+    { label: 'Korisnici', route: '/admin/users', icon: 'users' },
     { label: 'Narudžbe', route: '/admin/orders', icon: 'clipboard', placeholder: true },
   ];
 

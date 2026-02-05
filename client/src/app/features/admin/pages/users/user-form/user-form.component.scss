@@ -3,7 +3,7 @@ $flame: #f7931e;
 $ash: #2c1810;
 $smoke: #5a3a2a;
 
-.product-form {
+.user-form {
   max-width: 900px;
   margin: 0 auto;
   padding: 1.5rem 2rem;
@@ -102,11 +102,6 @@ $smoke: #5a3a2a;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  order: 2;
-
-  @media (max-width: 768px) {
-    order: 2;
-  }
 }
 
 .form-row {
@@ -123,20 +118,15 @@ $smoke: #5a3a2a;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  order: 1;
-
-  @media (max-width: 768px) {
-    order: 1;
-  }
 }
 
 .image-preview {
   width: 100%;
   aspect-ratio: 1;
-  border-radius: 10px;
+  border-radius: 50%;
   overflow: hidden;
   background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%);
-  border: 2px solid rgba(0, 0, 0, 0.06);
+  border: 3px solid rgba(0, 0, 0, 0.06);
 
   img {
     width: 100%;
@@ -153,40 +143,8 @@ $smoke: #5a3a2a;
     color: #ccc;
 
     svg {
-      width: 48px;
-      height: 48px;
-    }
-  }
-}
-
-.form-section {
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-
-  &:last-of-type {
-    border-bottom: none;
-  }
-}
-
-.section-title {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: $smoke;
-  margin: 0 0 0.75rem 0;
-}
-
-// Form grid
-.form-grid {
-  display: grid;
-  gap: 0.875rem;
-
-  &.two-columns {
-    grid-template-columns: 1fr 1fr;
-
-    @media (max-width: 600px) {
-      grid-template-columns: 1fr;
+      width: 64px;
+      height: 64px;
     }
   }
 }
@@ -240,22 +198,6 @@ $smoke: #5a3a2a;
   }
 }
 
-.form-textarea {
-  resize: vertical;
-  min-height: 80px;
-  font-family: inherit;
-}
-
-.form-select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%235a3a2a'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m19.5 8.25-7.5 7.5-7.5-7.5'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 1rem center;
-  background-size: 18px;
-  padding-right: 2.75rem;
-  cursor: pointer;
-}
-
 .error-message {
   display: block;
   font-size: 0.8rem;
@@ -263,69 +205,11 @@ $smoke: #5a3a2a;
   margin-top: 0.375rem;
 }
 
-// Image upload section
-.image-upload-area {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-
-  @media (max-width: 600px) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
-.current-image-wrapper {
-  flex-shrink: 0;
-}
-
-.current-image {
-  width: 120px;
-  height: 120px;
-  border-radius: 10px;
-  overflow: hidden;
-  background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%);
-  border: 2px solid rgba(0, 0, 0, 0.06);
-  position: relative;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .no-image-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #ccc;
-
-    svg {
-      width: 36px;
-      height: 36px;
-      margin-bottom: 0.375rem;
-    }
-
-    span {
-      font-size: 0.75rem;
-    }
-  }
-}
-
-.image-actions {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
+// Image upload
 .upload-zone {
   border: 2px dashed rgba($ember, 0.3);
   border-radius: 10px;
-  padding: 1rem;
+  padding: 0.75rem;
   text-align: center;
   cursor: pointer;
   transition: border-color 0.15s ease, background-color 0.15s ease;
@@ -342,26 +226,15 @@ $smoke: #5a3a2a;
   }
 
   .upload-icon {
-    width: 32px;
-    height: 32px;
-    margin: 0 auto 0.5rem;
+    width: 24px;
+    height: 24px;
+    margin: 0 auto 0.25rem;
     color: $ember;
   }
 
-  .upload-text {
-    font-size: 0.85rem;
-    color: $ash;
-    margin-bottom: 0.125rem;
-
-    strong {
-      color: $ember;
-    }
-  }
-
-  .upload-hint {
-    font-size: 0.75rem;
+  span {
+    font-size: 0.8rem;
     color: $smoke;
-    opacity: 0.7;
   }
 }
 
@@ -374,12 +247,12 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.625rem 1rem;
+  padding: 0.5rem 0.75rem;
   background: rgba(#ef4444, 0.1);
   color: #ef4444;
   border: 1px solid rgba(#ef4444, 0.2);
   border-radius: 8px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
@@ -396,22 +269,23 @@ $smoke: #5a3a2a;
   }
 
   svg {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
   }
 }
 
 .upload-progress {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: center;
+  gap: 0.5rem;
   padding: 0.75rem;
   background: rgba($ember, 0.05);
   border-radius: 8px;
 
   .progress-spinner {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     border: 2px solid rgba($ember, 0.2);
     border-top-color: $ember;
     border-radius: 50%;
@@ -419,33 +293,8 @@ $smoke: #5a3a2a;
   }
 
   span {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: $smoke;
-  }
-}
-
-.image-upload-disabled {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2.5rem 1.5rem;
-  background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%);
-  border: 2px dashed rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
-  text-align: center;
-
-  svg {
-    width: 48px;
-    height: 48px;
-    color: #ccc;
-    margin-bottom: 1rem;
-  }
-
-  p {
-    font-size: 0.9rem;
-    color: $smoke;
-    margin: 0;
   }
 }
 
