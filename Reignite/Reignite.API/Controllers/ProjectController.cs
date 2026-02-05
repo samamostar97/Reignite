@@ -34,7 +34,12 @@ namespace Reignite.API.Controllers
         [HttpDelete("{id}")]
         public override Task<ActionResult> Delete(int id) => base.Delete(id);
 
-
-
+        [AllowAnonymous]
+        [HttpGet("top-rated")]
+        public async Task<ActionResult<List<ProjectResponse>>> GetTopRated([FromQuery] int count = 3)
+        {
+            var result = await _projectService.GetTopRatedProjectsAsync(count);
+            return Ok(result);
+        }
     }
 }
