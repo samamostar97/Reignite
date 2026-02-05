@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../core/services/product.service';
 import { ProjectService } from '../../core/services/project.service';
 import { Product } from '../../core/models/product.model';
 import { Project } from '../../core/models/project.model';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-landing',
@@ -23,9 +24,22 @@ export class LandingComponent implements OnInit, OnDestroy {
   protected readonly isLoadingKits = signal(true);
   protected readonly topRatedProjects = signal<Project[]>([]);
   protected readonly isLoadingProjects = signal(true);
+  protected readonly isMobileView = signal(false);
+
+  // Computed carousel transform that responds to mobile/desktop
+  protected readonly carouselTransform = computed(() => {
+    const index = this.currentKitIndex();
+    if (this.isMobileView()) {
+      // Mobile: items are 100% width, simple slide (no gap on mobile)
+      return `translateX(-${index * 100}%)`;
+    }
+    // Desktop: items are 60% width with 20% offset for partial visibility
+    return `translateX(calc(20% - ${index * 60}% - ${index * 2}rem))`;
+  });
 
   private scrollListener: (() => void) | null = null;
   private kitCarouselInterval: any = null;
+  private resizeListener: (() => void) | null = null;
 
   ngOnInit() {
     // Fetch featured products from API
@@ -51,7 +65,24 @@ export class LandingComponent implements OnInit, OnDestroy {
 
     window.addEventListener('scroll', this.scrollListener, { passive: true });
 
-    // Start kit carousel auto-rotation
+    // Add resize listener for mobile detection
+    this.resizeListener = () => {
+      const wasMobile = this.isMobileView();
+      const isMobile = window.innerWidth <= 768;
+      this.isMobileView.set(isMobile);
+
+      // Stop carousel when switching to mobile, start when switching to desktop
+      if (isMobile && !wasMobile) {
+        this.stopKitCarousel();
+      } else if (!isMobile && wasMobile) {
+        this.startKitCarousel();
+      }
+    };
+    // Set initial value
+    this.isMobileView.set(window.innerWidth <= 768);
+    window.addEventListener('resize', this.resizeListener, { passive: true });
+
+    // Start kit carousel auto-rotation (only on desktop)
     this.startKitCarousel();
   }
 
@@ -87,12 +118,19 @@ export class LandingComponent implements OnInit, OnDestroy {
     if (this.scrollListener) {
       window.removeEventListener('scroll', this.scrollListener);
     }
+    if (this.resizeListener) {
+      window.removeEventListener('resize', this.resizeListener);
+    }
     if (this.kitCarouselInterval) {
       clearInterval(this.kitCarouselInterval);
     }
   }
 
   private startKitCarousel() {
+    // Don't auto-rotate on mobile
+    if (this.isMobileView()) {
+      return;
+    }
     this.stopKitCarousel();
     this.kitCarouselInterval = setInterval(() => {
       this.nextKit();
@@ -135,6 +173,11 @@ export class LandingComponent implements OnInit, OnDestroy {
   protected goToKit(index: number) {
     this.restartKitCarousel();
     this.currentKitIndex.set(index);
+  }
+
+  protected getImageUrl(relativePath: string | null | undefined): string | null {
+    if (!relativePath) return null;
+    return `${environment.baseUrl}${relativePath}`;
   }
 
   protected readonly embers = Array.from({ length: 40 }, (_, i) => ({
