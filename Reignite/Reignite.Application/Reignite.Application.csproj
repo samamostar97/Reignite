@@ -10,8 +10,4 @@
     <ProjectReference Include="..\Reignite.Core\Reignite.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="IRepositories\" />
-  </ItemGroup>
-
 </Project>

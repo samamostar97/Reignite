@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Reignite.API.Middleware;
+using Reignite.Application.IRepositories;
 using Reignite.Application.IServices;
 using Reignite.Infrastructure.Data;
+using Reignite.Infrastructure.Repositories;
 using Reignite.Infrastructure.Services;
 using System.Text;
 
@@ -28,8 +30,11 @@ builder.Services.AddDbContext<ReigniteDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddMapster();
 
-
+builder.Services.AddScoped(typeof(IRepository<,>), typeof(BaseRepository<,>));
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
+
 
 
 // Configure JWT authentication
