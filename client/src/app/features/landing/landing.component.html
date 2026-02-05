@@ -8,7 +8,13 @@
         <a href="#" class="nav-link">Projekti</a>
         <a href="#" class="nav-link">Zajednica</a>
       </nav>
-      <a routerLink="/login" class="header-button">Prijavi Se</a>
+      @if (isAdmin()) {
+        <a routerLink="/admin" class="header-button">Admin Panel</a>
+      } @else if (isAuthenticated()) {
+        <a routerLink="/account" class="header-button">Moj Račun</a>
+      } @else {
+        <a routerLink="/login" class="header-button">Prijavi Se</a>
+      }
     </div>
   </header>
 
