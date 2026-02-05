@@ -1,16 +1,9 @@
 import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../core/services/product.service';
+import { ProjectService } from '../../core/services/project.service';
 import { Product } from '../../core/models/product.model';
-
-interface FeaturedProject {
-  id: number;
-  title: string;
-  author: string;
-  description: string;
-  image: string;
-  likes: number;
-}
+import { Project } from '../../core/models/project.model';
 
 @Component({
   selector: 'app-landing',
@@ -20,6 +13,7 @@ interface FeaturedProject {
 })
 export class LandingComponent implements OnInit, OnDestroy {
   private readonly productService = inject(ProductService);
+  private readonly projectService = inject(ProjectService);
 
   protected readonly animationComplete = signal(false);
   protected readonly showContent = signal(false);
@@ -27,6 +21,8 @@ export class LandingComponent implements OnInit, OnDestroy {
   protected readonly currentKitIndex = signal(0);
   protected readonly featuredKits = signal<Product[]>([]);
   protected readonly isLoadingKits = signal(true);
+  protected readonly topRatedProjects = signal<Project[]>([]);
+  protected readonly isLoadingProjects = signal(true);
 
   private scrollListener: (() => void) | null = null;
   private kitCarouselInterval: any = null;
@@ -34,6 +30,7 @@ export class LandingComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // Fetch featured products from API
     this.loadFeaturedKits();
+    this.loadTopRatedProjects();
 
     // Start the animation sequence - faster
     setTimeout(() => {
@@ -68,6 +65,20 @@ export class LandingComponent implements OnInit, OnDestroy {
       error: (err) => {
         console.error('Failed to load featured kits:', err);
         this.isLoadingKits.set(false);
+      }
+    });
+  }
+
+  private loadTopRatedProjects() {
+    this.isLoadingProjects.set(true);
+    this.projectService.getTopRatedProjects().subscribe({
+      next: (projects) => {
+        this.topRatedProjects.set(projects);
+        this.isLoadingProjects.set(false);
+      },
+      error: (err) => {
+        console.error('Failed to load top rated projects:', err);
+        this.isLoadingProjects.set(false);
       }
     });
   }
@@ -133,31 +144,4 @@ export class LandingComponent implements OnInit, OnDestroy {
     left: Math.random() * 100,
     size: 5 + Math.random() * 6
   }));
-
-  protected readonly featuredProjects: FeaturedProject[] = [
-    {
-      id: 1,
-      title: 'Ručno Tkana Torba',
-      author: 'Amina K.',
-      description: 'Tradicionalna tehnika tkanja sa modernim dizajnom. Trajalo mi je tri sedmice, ali vrijedi svaki trenutak.',
-      image: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=400&h=300&fit=crop',
-      likes: 147
-    },
-    {
-      id: 2,
-      title: 'Keramički Servis',
-      author: 'Emir D.',
-      description: 'Set od 6 šoljica i tanjira. Svaki komad je jedinstven, upravo kako sam i htio.',
-      image: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=400&h=300&fit=crop',
-      likes: 203
-    },
-    {
-      id: 3,
-      title: 'Zidna Dekoracija',
-      author: 'Sara M.',
-      description: 'Makrame kombinacija sa sušenim cvijećem. Savršeno se uklapa u moj dnevni boravak.',
-      image: 'https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?w=400&h=300&fit=crop',
-      likes: 189
-    }
-  ];
 }

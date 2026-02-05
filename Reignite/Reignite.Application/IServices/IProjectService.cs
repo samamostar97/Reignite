@@ -7,5 +7,6 @@ namespace Reignite.Application.IServices
 {
     public interface IProjectService : IService<Project, ProjectResponse, CreateProjectRequest, UpdateProjectRequest, ProjectQueryFilter, int>
     {
+        Task<List<ProjectResponse>> GetTopRatedProjectsAsync(int count = 3);
     }
 }

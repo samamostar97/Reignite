@@ -20,5 +20,7 @@ namespace Reignite.Application.DTOs.Response
         public int? ProductId { get; set; }
         public string? ProductName { get; set; }
         public DateTime CreatedAt { get; set; }
+        public double AverageRating { get; set; }
+        public int ReviewCount { get; set; }
     }
 }

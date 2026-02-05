@@ -16,8 +16,41 @@ namespace Reignite.Infrastructure.Services
 {
     public class ProjectService : BaseService<Project, ProjectResponse, CreateProjectRequest, UpdateProjectRequest, ProjectQueryFilter, int>, IProjectService
     {
+        private readonly IRepository<Project, int> _projectRepository;
+        private readonly IMapper _mapper;
+
         public ProjectService(IRepository<Project, int> repository, IMapper mapper) : base(repository, mapper)
         {
+            _projectRepository = repository;
+            _mapper = mapper;
+        }
+
+        public async Task<List<ProjectResponse>> GetTopRatedProjectsAsync(int count = 3)
+        {
+            var projects = await _projectRepository.AsQueryable()
+                .Include(p => p.User)
+                .Include(p => p.Hobby)
+                .Include(p => p.Product)
+                .Include(p => p.Reviews)
+                .Where(p => p.Reviews.Any())
+                .Select(p => new
+                {
+                    Project = p,
+                    AverageRating = p.Reviews.Average(r => r.Rating),
+                    ReviewCount = p.Reviews.Count()
+                })
+                .OrderByDescending(x => x.AverageRating)
+                .ThenByDescending(x => x.ReviewCount)
+                .Take(count)
+                .ToListAsync();
+
+            return projects.Select(x =>
+            {
+                var response = _mapper.Map<ProjectResponse>(x.Project);
+                response.AverageRating = x.AverageRating;
+                response.ReviewCount = x.ReviewCount;
+                return response;
+            }).ToList();
         }
 
         protected override IQueryable<Project> ApplyFilter(IQueryable<Project> query, ProjectQueryFilter filter)
