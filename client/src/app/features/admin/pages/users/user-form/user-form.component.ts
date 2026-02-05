@@ -2,29 +2,25 @@ import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@ang
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
-import { ProductService } from '../../../../../core/services/product.service';
-import { CategoryService } from '../../../../../core/services/category.service';
-import { ProductCategoryResponse } from '../../../../../core/models/category.model';
+import { UserService } from '../../../../../core/services/user.service';
 import { environment } from '../../../../../../environments/environment';
 
 @Component({
-  selector: 'app-product-form',
+  selector: 'app-user-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
-  templateUrl: './product-form.component.html',
-  styleUrl: './product-form.component.scss',
+  templateUrl: './user-form.component.html',
+  styleUrl: './user-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProductFormComponent implements OnInit {
+export class UserFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
-  private readonly productService = inject(ProductService);
-  private readonly categoryService = inject(CategoryService);
+  private readonly userService = inject(UserService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
   protected readonly isEditMode = signal(false);
-  protected readonly productId = signal<number | null>(null);
-  protected readonly categories = signal<ProductCategoryResponse[]>([]);
+  protected readonly userId = signal<number | null>(null);
   protected readonly isLoading = signal(false);
   protected readonly isSaving = signal(false);
   protected readonly currentImageUrl = signal<string | null>(null);
@@ -35,47 +31,45 @@ export class ProductFormComponent implements OnInit {
   protected readonly pendingImagePreview = signal<string | null>(null);
 
   protected readonly form: FormGroup = this.fb.group({
-    name: ['', [Validators.required, Validators.minLength(2)]],
-    description: [''],
-    price: [0, [Validators.required, Validators.min(0)]],
-    productCategoryId: [null, [Validators.required]]
+    firstName: ['', [Validators.required, Validators.minLength(2)]],
+    lastName: ['', [Validators.required, Validators.minLength(2)]],
+    username: ['', [Validators.required, Validators.minLength(3)]],
+    email: ['', [Validators.required, Validators.email]],
+    phoneNumber: ['', [Validators.required]],
+    password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
   ngOnInit() {
-    this.loadCategories();
-
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEditMode.set(true);
-      this.productId.set(+id);
-      this.loadProduct(+id);
+      this.userId.set(+id);
+      // Remove password validation for edit mode
+      this.form.get('password')?.clearValidators();
+      this.form.get('password')?.updateValueAndValidity();
+      this.loadUser(+id);
     }
   }
 
-  private loadCategories() {
-    this.categoryService.getCategories({ pageSize: 100 }).subscribe({
-      next: (result) => this.categories.set(result.items)
-    });
-  }
-
-  private loadProduct(id: number) {
+  private loadUser(id: number) {
     this.isLoading.set(true);
-    this.productService.getProductById(id).subscribe({
-      next: (product) => {
+    this.userService.getUserById(id).subscribe({
+      next: (user) => {
         this.form.patchValue({
-          name: product.name,
-          description: product.description,
-          price: product.price,
-          productCategoryId: product.productCategoryId
+          firstName: user.firstName,
+          lastName: user.lastName,
+          username: user.username,
+          email: user.email,
+          phoneNumber: user.phoneNumber
         });
-        if (product.productImageUrl) {
-          this.currentImageUrl.set(`${environment.baseUrl}${product.productImageUrl}`);
+        if (user.profileImageUrl) {
+          this.currentImageUrl.set(`${environment.baseUrl}${user.profileImageUrl}`);
         }
         this.isLoading.set(false);
       },
       error: () => {
         this.isLoading.set(false);
-        this.router.navigate(['/admin/products']);
+        this.router.navigate(['/admin/users']);
       }
     });
   }
@@ -90,18 +84,22 @@ export class ProductFormComponent implements OnInit {
     const data = this.form.value;
 
     if (this.isEditMode()) {
-      this.productService.updateProduct(this.productId()!, data).subscribe({
+      // Don't send password if empty in edit mode
+      const updateData = { ...data };
+      delete updateData.password;
+
+      this.userService.updateUser(this.userId()!, updateData).subscribe({
         next: () => {
           this.isSaving.set(false);
-          this.router.navigate(['/admin/products']);
+          this.router.navigate(['/admin/users']);
         },
         error: () => this.isSaving.set(false)
       });
     } else {
-      this.productService.createProduct(data, this.pendingImage() ?? undefined).subscribe({
+      this.userService.createUser(data, this.pendingImage() ?? undefined).subscribe({
         next: () => {
           this.isSaving.set(false);
-          this.router.navigate(['/admin/products']);
+          this.router.navigate(['/admin/users']);
         },
         error: () => this.isSaving.set(false)
       });
@@ -147,7 +145,6 @@ export class ProductFormComponent implements OnInit {
   }
 
   private uploadImage(file: File): void {
-    // Validate file size (5MB max)
     if (file.size > 5 * 1024 * 1024) {
       alert('Slika ne smije biti veca od 5MB');
       return;
@@ -155,11 +152,11 @@ export class ProductFormComponent implements OnInit {
 
     if (this.isEditMode()) {
       // Edit mode: upload immediately
-      const productId = this.productId();
-      if (!productId) return;
+      const userId = this.userId();
+      if (!userId) return;
 
       this.isUploading.set(true);
-      this.productService.uploadProductImage(productId, file).subscribe({
+      this.userService.uploadUserImage(userId, file).subscribe({
         next: (result) => {
           if (result.fileUrl) {
             this.currentImageUrl.set(`${environment.baseUrl}${result.fileUrl}`);
@@ -185,11 +182,11 @@ export class ProductFormComponent implements OnInit {
   protected removeImage(): void {
     if (this.isEditMode()) {
       // Edit mode: delete from server
-      const productId = this.productId();
-      if (!productId) return;
+      const userId = this.userId();
+      if (!userId) return;
 
       this.isRemovingImage.set(true);
-      this.productService.deleteProductImage(productId).subscribe({
+      this.userService.deleteUserImage(userId).subscribe({
         next: () => {
           this.currentImageUrl.set(null);
           this.isRemovingImage.set(false);

@@ -1,0 +1,226 @@
+<div class="user-form">
+  <div class="page-header">
+    <a routerLink="/admin/users" class="back-link">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+      </svg>
+      Nazad na listu
+    </a>
+    <h1 class="page-title">{{ isEditMode() ? 'Uredi korisnika' : 'Novi korisnik' }}</h1>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Ucitavanje...</p>
+    </div>
+  } @else {
+    <div class="form-card">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="form-layout">
+          <!-- Left Column: Profile Image Upload -->
+          <div class="image-column">
+            <label class="form-label">Profilna slika</label>
+            <div class="image-preview">
+              @if (isEditMode() && currentImageUrl()) {
+                <img [src]="currentImageUrl()" alt="Profilna slika">
+              } @else if (!isEditMode() && pendingImagePreview()) {
+                <img [src]="pendingImagePreview()" alt="Pregled slike">
+              } @else {
+                <div class="no-image-placeholder">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                  </svg>
+                </div>
+              }
+            </div>
+
+            @if (isUploading()) {
+              <div class="upload-progress">
+                <div class="progress-spinner"></div>
+                <span>Ucitavanje...</span>
+              </div>
+            } @else {
+              <div
+                class="upload-zone"
+                [class.dragging]="isDragging()"
+                (click)="fileInput.click()"
+                (dragover)="onDragOver($event)"
+                (dragleave)="onDragLeave($event)"
+                (drop)="onDrop($event)">
+                <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                </svg>
+                <span>Kliknite ili prevucite</span>
+              </div>
+              <input
+                #fileInput
+                type="file"
+                class="file-input"
+                accept="image/png,image/jpeg,image/jpg"
+                (change)="onFileSelected($event)">
+
+              @if ((isEditMode() && currentImageUrl()) || (!isEditMode() && pendingImagePreview())) {
+                <button
+                  type="button"
+                  class="btn-remove-image"
+                  (click)="removeImage()"
+                  [disabled]="isRemovingImage()">
+                  @if (isRemovingImage()) {
+                    <span class="spinner-small"></span>
+                  } @else {
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                    </svg>
+                    Ukloni
+                  }
+                </button>
+              }
+            }
+          </div>
+
+          <!-- Right Column: Form Fields -->
+          <div class="form-fields">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstName" class="form-label">
+                  Ime
+                  <span class="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="firstName"
+                  formControlName="firstName"
+                  class="form-input"
+                  [class.error]="hasError('firstName', 'required') || hasError('firstName', 'minlength')"
+                  placeholder="Unesite ime">
+                @if (hasError('firstName', 'required')) {
+                  <span class="error-message">Ime je obavezno</span>
+                }
+                @if (hasError('firstName', 'minlength')) {
+                  <span class="error-message">Ime mora imati najmanje 2 karaktera</span>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="lastName" class="form-label">
+                  Prezime
+                  <span class="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="lastName"
+                  formControlName="lastName"
+                  class="form-input"
+                  [class.error]="hasError('lastName', 'required') || hasError('lastName', 'minlength')"
+                  placeholder="Unesite prezime">
+                @if (hasError('lastName', 'required')) {
+                  <span class="error-message">Prezime je obavezno</span>
+                }
+                @if (hasError('lastName', 'minlength')) {
+                  <span class="error-message">Prezime mora imati najmanje 2 karaktera</span>
+                }
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="username" class="form-label">
+                  Korisnicko ime
+                  <span class="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="username"
+                  formControlName="username"
+                  class="form-input"
+                  [class.error]="hasError('username', 'required') || hasError('username', 'minlength')"
+                  placeholder="Unesite korisnicko ime">
+                @if (hasError('username', 'required')) {
+                  <span class="error-message">Korisnicko ime je obavezno</span>
+                }
+                @if (hasError('username', 'minlength')) {
+                  <span class="error-message">Korisnicko ime mora imati najmanje 3 karaktera</span>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="email" class="form-label">
+                  Email
+                  <span class="required">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  formControlName="email"
+                  class="form-input"
+                  [class.error]="hasError('email', 'required') || hasError('email', 'email')"
+                  placeholder="Unesite email adresu">
+                @if (hasError('email', 'required')) {
+                  <span class="error-message">Email je obavezan</span>
+                }
+                @if (hasError('email', 'email')) {
+                  <span class="error-message">Unesite ispravnu email adresu</span>
+                }
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="phoneNumber" class="form-label">
+                  Broj telefona
+                  <span class="required">*</span>
+                </label>
+                <input
+                  type="tel"
+                  id="phoneNumber"
+                  formControlName="phoneNumber"
+                  class="form-input"
+                  [class.error]="hasError('phoneNumber', 'required')"
+                  placeholder="+387 6X XXX XXX">
+                @if (hasError('phoneNumber', 'required')) {
+                  <span class="error-message">Broj telefona je obavezan</span>
+                }
+              </div>
+
+              @if (!isEditMode()) {
+                <div class="form-group">
+                  <label for="password" class="form-label">
+                    Lozinka
+                    <span class="required">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    formControlName="password"
+                    class="form-input"
+                    [class.error]="hasError('password', 'required') || hasError('password', 'minlength')"
+                    placeholder="Unesite lozinku">
+                  @if (hasError('password', 'required')) {
+                    <span class="error-message">Lozinka je obavezna</span>
+                  }
+                  @if (hasError('password', 'minlength')) {
+                    <span class="error-message">Lozinka mora imati najmanje 6 karaktera</span>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <a routerLink="/admin/users" class="btn-secondary">Otkazi</a>
+          <button type="submit" class="btn-primary" [disabled]="isSaving()">
+            @if (isSaving()) {
+              <span class="spinner-small"></span>
+              Spremanje...
+            } @else {
+              {{ isEditMode() ? 'Spremi promjene' : 'Kreiraj korisnika' }}
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+</div>

@@ -34,8 +34,16 @@ export class UserService {
     return this.http.get<UserResponse>(`${this.apiUrl}/${id}`);
   }
 
-  createUser(data: CreateUserRequest): Observable<UserResponse> {
-    return this.http.post<UserResponse>(this.apiUrl, data);
+  createUser(data: CreateUserRequest, image?: File): Observable<UserResponse> {
+    const formData = new FormData();
+    formData.append('firstName', data.firstName);
+    formData.append('lastName', data.lastName);
+    formData.append('username', data.username);
+    formData.append('email', data.email);
+    formData.append('phoneNumber', data.phoneNumber);
+    formData.append('password', data.password);
+    if (image) formData.append('image', image);
+    return this.http.post<UserResponse>(this.apiUrl, formData);
   }
 
   updateUser(id: number, data: UpdateUserRequest): Observable<UserResponse> {
@@ -44,5 +52,15 @@ export class UserService {
 
   deleteUser(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  uploadUserImage(id: number, file: File): Observable<{ fileUrl: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<{ fileUrl: string }>(`${environment.apiUrl}/uploads/users/${id}`, formData);
+  }
+
+  deleteUserImage(id: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/uploads/users/${id}`);
   }
 }

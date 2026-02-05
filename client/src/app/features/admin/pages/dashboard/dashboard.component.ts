@@ -1,9 +1,10 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../../../core/services/product.service';
 import { CategoryService } from '../../../../core/services/category.service';
 import { ProjectService } from '../../../../core/services/project.service';
+import { UserService } from '../../../../core/services/user.service';
 
 interface StatCard {
   label: string;
@@ -21,12 +22,14 @@ interface StatCard {
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+  styleUrl: './dashboard.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent implements OnInit {
   private readonly productService = inject(ProductService);
   private readonly categoryService = inject(CategoryService);
   private readonly projectService = inject(ProjectService);
+  private readonly userService = inject(UserService);
 
   protected readonly stats = signal<StatCard[]>([
     {
@@ -61,18 +64,20 @@ export class DashboardComponent implements OnInit {
     },
     {
       label: 'Korisnici',
-      value: '--',
+      value: '...',
       icon: 'users',
       route: '/admin/users',
       color: '#5a3a2a',
       secondaryColor: '#2c1810',
       rgb: '90, 58, 42',
-      loading: false
+      loading: true
     },
   ]);
 
   ngOnInit() {
     this.loadStats();
+    // Preload products for faster navigation to products page
+    this.productService.preloadProducts();
   }
 
   private loadStats() {
@@ -98,6 +103,14 @@ export class DashboardComponent implements OnInit {
         this.updateStat(2, result.totalCount);
       },
       error: () => this.updateStat(2, 'Greška')
+    });
+
+    // Load users count
+    this.userService.getUsers({ pageSize: 1 }).subscribe({
+      next: (result) => {
+        this.updateStat(3, result.totalCount);
+      },
+      error: () => this.updateStat(3, 'Greška')
     });
   }
 
