@@ -488,6 +488,7 @@ namespace Reignite.Infrastructure.Migrations
                             Name = "Čekić kovački 500g",
                             Price = 45.00m,
                             ProductCategoryId = 1,
+                            ProductImageUrl = "/uploads/products/product_1.jpg",
                             SupplierId = 1
                         },
                         new
@@ -499,6 +500,7 @@ namespace Reignite.Infrastructure.Migrations
                             Name = "Set šrafcigera 12 kom",
                             Price = 32.50m,
                             ProductCategoryId = 1,
+                            ProductImageUrl = "/uploads/products/product_2.jpg",
                             SupplierId = 1
                         },
                         new
@@ -510,6 +512,7 @@ namespace Reignite.Infrastructure.Migrations
                             Name = "Hrastova daska premium",
                             Price = 78.00m,
                             ProductCategoryId = 2,
+                            ProductImageUrl = "/uploads/products/product_3.jpg",
                             SupplierId = 3
                         },
                         new
@@ -521,6 +524,7 @@ namespace Reignite.Infrastructure.Migrations
                             Name = "Orahov furnir 1m²",
                             Price = 55.90m,
                             ProductCategoryId = 2,
+                            ProductImageUrl = "/uploads/products/product_4.jpg",
                             SupplierId = 3
                         },
                         new
@@ -532,6 +536,7 @@ namespace Reignite.Infrastructure.Migrations
                             Name = "Stolarski komplet za početnike",
                             Price = 149.99m,
                             ProductCategoryId = 3,
+                            ProductImageUrl = "/uploads/products/product_5.jpg",
                             SupplierId = 2
                         },
                         new
@@ -543,6 +548,7 @@ namespace Reignite.Infrastructure.Migrations
                             Name = "Komplet za obradu kože",
                             Price = 189.00m,
                             ProductCategoryId = 3,
+                            ProductImageUrl = "/uploads/products/product_6.jpg",
                             SupplierId = 2
                         },
                         new
@@ -554,6 +560,7 @@ namespace Reignite.Infrastructure.Migrations
                             Name = "Radionička pregača kožna",
                             Price = 65.00m,
                             ProductCategoryId = 4,
+                            ProductImageUrl = "/uploads/products/product_7.jpg",
                             SupplierId = 2
                         },
                         new
@@ -565,6 +572,7 @@ namespace Reignite.Infrastructure.Migrations
                             Name = "Stega stolarska 300mm",
                             Price = 28.75m,
                             ProductCategoryId = 4,
+                            ProductImageUrl = "/uploads/products/product_8.jpg",
                             SupplierId = 1
                         },
                         new
@@ -576,6 +584,7 @@ namespace Reignite.Infrastructure.Migrations
                             Name = "Brusni papir set 50 kom",
                             Price = 19.90m,
                             ProductCategoryId = 4,
+                            ProductImageUrl = "/uploads/products/product_9.jpg",
                             SupplierId = 3
                         },
                         new
@@ -587,6 +596,7 @@ namespace Reignite.Infrastructure.Migrations
                             Name = "Dlijeto ručno 25mm",
                             Price = 38.50m,
                             ProductCategoryId = 1,
+                            ProductImageUrl = "/uploads/products/product_10.jpg",
                             SupplierId = 1
                         });
                 });
@@ -706,6 +716,7 @@ namespace Reignite.Infrastructure.Migrations
                             Description = "Moj prvi projekat sa kompletom za obradu kože. Napravio sam klasični muški novčanik sa 6 slotova za kartice i pretincem za novčanice. Koristio sam smeđu goveđu kožu i ručno šivanje sedlarskim bodom.",
                             HobbyId = 2,
                             HoursSpent = 12,
+                            ImageUrl = "/uploads/projects/project_1.jpg",
                             IsDeleted = false,
                             ProductId = 6,
                             Title = "Ručno izrađeni novčanik od kože",
@@ -718,6 +729,7 @@ namespace Reignite.Infrastructure.Migrations
                             Description = "Od hrastove daske sam napravio zidnu policu u rustikalnom stilu. Dimenzije su 120x25cm, sa tri police. Završna obrada je ulje za drvo koje naglašava prirodnu teksturu hrasta.",
                             HobbyId = 1,
                             HoursSpent = 8,
+                            ImageUrl = "/uploads/projects/project_2.jpg",
                             IsDeleted = false,
                             ProductId = 3,
                             Title = "Rustikalna polica za knjige",
@@ -730,6 +742,7 @@ namespace Reignite.Infrastructure.Migrations
                             Description = "Kombinacija stolarije i metalnog rada. Baza je od orahovog furnira, a metalni nosači su ručno kovani. Drži 5 kuhinjskih noževa elegantno na kuhinjskom pultu.",
                             HobbyId = 3,
                             HoursSpent = 15,
+                            ImageUrl = "/uploads/projects/project_3.jpg",
                             IsDeleted = false,
                             ProductId = 4,
                             Title = "Dekorativni stalak za noževe",
@@ -742,6 +755,7 @@ namespace Reignite.Infrastructure.Migrations
                             Description = "Komplet od tri kutlače različitih veličina, ručno izrezbarene od jednog komada hrastovine. Savršene za svakodnevnu upotrebu u kuhinji, obrađene prehrambeno sigurnim uljem.",
                             HobbyId = 1,
                             HoursSpent = 6,
+                            ImageUrl = "/uploads/projects/project_4.jpg",
                             IsDeleted = false,
                             ProductId = 5,
                             Title = "Set drvenih kutlača",
@@ -754,6 +768,7 @@ namespace Reignite.Infrastructure.Migrations
                             Description = "Elegantna futrola za naočale od tamnosmeđe kože sa magnetnim zatvaračem. Unutrašnjost je obložena mekom tkaninom koja štiti stakla od ogrebotina.",
                             HobbyId = 2,
                             HoursSpent = 4,
+                            ImageUrl = "/uploads/projects/project_5.jpg",
                             IsDeleted = false,
                             ProductId = 6,
                             Title = "Kožna futrola za naočale",
@@ -766,6 +781,7 @@ namespace Reignite.Infrastructure.Migrations
                             Description = "Dekorativni držač za tri svijeće, izrađen od kovanog željeza. Moderna geometrijska forma sa crnom mat završnom obradom. Idealan kao centralni element na trpezarijskom stolu.",
                             HobbyId = 3,
                             HoursSpent = 10,
+                            ImageUrl = "/uploads/projects/project_6.jpg",
                             IsDeleted = false,
                             ProductId = 1,
                             Title = "Kovani držač za svijeće",

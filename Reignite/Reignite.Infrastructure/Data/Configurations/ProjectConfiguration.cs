@@ -41,6 +41,7 @@ namespace Reignite.Infrastructure.Data.Configurations
                     UserId = 2,
                     HobbyId = 2,
                     ProductId = 6,
+                    ImageUrl = "/uploads/projects/project_1.jpg",
                     CreatedAt = seedDate
                 },
                 new Project
@@ -52,6 +53,7 @@ namespace Reignite.Infrastructure.Data.Configurations
                     UserId = 3,
                     HobbyId = 1,
                     ProductId = 3,
+                    ImageUrl = "/uploads/projects/project_2.jpg",
                     CreatedAt = seedDate
                 },
                 new Project
@@ -63,6 +65,7 @@ namespace Reignite.Infrastructure.Data.Configurations
                     UserId = 4,
                     HobbyId = 3,
                     ProductId = 4,
+                    ImageUrl = "/uploads/projects/project_3.jpg",
                     CreatedAt = seedDate
                 },
                 new Project
@@ -74,6 +77,7 @@ namespace Reignite.Infrastructure.Data.Configurations
                     UserId = 2,
                     HobbyId = 1,
                     ProductId = 5,
+                    ImageUrl = "/uploads/projects/project_4.jpg",
                     CreatedAt = seedDate
                 },
                 new Project
@@ -85,6 +89,7 @@ namespace Reignite.Infrastructure.Data.Configurations
                     UserId = 3,
                     HobbyId = 2,
                     ProductId = 6,
+                    ImageUrl = "/uploads/projects/project_5.jpg",
                     CreatedAt = seedDate
                 },
                 new Project
@@ -96,6 +101,7 @@ namespace Reignite.Infrastructure.Data.Configurations
                     UserId = 4,
                     HobbyId = 3,
                     ProductId = 1,
+                    ImageUrl = "/uploads/projects/project_6.jpg",
                     CreatedAt = seedDate
                 }
             );
