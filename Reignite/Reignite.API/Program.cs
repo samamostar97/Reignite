@@ -34,6 +34,8 @@ builder.Services.AddScoped(typeof(IRepository<,>), typeof(BaseRepository<,>));
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
+
 
 
 
