@@ -4,11 +4,11 @@
     <div class="header-content">
       <div class="header-logo">REIGNITE</div>
       <nav class="header-nav">
-        <a href="#" class="nav-link">Setovi</a>
+        <a href="#" class="nav-link">Shop</a>
         <a href="#" class="nav-link">Projekti</a>
         <a href="#" class="nav-link">Zajednica</a>
       </nav>
-      <button class="header-button">Prijavi Se</button>
+      <a routerLink="/login" class="header-button">Prijavi Se</a>
     </div>
   </header>
 
@@ -107,7 +107,7 @@
                 </div>
               </div>
 
-              <button class="carousel-nav next" (click)="nextKit(true)" aria-label="Next kit">
+              <button class="carousel-nav next" (click)="nextKit()" aria-label="Next kit">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                 </svg>

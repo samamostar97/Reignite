@@ -1,0 +1,31 @@
+<div class="notification-container">
+  @for (notification of notifications(); track trackById($index, notification)) {
+    <div
+      class="notification"
+      [class]="'notification--' + notification.type"
+      role="alert"
+    >
+      <div class="notification__icon-wrapper">
+        <span class="notification__icon">{{ getIcon(notification.type) }}</span>
+        <div class="notification__icon-ring"></div>
+      </div>
+
+      <div class="notification__content">
+        <h4 class="notification__title">{{ notification.title }}</h4>
+        <p class="notification__message">{{ notification.message }}</p>
+      </div>
+
+      @if (notification.dismissible) {
+        <button
+          class="notification__close"
+          (click)="dismiss(notification.id)"
+          aria-label="Zatvori"
+        >
+          <span>✕</span>
+        </button>
+      }
+
+      <div class="notification__progress"></div>
+    </div>
+  }
+</div>
