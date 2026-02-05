@@ -35,8 +35,14 @@ export class ProductService {
     return this.http.get<ProductResponse>(`${this.apiUrl}/${id}`);
   }
 
-  createProduct(data: CreateProductRequest): Observable<ProductResponse> {
-    return this.http.post<ProductResponse>(this.apiUrl, data);
+  createProduct(data: CreateProductRequest, image?: File): Observable<ProductResponse> {
+    const formData = new FormData();
+    formData.append('name', data.name);
+    if (data.description) formData.append('description', data.description);
+    formData.append('price', data.price.toString());
+    formData.append('productCategoryId', data.productCategoryId.toString());
+    if (image) formData.append('image', image);
+    return this.http.post<ProductResponse>(this.apiUrl, formData);
   }
 
   updateProduct(id: number, data: UpdateProductRequest): Observable<ProductResponse> {
@@ -47,14 +53,14 @@ export class ProductService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  uploadProductImage(id: number, file: File): Observable<ProductResponse> {
+  uploadProductImage(id: number, file: File): Observable<{ fileUrl: string }> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post<ProductResponse>(`${this.apiUrl}/${id}/image`, formData);
+    return this.http.post<{ fileUrl: string }>(`${environment.apiUrl}/uploads/products/${id}`, formData);
   }
 
   deleteProductImage(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}/image`);
+    return this.http.delete<void>(`${environment.apiUrl}/uploads/products/${id}`);
   }
 
   getBestSelling(count: number = 5): Observable<ProductResponse[]> {

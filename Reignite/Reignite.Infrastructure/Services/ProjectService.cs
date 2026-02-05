@@ -28,6 +28,21 @@ namespace Reignite.Infrastructure.Services
             _fileStorageService = fileStorageService;
         }
 
+        public override async Task<ProjectResponse> GetByIdAsync(int id)
+        {
+            var project = await _projectRepository.AsQueryable()
+                .Include(p => p.User)
+                .Include(p => p.Hobby)
+                .Include(p => p.Product)
+                .Include(p => p.Reviews)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (project == null)
+                throw new KeyNotFoundException("Projekat nije pronađen");
+
+            return _mapper.Map<ProjectResponse>(project);
+        }
+
         public async Task<List<ProjectResponse>> GetTopRatedProjectsAsync(int count = 3)
         {
             var projects = await _projectRepository.AsQueryable()
@@ -62,6 +77,7 @@ namespace Reignite.Infrastructure.Services
                 .Include(x => x.User)
                 .Include(x => x.Hobby)
                 .Include(x => x.Product)
+                .Include(x => x.Reviews)
                 .FirstOrDefaultAsync(x => x.Id == projectId);
 
             if (project == null)
@@ -103,7 +119,7 @@ namespace Reignite.Infrastructure.Services
 
         protected override IQueryable<Project> ApplyFilter(IQueryable<Project> query, ProjectQueryFilter filter)
         {
-            query = query.Include(x => x.User).Include(x => x.Hobby).Include(x => x.Product);
+            query = query.Include(x => x.User).Include(x => x.Hobby).Include(x => x.Product).Include(x => x.Reviews);
 
             if (!string.IsNullOrEmpty(filter.Search))
                 query = query.Where(x => x.Title.ToLower().Contains(filter.Search.ToLower()));

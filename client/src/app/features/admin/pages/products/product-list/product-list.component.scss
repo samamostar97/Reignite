@@ -366,6 +366,54 @@ $smoke: #5a3a2a;
   }
 }
 
+// Pagination
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: #fff;
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: 0 0 16px 16px;
+}
+
+.pagination-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: $ash;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: $ember;
+    color: #fff;
+    border-color: $ember;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.pagination-info {
+  font-size: 0.9rem;
+  color: $smoke;
+  font-weight: 500;
+}
+
 // Responsive
 @media (max-width: 768px) {
   .page-header {

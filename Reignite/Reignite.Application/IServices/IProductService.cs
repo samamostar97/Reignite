@@ -9,6 +9,7 @@ namespace Reignite.Application.IServices
 {
     public interface IProductService:IService<Product,ProductResponse,CreateProductRequest,UpdateProductRequest,ProductQueryFilter,int>
     {
+        Task<ProductResponse> CreateWithImageAsync(CreateProductRequest dto, FileUploadRequest? imageRequest);
         Task<ProductResponse> UploadImageAsync(int productId, FileUploadRequest fileRequest);
         Task<bool> DeleteImageAsync(int productId);
         Task<List<ProductResponse>> GetBestSellingAsync(int count = 5);

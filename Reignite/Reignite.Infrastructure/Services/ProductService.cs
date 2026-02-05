@@ -29,6 +29,31 @@ namespace Reignite.Infrastructure.Services
             _fileStorageService = fileStorageService;
             _orderItemRepository = orderItemRepository;
         }
+
+        public async Task<ProductResponse> CreateWithImageAsync(CreateProductRequest dto, FileUploadRequest? imageRequest)
+        {
+            var product = _mapper.Map<Product>(dto);
+            await _repository.AddAsync(product);
+
+            if (imageRequest != null && imageRequest.FileStream != null && imageRequest.FileSize > 0)
+            {
+                var uploadResult = await _fileStorageService.UploadAsync(imageRequest, "products", product.Id.ToString());
+
+                if (uploadResult.Success)
+                {
+                    product.ProductImageUrl = uploadResult.FileUrl;
+                    await _repository.UpdateAsync(product);
+                }
+            }
+
+            var result = await _repository.AsQueryable()
+                .Include(x => x.ProductCategory)
+                .Include(x => x.Supplier)
+                .FirstOrDefaultAsync(x => x.Id == product.Id);
+
+            return _mapper.Map<ProductResponse>(result!);
+        }
+
         protected override IQueryable<Product> ApplyFilter(IQueryable<Product> query, ProductQueryFilter filter)
         {
             query = query.Include(x => x.ProductCategory).Include(x=>x.Supplier);

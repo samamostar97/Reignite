@@ -1,7 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
+import { SidebarService } from '../../services/sidebar.service';
 
 interface NavItem {
   label: string;
@@ -19,8 +20,9 @@ interface NavItem {
 })
 export class SidebarComponent {
   private readonly authService = inject(AuthService);
+  private readonly sidebarService = inject(SidebarService);
 
-  protected readonly isCollapsed = signal(false);
+  protected readonly isCollapsed = this.sidebarService.isCollapsed;
 
   // Grouped navigation items
   protected readonly mainNavItems: NavItem[] = [
@@ -39,7 +41,7 @@ export class SidebarComponent {
   ];
 
   protected toggleCollapse(): void {
-    this.isCollapsed.update(v => !v);
+    this.sidebarService.toggle();
   }
 
   protected logout(): void {

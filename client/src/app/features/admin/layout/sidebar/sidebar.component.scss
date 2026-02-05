@@ -44,7 +44,8 @@ $smoke: #5a3a2a;
     .nav-label,
     .badge,
     .logout-text,
-    .nav-section-label {
+    .nav-section-label,
+    .nav-section-line {
       opacity: 0;
       width: 0;
       overflow: hidden;
@@ -52,17 +53,19 @@ $smoke: #5a3a2a;
 
     .sidebar-header {
       padding: 1.5rem 0;
-      justify-content: center;
+      align-items: center;
     }
 
     .logo-container {
       justify-content: center;
+      width: 100%;
     }
 
     .nav-item {
       justify-content: center;
-      padding: 1rem;
-      margin: 0.125rem 0.5rem;
+      padding: 0.875rem;
+      margin: 0.125rem auto;
+      width: calc(100% - 1rem);
 
       .nav-icon {
         margin: 0;
@@ -71,12 +74,17 @@ $smoke: #5a3a2a;
 
     .logout-btn {
       justify-content: center;
-      padding: 1rem;
+      padding: 0.875rem;
+      margin: 0 0.5rem;
     }
 
     .nav-section {
       padding: 0.5rem;
       justify-content: center;
+    }
+
+    .sidebar-footer {
+      padding: 1rem 0.5rem;
     }
   }
 }
@@ -390,9 +398,9 @@ $smoke: #5a3a2a;
 
 // Collapse toggle button
 .collapse-toggle {
-  position: absolute;
+  position: fixed;
   top: 50%;
-  right: -12px;
+  left: calc(#{$sidebar-width} - 12px);
   transform: translateY(-50%);
   width: 24px;
   height: 24px;
@@ -404,8 +412,12 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.25s ease;
-  z-index: 101;
+  transition: all 0.25s ease, left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 200;
+
+  &.collapsed {
+    left: calc(#{$sidebar-collapsed-width} - 12px);
+  }
 
   &:hover {
     background: $ember;
