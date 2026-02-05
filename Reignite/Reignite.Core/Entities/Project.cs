@@ -19,5 +19,6 @@ namespace Reignite.Core.Entities
         public User User { get; set; } = null!;
         public Hobby Hobby { get; set; } = null!;
         public Product? Product { get; set; }
+        public ICollection<ProjectReview> Reviews { get; set; } = new List<ProjectReview>();
     }
 }

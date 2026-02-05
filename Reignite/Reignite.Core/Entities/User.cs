@@ -19,6 +19,7 @@ namespace Reignite.Core.Entities
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public ICollection<UserHobby> UserHobbies { get; set; } = new List<UserHobby>();
         public ICollection<Project> Projects { get; set; } = new List<Project>();
+        public ICollection<ProjectReview> ProjectReviews { get; set; } = new List<ProjectReview>();
     }
 }
 
