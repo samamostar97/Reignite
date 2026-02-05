@@ -26,6 +26,7 @@ namespace Reignite.Infrastructure.Data
         public DbSet<Hobby> Hobbies { get; set; }
         public DbSet<UserHobby> UserHobbies { get; set; }
         public DbSet<Project> Projects { get; set; }
+        public DbSet<ProjectReview> ProjectReviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -19,11 +19,11 @@ namespace Reignite.Infrastructure.Data.Configurations
             var seedDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
             builder.HasData(
-                new Hobby { Id = 1, Name = "Woodworking", Description = "The art of crafting objects from wood, from furniture to decorative pieces.", IconUrl = null, CreatedAt = seedDate },
-                new Hobby { Id = 2, Name = "Leathercraft", Description = "Creating wallets, belts, bags and other items from leather.", IconUrl = null, CreatedAt = seedDate },
-                new Hobby { Id = 3, Name = "Metalworking", Description = "Shaping and forging metal into tools, art, and functional objects.", IconUrl = null, CreatedAt = seedDate },
-                new Hobby { Id = 4, Name = "Pottery", Description = "Molding clay into ceramics, from bowls to sculptures.", IconUrl = null, CreatedAt = seedDate },
-                new Hobby { Id = 5, Name = "Candle Making", Description = "Crafting custom candles with unique scents and designs.", IconUrl = null, CreatedAt = seedDate }
+                new Hobby { Id = 1, Name = "Stolarija", Description = "Umjetnost izrade predmeta od drveta, od namještaja do dekorativnih komada.", IconUrl = null, CreatedAt = seedDate },
+                new Hobby { Id = 2, Name = "Obrada kože", Description = "Izrada novčanika, remena, torbi i drugih predmeta od kože.", IconUrl = null, CreatedAt = seedDate },
+                new Hobby { Id = 3, Name = "Obrada metala", Description = "Oblikovanje i kovanje metala u alate, umjetničke i funkcionalne predmete.", IconUrl = null, CreatedAt = seedDate },
+                new Hobby { Id = 4, Name = "Keramika", Description = "Oblikovanje gline u keramičke predmete, od posuda do skulptura.", IconUrl = null, CreatedAt = seedDate },
+                new Hobby { Id = 5, Name = "Izrada svijeća", Description = "Izrada jedinstvenih svijeća sa posebnim mirisima i dizajnom.", IconUrl = null, CreatedAt = seedDate }
             );
         }
     }
