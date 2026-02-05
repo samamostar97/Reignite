@@ -1,5 +1,6 @@
 ﻿using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
+using Reignite.Application.Common;
 using Reignite.Application.DTOs.Request;
 using Reignite.Application.DTOs.Response;
 using Reignite.Application.Filters;
@@ -16,8 +17,11 @@ namespace Reignite.Infrastructure.Services
 {
     public class ProductService : BaseService<Product, ProductResponse, CreateProductRequest, UpdateProductRequest, ProductQueryFilter, int>,IProductService
     {
-        public ProductService(IRepository<Product, int> repository, IMapper mapper) : base(repository, mapper)
+        private readonly IFileStorageService _fileStorageService;
+
+        public ProductService(IRepository<Product, int> repository, IMapper mapper, IFileStorageService fileStorageService) : base(repository, mapper)
         {
+            _fileStorageService = fileStorageService;
         }
         protected override IQueryable<Product> ApplyFilter(IQueryable<Product> query, ProductQueryFilter filter)
         {
@@ -35,6 +39,49 @@ namespace Reignite.Infrastructure.Services
             }
             query = query.OrderBy(x => x.CreatedAt);
             return query;
+        }
+        public async Task<ProductResponse> UploadImageAsync(int productId, FileUploadRequest fileRequest)
+        {
+            var product = await _repository.AsQueryable()
+                .Include(x => x.Supplier)
+                .Include(x => x.ProductCategory)
+                .FirstOrDefaultAsync(x => x.Id == productId);
+
+            if (product == null)
+                throw new KeyNotFoundException("Proizvod nije pronađen");
+
+            if (!string.IsNullOrEmpty(product.ProductImageUrl))
+            {
+                await _fileStorageService.DeleteAsync(product.ProductImageUrl);
+            }
+
+            var uploadResult = await _fileStorageService.UploadAsync(fileRequest, "products", productId.ToString());
+
+            if (!uploadResult.Success)
+                throw new InvalidOperationException(uploadResult.ErrorMessage);
+
+            product.ProductImageUrl = uploadResult.FileUrl;
+            await _repository.UpdateAsync(product);
+
+            return _mapper.Map<ProductResponse>(product);
+        }
+
+        public async Task<bool> DeleteImageAsync(int productId)
+        {
+            var product = await _repository.GetByIdAsync(productId);
+
+            if (product == null)
+                throw new KeyNotFoundException("Proizvod nije pronađen");
+
+            if (string.IsNullOrEmpty(product.ProductImageUrl))
+                return false;
+
+            var deleted = await _fileStorageService.DeleteAsync(product.ProductImageUrl);
+
+            product.ProductImageUrl = null;
+            await _repository.UpdateAsync(product);
+
+            return deleted;
         }
     }
 }

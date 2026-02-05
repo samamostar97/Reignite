@@ -7,6 +7,7 @@ using Reignite.API.Middleware;
 using Reignite.Application.IRepositories;
 using Reignite.Application.IServices;
 using Reignite.Infrastructure.Data;
+using Reignite.Infrastructure.Mappings;
 using Reignite.Infrastructure.Repositories;
 using Reignite.Infrastructure.Services;
 using System.Text;
@@ -29,12 +30,20 @@ var connectionString = $"Server={Environment.GetEnvironmentVariable("DB_SERVER")
 builder.Services.AddDbContext<ReigniteDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddMapster();
+MappingConfig.Configure();
+
 
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(BaseRepository<,>));
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IFileStorageService>(sp =>
+{
+    var env = sp.GetRequiredService<IWebHostEnvironment>();
+    return new FileStorageService(env.WebRootPath ?? Path.Combine(env.ContentRootPath, "wwwroot"));
+});
+
 
 
 
@@ -115,6 +124,9 @@ app.UseMiddleware<ApiExceptionMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
+
+app.UseStaticFiles();
+
 app.UseAuthentication();
 
 app.UseAuthorization();

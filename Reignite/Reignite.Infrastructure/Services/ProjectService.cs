@@ -1,5 +1,6 @@
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
+using Reignite.Application.Common;
 using Reignite.Application.DTOs.Request;
 using Reignite.Application.DTOs.Response;
 using Reignite.Application.Filters;
@@ -18,11 +19,13 @@ namespace Reignite.Infrastructure.Services
     {
         private readonly IRepository<Project, int> _projectRepository;
         private readonly IMapper _mapper;
+        private readonly IFileStorageService _fileStorageService;
 
-        public ProjectService(IRepository<Project, int> repository, IMapper mapper) : base(repository, mapper)
+        public ProjectService(IRepository<Project, int> repository, IMapper mapper, IFileStorageService fileStorageService) : base(repository, mapper)
         {
             _projectRepository = repository;
             _mapper = mapper;
+            _fileStorageService = fileStorageService;
         }
 
         public async Task<List<ProjectResponse>> GetTopRatedProjectsAsync(int count = 3)
@@ -51,6 +54,51 @@ namespace Reignite.Infrastructure.Services
                 response.ReviewCount = x.ReviewCount;
                 return response;
             }).ToList();
+        }
+
+        public async Task<ProjectResponse> UploadImageAsync(int projectId, FileUploadRequest fileRequest)
+        {
+            var project = await _projectRepository.AsQueryable()
+                .Include(x => x.User)
+                .Include(x => x.Hobby)
+                .Include(x => x.Product)
+                .FirstOrDefaultAsync(x => x.Id == projectId);
+
+            if (project == null)
+                throw new KeyNotFoundException("Projekat nije pronađen");
+
+            if (!string.IsNullOrEmpty(project.ImageUrl))
+            {
+                await _fileStorageService.DeleteAsync(project.ImageUrl);
+            }
+
+            var uploadResult = await _fileStorageService.UploadAsync(fileRequest, "projects", projectId.ToString());
+
+            if (!uploadResult.Success)
+                throw new InvalidOperationException(uploadResult.ErrorMessage);
+
+            project.ImageUrl = uploadResult.FileUrl;
+            await _projectRepository.UpdateAsync(project);
+
+            return _mapper.Map<ProjectResponse>(project);
+        }
+
+        public async Task<bool> DeleteImageAsync(int projectId)
+        {
+            var project = await _projectRepository.GetByIdAsync(projectId);
+
+            if (project == null)
+                throw new KeyNotFoundException("Projekat nije pronađen");
+
+            if (string.IsNullOrEmpty(project.ImageUrl))
+                return false;
+
+            var deleted = await _fileStorageService.DeleteAsync(project.ImageUrl);
+
+            project.ImageUrl = null;
+            await _projectRepository.UpdateAsync(project);
+
+            return deleted;
         }
 
         protected override IQueryable<Project> ApplyFilter(IQueryable<Project> query, ProjectQueryFilter filter)

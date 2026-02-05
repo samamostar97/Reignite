@@ -25,5 +25,29 @@ namespace Reignite.API.Controllers
         [AllowAnonymous]
         [HttpGet("{id}")]
         public override Task<ActionResult<ProductResponse>> GetById(int id) => base.GetById(id);
+        
+        [HttpPost("{id}/image")]
+        public async Task<ActionResult<ProductResponse>> UploadImage(int id, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("Nije odabrana slika");
+
+            var fileRequest = new FileUploadRequest
+            {
+                FileStream = file.OpenReadStream(),
+                FileName = file.FileName,
+                ContentType = file.ContentType,
+                FileSize = file.Length
+            };
+
+            var result = await _productService.UploadImageAsync(id, fileRequest);
+            return Ok(result);
+        }
+        [HttpDelete("{id}/image")]
+        public async Task<IActionResult> DeleteImage(int id)
+        {
+            await _productService.DeleteImageAsync(id);
+            return NoContent();
+        }
     }
 }
