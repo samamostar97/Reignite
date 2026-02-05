@@ -69,7 +69,12 @@ export class ProductFormComponent implements OnInit {
           productCategoryId: product.productCategoryId
         });
         if (product.productImageUrl) {
-          this.currentImageUrl.set(`${environment.baseUrl}${product.productImageUrl}`);
+          // If it's already an absolute URL (Unsplash, etc.), use as-is
+          if (product.productImageUrl.startsWith('http://') || product.productImageUrl.startsWith('https://')) {
+            this.currentImageUrl.set(product.productImageUrl);
+          } else {
+            this.currentImageUrl.set(`${environment.baseUrl}${product.productImageUrl}`);
+          }
         }
         this.isLoading.set(false);
       },

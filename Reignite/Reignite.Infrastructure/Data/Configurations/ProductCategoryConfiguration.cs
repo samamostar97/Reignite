@@ -20,9 +20,9 @@ namespace Reignite.Infrastructure.Data.Configurations
 
             builder.HasData(
                 new ProductCategory { Id = 1, Name = "Ručni Alati", CreatedAt = seedDate },
-                new ProductCategory { Id = 2, Name = "Premium Materijali",  CreatedAt = seedDate },
-                new ProductCategory { Id = 3, Name = "Komplete za Početnike",  CreatedAt = seedDate },
-                new ProductCategory { Id = 4, Name = "Pribor za Radionicu",  CreatedAt = seedDate }
+                new ProductCategory { Id = 2, Name = "Premium Materijali", CreatedAt = seedDate },
+                new ProductCategory { Id = 3, Name = "Kompleti za Početnike", CreatedAt = seedDate },
+                new ProductCategory { Id = 4, Name = "Pribor za Radionicu", CreatedAt = seedDate }
             );
         }
     }

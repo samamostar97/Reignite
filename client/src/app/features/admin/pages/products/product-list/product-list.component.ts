@@ -81,6 +81,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   protected getImageUrl(path: string | undefined): string {
     if (!path) return '';
+    // If it's already an absolute URL (Unsplash, etc.), return as-is
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return path;
+    }
     return `${environment.baseUrl}${path}`;
   }
 
