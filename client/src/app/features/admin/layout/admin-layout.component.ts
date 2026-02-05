@@ -1,9 +1,10 @@
-import { Component, inject, signal, effect } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { TopbarComponent } from './topbar/topbar.component';
+import { SidebarService } from '../services/sidebar.service';
 
 @Component({
   selector: 'app-admin-layout',
@@ -14,8 +15,10 @@ import { TopbarComponent } from './topbar/topbar.component';
 })
 export class AdminLayoutComponent {
   private readonly router = inject(Router);
+  private readonly sidebarService = inject(SidebarService);
 
   protected readonly pageTitle = signal('Dashboard');
+  protected readonly isSidebarCollapsed = this.sidebarService.isCollapsed;
 
   private readonly pageTitles: Record<string, string> = {
     '/admin/dashboard': 'Dashboard',

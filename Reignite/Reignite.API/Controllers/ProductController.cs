@@ -26,36 +26,33 @@ namespace Reignite.API.Controllers
         [HttpGet("{id}")]
         public override Task<ActionResult<ProductResponse>> GetById(int id) => base.GetById(id);
 
+        [HttpPost]
+        public override async Task<ActionResult<ProductResponse>> Create([FromForm] CreateProductRequest dto)
+        {
+            var image = Request.Form.Files.Count > 0 ? Request.Form.Files[0] : null;
+            FileUploadRequest? fileRequest = null;
+
+            if (image != null && image.Length > 0)
+            {
+                fileRequest = new FileUploadRequest
+                {
+                    FileStream = image.OpenReadStream(),
+                    FileName = image.FileName,
+                    ContentType = image.ContentType,
+                    FileSize = image.Length
+                };
+            }
+
+            var result = await _productService.CreateWithImageAsync(dto, fileRequest);
+            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+        }
+
         [AllowAnonymous]
         [HttpGet("best-selling")]
         public async Task<ActionResult<List<ProductResponse>>> GetBestSelling([FromQuery] int count = 5)
         {
             var products = await _productService.GetBestSellingAsync(count);
             return Ok(products);
-        }
-
-        [HttpPost("{id}/image")]
-        public async Task<ActionResult<ProductResponse>> UploadImage(int id, IFormFile file)
-        {
-            if (file == null || file.Length == 0)
-                return BadRequest("Nije odabrana slika");
-
-            var fileRequest = new FileUploadRequest
-            {
-                FileStream = file.OpenReadStream(),
-                FileName = file.FileName,
-                ContentType = file.ContentType,
-                FileSize = file.Length
-            };
-
-            var result = await _productService.UploadImageAsync(id, fileRequest);
-            return Ok(result);
-        }
-        [HttpDelete("{id}/image")]
-        public async Task<IActionResult> DeleteImage(int id)
-        {
-            await _productService.DeleteImageAsync(id);
-            return NoContent();
         }
     }
 }

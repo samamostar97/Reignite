@@ -24,7 +24,7 @@
       <div class="spinner"></div>
       <p>Učitavanje projekata...</p>
     </div>
-  } @else if (filteredProjects().length === 0) {
+  } @else if (projects().length === 0) {
     <div class="empty-state">
       <div class="empty-icon">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -53,11 +53,11 @@
           </tr>
         </thead>
         <tbody>
-          @for (project of filteredProjects(); track project.id) {
+          @for (project of projects(); track project.id) {
             <tr>
               <td class="cell-image">
                 @if (project.imageUrl) {
-                  <img [src]="getImageUrl(project.imageUrl)" [alt]="project.title">
+                  <img [src]="getImageUrl(project.imageUrl)" [alt]="project.title" loading="lazy">
                 } @else {
                   <div class="no-image">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -99,5 +99,29 @@
         </tbody>
       </table>
     </div>
+
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <button
+          class="pagination-btn"
+          [disabled]="currentPage() === 1"
+          (click)="goToPage(currentPage() - 1)">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+          </svg>
+        </button>
+        <span class="pagination-info">
+          Stranica {{ currentPage() }} od {{ totalPages() }}
+        </span>
+        <button
+          class="pagination-btn"
+          [disabled]="currentPage() === totalPages()"
+          (click)="goToPage(currentPage() + 1)">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+          </svg>
+        </button>
+      </div>
+    }
   }
 </div>

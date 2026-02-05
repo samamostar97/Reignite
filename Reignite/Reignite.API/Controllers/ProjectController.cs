@@ -55,39 +55,6 @@ namespace Reignite.API.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Admin,AppUser")]
-        [HttpPost("{id}/image")]
-        public async Task<ActionResult<ProjectResponse>> UploadImage(int id, IFormFile file)
-        {
-            if (!await IsOwnerOrAdmin(id))
-                return Forbid();
-
-            if (file == null || file.Length == 0)
-                return BadRequest("Nije odabrana slika");
-
-            var fileRequest = new FileUploadRequest
-            {
-                FileStream = file.OpenReadStream(),
-                FileName = file.FileName,
-                ContentType = file.ContentType,
-                FileSize = file.Length
-            };
-
-            var result = await _projectService.UploadImageAsync(id, fileRequest);
-            return Ok(result);
-        }
-
-        [Authorize(Roles = "Admin,AppUser")]
-        [HttpDelete("{id}/image")]
-        public async Task<IActionResult> DeleteImage(int id)
-        {
-            if (!await IsOwnerOrAdmin(id))
-                return Forbid();
-
-            await _projectService.DeleteImageAsync(id);
-            return NoContent();
-        }
-
         private async Task<bool> IsOwnerOrAdmin(int projectId)
         {
             if (User.IsInRole("Admin"))

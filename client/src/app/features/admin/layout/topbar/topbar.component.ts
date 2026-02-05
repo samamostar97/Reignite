@@ -19,7 +19,6 @@ export class TopbarComponent {
   protected readonly userFullName = this.authService.userFullName;
   protected readonly currentUser = this.authService.currentUser;
   protected readonly isDropdownOpen = signal(false);
-  protected readonly searchQuery = signal('');
 
   protected readonly userRole = computed(() => {
     const role = this.currentUser()?.role;
@@ -44,13 +43,6 @@ export class TopbarComponent {
 
   @HostListener('document:keydown', ['$event'])
   onKeydown(event: KeyboardEvent): void {
-    // Ctrl/Cmd + K to focus search
-    if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
-      event.preventDefault();
-      const searchInput = this.elementRef.nativeElement.querySelector('.search-input');
-      searchInput?.focus();
-    }
-    // Escape to close dropdown
     if (event.key === 'Escape') {
       this.isDropdownOpen.set(false);
     }
@@ -63,11 +55,5 @@ export class TopbarComponent {
   protected logout(): void {
     this.isDropdownOpen.set(false);
     this.authService.logout();
-  }
-
-  protected onSearchInput(event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
-    this.searchQuery.set(value);
-    // Search functionality can be implemented later
   }
 }

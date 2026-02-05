@@ -38,4 +38,14 @@ export class ProjectService {
   deleteProject(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  uploadProjectImage(id: number, file: File): Observable<{ fileUrl: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<{ fileUrl: string }>(`${environment.apiUrl}/uploads/projects/${id}`, formData);
+  }
+
+  deleteProjectImage(id: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/uploads/projects/${id}`);
+  }
 }

@@ -20,7 +20,9 @@ namespace Reignite.Infrastructure.Mappings
             TypeAdapterConfig<Project, ProjectResponse>.NewConfig()
                 .Map(dest => dest.UserName, src => src.User.FirstName + " " + src.User.LastName)
                 .Map(dest => dest.HobbyName, src => src.Hobby.Name)
-                .Map(dest => dest.ProductName, src => src.Product != null ? src.Product.Name : null);
+                .Map(dest => dest.ProductName, src => src.Product != null ? src.Product.Name : null)
+                .Map(dest => dest.AverageRating, src => src.Reviews.Any() ? src.Reviews.Average(r => r.Rating) : 0)
+                .Map(dest => dest.ReviewCount, src => src.Reviews.Count);
         }
     }
 }
