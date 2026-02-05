@@ -23,6 +23,9 @@ namespace Reignite.Infrastructure.Mappings
                 .Map(dest => dest.ProductName, src => src.Product != null ? src.Product.Name : null)
                 .Map(dest => dest.AverageRating, src => src.Reviews.Any() ? src.Reviews.Average(r => r.Rating) : 0)
                 .Map(dest => dest.ReviewCount, src => src.Reviews.Count);
+            TypeAdapterConfig<User,UserResponse>.NewConfig()
+                .Map(dest=>dest.OrderCount,src=>src.Orders.Count())
+                .Map(dest=>dest.ProjectCount,src=>src.Projects.Count());
         }
     }
 }

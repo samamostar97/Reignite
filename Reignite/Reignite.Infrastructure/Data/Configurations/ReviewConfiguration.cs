@@ -28,13 +28,12 @@ namespace Reignite.Infrastructure.Data.Configurations
 
             builder.HasData(
                 new Review { Id = 1, UserId = 2, ProductId = 1, Rating = 5, Comment = "Odličan čekić, savršena ravnoteža i čvrst zahvat. Preporučujem!", CreatedAt = seedDate },
-                new Review { Id = 2, UserId = 2, ProductId = 3, Rating = 4, Comment = "Kvalitetna hrastova daska, samo je pakovanje moglo biti bolje.", CreatedAt = seedDate },
-                new Review { Id = 3, UserId = 3, ProductId = 5, Rating = 5, Comment = "Savršen komplet za početnike, sve što vam treba na jednom mjestu.", CreatedAt = seedDate },
-                new Review { Id = 4, UserId = 3, ProductId = 10, Rating = 4, Comment = "Dlijeto drži oštricu jako dobro, zadovoljna sam kupovinom.", CreatedAt = seedDate },
-                new Review { Id = 5, UserId = 4, ProductId = 6, Rating = 5, Comment = "Vrhunski set za obradu kože, profesionalni kvalitet.", CreatedAt = seedDate },
-                new Review { Id = 6, UserId = 4, ProductId = 9, Rating = 3, Comment = "Brusni papir je ok za cijenu, ali granulacija 80 se brzo troši.", CreatedAt = seedDate }
+                new Review { Id = 2, UserId = 2, ProductId = 5, Rating = 4, Comment = "Kvalitetna hrastova daska, samo je pakovanje moglo biti bolje.", CreatedAt = seedDate },
+                new Review { Id = 3, UserId = 3, ProductId = 9, Rating = 5, Comment = "Savršen komplet za početnike, sve što treba na jednom mjestu.", CreatedAt = seedDate },
+                new Review { Id = 4, UserId = 3, ProductId = 3, Rating = 4, Comment = "Dlijeto drži oštricu jako dobro, zadovoljna sam kupovinom.", CreatedAt = seedDate },
+                new Review { Id = 5, UserId = 4, ProductId = 10, Rating = 5, Comment = "Komplet za kožu ima sve potrebno. Napravio sam novčanik!", CreatedAt = seedDate },
+                new Review { Id = 6, UserId = 4, ProductId = 15, Rating = 4, Comment = "Brusni papir je ok za cijenu, ali se brže troši.", CreatedAt = seedDate }
             );
         }
     }
 }
-

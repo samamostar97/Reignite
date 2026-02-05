@@ -145,6 +145,10 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   protected getImageUrl(relativePath: string | null | undefined): string | null {
     if (!relativePath) return null;
+    // If it's already an absolute URL (Unsplash, etc.), return as-is
+    if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
+      return relativePath;
+    }
     return `${environment.baseUrl}${relativePath}`;
   }
 

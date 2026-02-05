@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Reignite.Application.Common;
@@ -13,7 +14,6 @@ namespace Reignite.Infrastructure.Services
     public class UserService : BaseService<User, UserResponse, CreateUserRequest, UpdateUserRequest, UserQueryFilter, int>, IUserService
     {
         private readonly IFileStorageService _fileStorageService;
-
         public UserService(
             IRepository<User, int> repository,
             IMapper mapper,
@@ -60,8 +60,10 @@ namespace Reignite.Infrastructure.Services
 
         protected override IQueryable<User> ApplyFilter(IQueryable<User> query, UserQueryFilter filter)
         {
+           query=query.Include(x=>x.Orders).ThenInclude(x=>x.OrderItems).Include(x=>x.Projects);
             if (!string.IsNullOrEmpty(filter.Search))
             {
+
                 var searchLower = filter.Search.ToLower();
                 query = query.Where(u =>
                     u.FirstName.ToLower().Contains(searchLower) ||

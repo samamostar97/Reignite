@@ -63,7 +63,12 @@ export class UserFormComponent implements OnInit {
           phoneNumber: user.phoneNumber
         });
         if (user.profileImageUrl) {
-          this.currentImageUrl.set(`${environment.baseUrl}${user.profileImageUrl}`);
+          // If it's already an absolute URL (Unsplash, etc.), use as-is
+          if (user.profileImageUrl.startsWith('http://') || user.profileImageUrl.startsWith('https://')) {
+            this.currentImageUrl.set(user.profileImageUrl);
+          } else {
+            this.currentImageUrl.set(`${environment.baseUrl}${user.profileImageUrl}`);
+          }
         }
         this.isLoading.set(false);
       },
