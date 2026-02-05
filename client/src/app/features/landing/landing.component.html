@@ -81,11 +81,11 @@
               </button>
 
               <div class="carousel-container">
-                <div class="carousel-track" [style.transform]="'translateX(calc(20% - ' + (currentKitIndex() * 60) + '% - ' + (currentKitIndex() * 2) + 'rem))'">
+                <div class="carousel-track" [style.transform]="carouselTransform()">
                   @for (kit of featuredKits(); track kit.id; let idx = $index) {
                     <div class="kit-card carousel-item" [class.active]="currentKitIndex() === idx">
                       @if (kit.productImageUrl) {
-                        <div class="kit-image" [style.background-image]="'url(' + kit.productImageUrl + ')'"></div>
+                        <div class="kit-image" [style.background-image]="'url(' + getImageUrl(kit.productImageUrl) + ')'"></div>
                       } @else {
                         <div class="kit-image kit-image-placeholder">
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -151,7 +151,7 @@
               @for (project of topRatedProjects(); track project.id) {
                 <div class="project-card">
                   @if (project.imageUrl) {
-                    <div class="project-image" [style.background-image]="'url(' + project.imageUrl + ')'"></div>
+                    <div class="project-image" [style.background-image]="'url(' + getImageUrl(project.imageUrl) + ')'"></div>
                   } @else {
                     <div class="project-image project-image-placeholder">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
