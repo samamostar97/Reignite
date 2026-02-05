@@ -1,0 +1,27 @@
+$sidebar-width: 280px;
+$sidebar-collapsed-width: 80px;
+
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #faf8f5;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: $sidebar-width;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.sidebar-collapsed {
+    margin-left: $sidebar-collapsed-width;
+  }
+}
+
+.content-area {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}

@@ -11,6 +11,6 @@ namespace Reignite.Application.Filters
     {
         public string? Search {  get; set; }
         public string? OrderBy { get; set; }
-
+        public int? ProductCategoryId { get; set; }
     }
 }

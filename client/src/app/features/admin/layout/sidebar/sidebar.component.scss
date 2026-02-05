@@ -1,0 +1,460 @@
+// Theme variables
+$sidebar-bg: #0f0d0b;
+$sidebar-width: 280px;
+$sidebar-collapsed-width: 80px;
+$ember: #ff6b35;
+$flame: #f7931e;
+$ash: #2c1810;
+$smoke: #5a3a2a;
+
+.sidebar {
+  width: $sidebar-width;
+  height: 100vh;
+  background: $sidebar-bg;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+
+  // Ambient glow effect
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    background: radial-gradient(
+      ellipse at 50% 0%,
+      rgba(255, 107, 53, 0.12) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  &.collapsed {
+    width: $sidebar-collapsed-width;
+
+    .logo-text,
+    .logo-subtitle,
+    .nav-label,
+    .badge,
+    .logout-text,
+    .nav-section-label {
+      opacity: 0;
+      width: 0;
+      overflow: hidden;
+    }
+
+    .sidebar-header {
+      padding: 1.5rem 0;
+      justify-content: center;
+    }
+
+    .logo-container {
+      justify-content: center;
+    }
+
+    .nav-item {
+      justify-content: center;
+      padding: 1rem;
+      margin: 0.125rem 0.5rem;
+
+      .nav-icon {
+        margin: 0;
+      }
+    }
+
+    .logout-btn {
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .nav-section {
+      padding: 0.5rem;
+      justify-content: center;
+    }
+  }
+}
+
+// Header with animated logo
+.sidebar-header {
+  padding: 1.75rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  z-index: 1;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  gap: 0.75rem;
+}
+
+.logo-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, $ember 0%, $flame 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+  box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
+  animation: pulse-glow 3s ease-in-out infinite;
+
+  svg {
+    width: 24px;
+    height: 24px;
+    color: #fff;
+  }
+
+  // Glow ring
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, $ember, $flame);
+    opacity: 0.3;
+    z-index: -1;
+    animation: ring-pulse 3s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 30px rgba(255, 107, 53, 0.6);
+  }
+}
+
+@keyframes ring-pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.05);
+  }
+}
+
+.logo-text {
+  font-size: 1.35rem;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  color: #fff;
+  font-family: 'Georgia', serif;
+  text-transform: uppercase;
+  transition: opacity 0.2s, width 0.3s;
+}
+
+.logo-subtitle {
+  font-size: 0.7rem;
+  color: rgba(255, 107, 53, 0.8);
+  letter-spacing: 0.15em;
+  margin-top: 0.5rem;
+  text-transform: uppercase;
+  transition: opacity 0.2s, width 0.3s;
+  padding-left: 54px;
+}
+
+// Section divider
+.nav-section {
+  padding: 0.75rem 1.5rem 0.5rem;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  &-label {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.35);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: opacity 0.2s, width 0.3s;
+  }
+
+  &-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 107, 53, 0.2) 0%,
+      transparent 100%
+    );
+  }
+}
+
+// Navigation
+.sidebar-nav {
+  flex: 1;
+  padding: 0.5rem 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 107, 53, 0.3);
+    border-radius: 2px;
+  }
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.875rem 1.5rem;
+  margin: 0.125rem 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 10px;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+
+  // Hover background animation
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 107, 53, 0.15) 0%,
+      rgba(255, 107, 53, 0.05) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    border-radius: 10px;
+  }
+
+  &:hover {
+    color: #fff;
+
+    &::before {
+      opacity: 1;
+    }
+
+    .nav-icon {
+      color: $ember;
+      transform: scale(1.1);
+    }
+  }
+
+  &.active {
+    color: #fff;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 107, 53, 0.2) 0%,
+      rgba(255, 107, 53, 0.08) 100%
+    );
+
+    // Animated left border
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 60%;
+      background: linear-gradient(180deg, $ember 0%, $flame 100%);
+      border-radius: 0 3px 3px 0;
+      box-shadow: 0 0 12px rgba(255, 107, 53, 0.6);
+    }
+
+    .nav-icon {
+      color: $ember;
+    }
+  }
+
+  &.placeholder {
+    opacity: 0.5;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}
+
+.nav-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  transition: color 0.25s ease, transform 0.25s ease;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.nav-label {
+  flex: 1;
+  white-space: nowrap;
+  transition: opacity 0.2s, width 0.3s;
+}
+
+.badge {
+  font-size: 0.6rem;
+  padding: 0.2rem 0.5rem;
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.25) 0%, rgba(247, 147, 30, 0.15) 100%);
+  color: $ember;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  border: 1px solid rgba(255, 107, 53, 0.2);
+  transition: opacity 0.2s, width 0.3s;
+}
+
+// Footer
+.sidebar-footer {
+  padding: 1rem 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 1.5rem;
+    right: 1.5rem;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 107, 53, 0.3) 50%,
+      transparent 100%
+    );
+  }
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  width: 100%;
+  padding: 0.875rem 0.75rem;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  &:hover {
+    color: #ff4444;
+    background: rgba(255, 68, 68, 0.1);
+
+    svg {
+      transform: translateX(3px);
+    }
+  }
+
+  svg {
+    width: 22px;
+    height: 22px;
+    transition: transform 0.25s ease;
+  }
+
+  .logout-text {
+    transition: opacity 0.2s, width 0.3s;
+  }
+}
+
+// Collapse toggle button
+.collapse-toggle {
+  position: absolute;
+  top: 50%;
+  right: -12px;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: $sidebar-bg;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  z-index: 101;
+
+  &:hover {
+    background: $ember;
+    border-color: $ember;
+    color: #fff;
+  }
+
+  svg {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.3s ease;
+  }
+
+  &.collapsed svg {
+    transform: rotate(180deg);
+  }
+}
+
+// Tooltip for collapsed state
+.nav-tooltip {
+  position: fixed;
+  left: calc(#{$sidebar-collapsed-width} + 10px);
+  padding: 0.5rem 0.75rem;
+  background: $ash;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  pointer-events: none;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 6px solid transparent;
+    border-right-color: $ash;
+    border-left: 0;
+  }
+}
+
+.sidebar.collapsed .nav-item:hover .nav-tooltip {
+  opacity: 1;
+  visibility: visible;
+}

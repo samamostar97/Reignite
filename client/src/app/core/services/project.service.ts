@@ -1,8 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Project } from '../models/project.model';
+import { PagedResult } from '../models/common.model';
+import { ProjectResponse, ProjectQueryFilter } from '../models/project.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +12,30 @@ export class ProjectService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/project`;
 
-  getTopRatedProjects(count: number = 3): Observable<Project[]> {
-    return this.http.get<Project[]>(`${this.apiUrl}/top-rated`, {
+  getProjects(filter?: ProjectQueryFilter): Observable<PagedResult<ProjectResponse>> {
+    let params = new HttpParams();
+
+    if (filter) {
+      if (filter.pageNumber) params = params.set('pageNumber', filter.pageNumber.toString());
+      if (filter.pageSize) params = params.set('pageSize', filter.pageSize.toString());
+      if (filter.search) params = params.set('search', filter.search);
+      if (filter.orderBy) params = params.set('orderBy', filter.orderBy);
+    }
+
+    return this.http.get<PagedResult<ProjectResponse>>(this.apiUrl, { params });
+  }
+
+  getTopRatedProjects(count: number = 3): Observable<ProjectResponse[]> {
+    return this.http.get<ProjectResponse[]>(`${this.apiUrl}/top-rated`, {
       params: { count: count.toString() }
     });
+  }
+
+  getProjectById(id: number): Observable<ProjectResponse> {
+    return this.http.get<ProjectResponse>(`${this.apiUrl}/${id}`);
+  }
+
+  deleteProject(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

@@ -54,7 +54,10 @@ export class LoginComponent {
           title: 'Uspješna prijava',
           message: 'Dobrodošli nazad!'
         });
-        this.router.navigate(['/']);
+
+        // Redirect based on user role
+        const redirectUrl = this.authService.isAdmin() ? '/admin' : '/';
+        this.router.navigate([redirectUrl]);
       },
       error: (err) => {
         this.isLoading.set(false);

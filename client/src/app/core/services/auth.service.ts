@@ -22,6 +22,11 @@ export class AuthService {
 
   readonly currentUser = this._currentUser.asReadonly();
   readonly isAuthenticated = this._isAuthenticated.asReadonly();
+  readonly isAdmin = computed(() => {
+    const user = this._currentUser();
+    // Handle both string 'Admin' and numeric 1 (enum value from backend)
+    return user?.role === 'Admin' || user?.role === 1;
+  });
   readonly userFullName = computed(() => {
     const user = this._currentUser();
     return user ? `${user.firstName} ${user.lastName}` : '';

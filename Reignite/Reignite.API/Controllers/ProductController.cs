@@ -25,7 +25,15 @@ namespace Reignite.API.Controllers
         [AllowAnonymous]
         [HttpGet("{id}")]
         public override Task<ActionResult<ProductResponse>> GetById(int id) => base.GetById(id);
-        
+
+        [AllowAnonymous]
+        [HttpGet("best-selling")]
+        public async Task<ActionResult<List<ProductResponse>>> GetBestSelling([FromQuery] int count = 5)
+        {
+            var products = await _productService.GetBestSellingAsync(count);
+            return Ok(products);
+        }
+
         [HttpPost("{id}/image")]
         public async Task<ActionResult<ProductResponse>> UploadImage(int id, IFormFile file)
         {

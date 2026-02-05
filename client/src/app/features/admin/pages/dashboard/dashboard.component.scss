@@ -1,0 +1,446 @@
+$ember: #ff6b35;
+$flame: #f7931e;
+$ash: #2c1810;
+$smoke: #5a3a2a;
+
+.dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Welcome section with gradient text
+.welcome-section {
+  margin-bottom: 2.5rem;
+  position: relative;
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: $ash;
+    margin: 0 0 0.5rem 0;
+    font-family: 'Georgia', serif;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .greeting-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba($ember, 0.15) 0%, rgba($flame, 0.1) 100%);
+    animation: wave 2s ease-in-out;
+
+    svg {
+      width: 24px;
+      height: 24px;
+      color: $ember;
+    }
+  }
+
+  p {
+    color: $smoke;
+    margin: 0;
+    font-size: 1.05rem;
+    max-width: 500px;
+  }
+}
+
+@keyframes wave {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(10deg); }
+  50% { transform: rotate(-5deg); }
+  75% { transform: rotate(8deg); }
+}
+
+// Modern stat cards grid
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+  // Gradient overlay on hover
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(var(--card-rgb), 0.08) 0%,
+      transparent 50%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  // Animated border gradient
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      rgba(var(--card-rgb), 0.3),
+      transparent 50%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+
+    &::before,
+    &::after {
+      opacity: 1;
+    }
+
+    .stat-icon {
+      transform: scale(1.1);
+    }
+
+    .stat-arrow {
+      opacity: 1;
+      transform: translateX(4px);
+    }
+  }
+}
+
+.stat-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.stat-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-secondary, var(--accent-color)) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+
+  // Glow effect
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary, var(--accent-color)));
+    opacity: 0.2;
+    z-index: -1;
+    filter: blur(8px);
+  }
+
+  svg {
+    width: 26px;
+    height: 26px;
+    color: #fff;
+  }
+}
+
+.stat-trend {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+
+  &.up {
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+  }
+
+  &.down {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+  }
+
+  svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+.stat-content {
+  position: relative;
+}
+
+.stat-value {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: $ash;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  display: block;
+  margin-bottom: 0.25rem;
+
+  &.loading {
+    color: #ddd;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: $smoke;
+  font-weight: 500;
+}
+
+.stat-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.stat-link {
+  font-size: 0.8rem;
+  color: $smoke;
+  font-weight: 500;
+}
+
+.stat-arrow {
+  color: $smoke;
+  opacity: 0;
+  transition: all 0.3s ease;
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+// Quick actions section
+.quick-actions {
+  margin-top: 2rem;
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $ash;
+    margin: 0 0 1.25rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba($ember, 0.2) 0%, transparent 100%);
+      margin-left: 1rem;
+    }
+  }
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 540px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.action-card {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 14px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+
+  // Hover gradient
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba($ember, 0.05) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  &:hover {
+    border-color: rgba($ember, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+
+    &::before {
+      opacity: 1;
+    }
+
+    .action-icon {
+      background: linear-gradient(135deg, $ember 0%, $flame 100%);
+
+      svg {
+        color: #fff;
+      }
+    }
+
+    .action-arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .action-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba($ember, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.25s ease;
+
+    svg {
+      width: 24px;
+      height: 24px;
+      color: $ember;
+      transition: color 0.25s ease;
+    }
+  }
+
+  .action-content {
+    flex: 1;
+  }
+
+  .action-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: $ash;
+    display: block;
+  }
+
+  .action-desc {
+    font-size: 0.8rem;
+    color: $smoke;
+    margin-top: 0.2rem;
+  }
+
+  .action-arrow {
+    color: $smoke;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: all 0.25s ease;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+// Recent activity section
+.recent-activity {
+  margin-top: 3rem;
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $ash;
+    margin: 0 0 1.25rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba($ember, 0.2) 0%, transparent 100%);
+      margin-left: 1rem;
+    }
+  }
+}
+
+.activity-placeholder {
+  background: #fff;
+  border-radius: 14px;
+  padding: 3rem 2rem;
+  text-align: center;
+  border: 1px dashed rgba($ember, 0.2);
+
+  svg {
+    width: 48px;
+    height: 48px;
+    color: rgba($smoke, 0.4);
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: $smoke;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+}

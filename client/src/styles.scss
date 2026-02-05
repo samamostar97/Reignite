@@ -21,3 +21,52 @@ html, body {
   height: 100%;
   margin: 0;
 }
+
+// Admin Panel Theme Variables
+:root {
+  --admin-ember: #ff6b35;
+  --admin-flame: #f7931e;
+  --admin-ash: #2c1810;
+  --admin-smoke: #5a3a2a;
+  --admin-sidebar-bg: #0f0d0b;
+  --admin-content-bg: #faf8f5;
+}
+
+// Smooth scrolling
+html {
+  scroll-behavior: smooth;
+}
+
+// Better focus styles for accessibility
+:focus-visible {
+  outline: 2px solid var(--admin-ember);
+  outline-offset: 2px;
+}
+
+// Admin scrollbar styling
+.admin-layout {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.25);
+    }
+  }
+}
+
+// Admin selection color
+.admin-layout ::selection {
+  background: rgba(255, 107, 53, 0.2);
+  color: var(--admin-ash);
+}
