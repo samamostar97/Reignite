@@ -1,0 +1,287 @@
+// Design system colors
+$ember: #ff6b35;
+$flame: #f7931e;
+$ash: #2c1810;
+$smoke: #5a3a2a;
+
+$success-primary: #10b981;
+$success-secondary: #34d399;
+$error-primary: #ef4444;
+$error-secondary: #f87171;
+$warning-primary: #f59e0b;
+$warning-secondary: #fbbf24;
+$info-primary: #3b82f6;
+$info-secondary: #60a5fa;
+
+.notification-container {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 400px;
+  width: calc(100vw - 3rem);
+  pointer-events: none;
+}
+
+.notification {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  pointer-events: auto;
+
+  // Slide in animation
+  animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(100%) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+  }
+
+  // Icon wrapper with animated ring
+  &__icon-wrapper {
+    position: relative;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__icon {
+    position: relative;
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+    animation: iconPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+
+    @keyframes iconPop {
+      from {
+        transform: scale(0);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+  }
+
+  &__icon-ring {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    opacity: 0.3;
+    animation: ringPulse 2s ease-in-out infinite;
+
+    @keyframes ringPulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.3;
+      }
+      50% {
+        transform: scale(1.15);
+        opacity: 0.15;
+      }
+    }
+  }
+
+  // Content
+  &__content {
+    flex: 1;
+    min-width: 0;
+    padding-top: 0.125rem;
+  }
+
+  &__title {
+    margin: 0 0 0.25rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $ash;
+    letter-spacing: 0.01em;
+  }
+
+  &__message {
+    margin: 0;
+    font-size: 0.875rem;
+    color: $smoke;
+    line-height: 1.4;
+  }
+
+  // Close button
+  &__close {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: $smoke;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: -0.25rem -0.25rem 0 0;
+
+    span {
+      font-size: 0.875rem;
+      line-height: 1;
+    }
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+      color: $ash;
+    }
+  }
+
+  // Progress bar
+  &__progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    transform-origin: left;
+    animation: progress 4s linear forwards;
+
+    @keyframes progress {
+      from {
+        transform: scaleX(1);
+      }
+      to {
+        transform: scaleX(0);
+      }
+    }
+  }
+
+  // Type variations
+  &--success {
+    border-left: 4px solid $success-primary;
+
+    .notification__icon {
+      background: linear-gradient(135deg, $success-primary, $success-secondary);
+    }
+
+    .notification__icon-ring {
+      background: $success-primary;
+    }
+
+    .notification__progress {
+      background: linear-gradient(90deg, $success-primary, $success-secondary);
+    }
+  }
+
+  &--error {
+    border-left: 4px solid $error-primary;
+
+    .notification__icon {
+      background: linear-gradient(135deg, $error-primary, $error-secondary);
+    }
+
+    .notification__icon-ring {
+      background: $error-primary;
+    }
+
+    .notification__progress {
+      background: linear-gradient(90deg, $error-primary, $error-secondary);
+      animation-duration: 5s;
+    }
+  }
+
+  &--warning {
+    border-left: 4px solid $warning-primary;
+
+    .notification__icon {
+      background: linear-gradient(135deg, $warning-primary, $warning-secondary);
+    }
+
+    .notification__icon-ring {
+      background: $warning-primary;
+    }
+
+    .notification__progress {
+      background: linear-gradient(90deg, $warning-primary, $warning-secondary);
+    }
+  }
+
+  &--info {
+    border-left: 4px solid $info-primary;
+
+    .notification__icon {
+      background: linear-gradient(135deg, $info-primary, $info-secondary);
+    }
+
+    .notification__icon-ring {
+      background: $info-primary;
+    }
+
+    .notification__progress {
+      background: linear-gradient(90deg, $info-primary, $info-secondary);
+    }
+  }
+}
+
+// Mobile adjustments
+@media (max-width: 480px) {
+  .notification-container {
+    top: 1rem;
+    right: 1rem;
+    left: 1rem;
+    width: auto;
+    max-width: none;
+  }
+
+  .notification {
+    padding: 0.875rem 1rem;
+
+    &__icon-wrapper {
+      width: 36px;
+      height: 36px;
+    }
+
+    &__icon {
+      width: 36px;
+      height: 36px;
+      font-size: 1.125rem;
+    }
+
+    &__title {
+      font-size: 0.9375rem;
+    }
+
+    &__message {
+      font-size: 0.8125rem;
+    }
+  }
+}

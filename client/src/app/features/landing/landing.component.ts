@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { ProjectService } from '../../core/services/project.service';
 import { Product } from '../../core/models/product.model';
@@ -8,7 +9,7 @@ import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-landing',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.scss'
 })
@@ -26,11 +27,10 @@ export class LandingComponent implements OnInit, OnDestroy {
   protected readonly isLoadingProjects = signal(true);
   protected readonly isMobileView = signal(false);
 
-  // Computed carousel transform that responds to mobile/desktop
+  // Computed carousel transform with adjacent items visible
   protected readonly carouselTransform = computed(() => {
     const index = this.currentKitIndex();
     if (this.isMobileView()) {
-      // Mobile: items are 100% width, simple slide (no gap on mobile)
       return `translateX(-${index * 100}%)`;
     }
     // Desktop: items are 60% width with 20% offset for partial visibility
@@ -38,8 +38,9 @@ export class LandingComponent implements OnInit, OnDestroy {
   });
 
   private scrollListener: (() => void) | null = null;
-  private kitCarouselInterval: any = null;
   private resizeListener: (() => void) | null = null;
+  private scrollTicking = false;
+  private viewportHeight = 0;
 
   ngOnInit() {
     // Fetch featured products from API
@@ -54,36 +55,32 @@ export class LandingComponent implements OnInit, OnDestroy {
       }, 600);
     }, 2000);
 
-    // Add scroll listener to detect when user scrolls past hero section
-    this.scrollListener = () => {
-      const scrollPosition = window.scrollY;
-      const viewportHeight = window.innerHeight;
+    // Cache viewport height to avoid reflow on every scroll
+    this.viewportHeight = window.innerHeight;
 
-      // User is on hero section if scroll position is less than 40% of viewport height
-      this.isOnHeroSection.set(scrollPosition < viewportHeight * 0.4);
+    // Add throttled scroll listener using requestAnimationFrame
+    this.scrollListener = () => {
+      if (!this.scrollTicking) {
+        requestAnimationFrame(() => {
+          const scrollPosition = window.scrollY;
+          // User is on hero section if scroll position is less than 40% of viewport height
+          this.isOnHeroSection.set(scrollPosition < this.viewportHeight * 0.4);
+          this.scrollTicking = false;
+        });
+        this.scrollTicking = true;
+      }
     };
 
     window.addEventListener('scroll', this.scrollListener, { passive: true });
 
-    // Add resize listener for mobile detection
+    // Add resize listener for mobile detection and viewport height update
     this.resizeListener = () => {
-      const wasMobile = this.isMobileView();
-      const isMobile = window.innerWidth <= 768;
-      this.isMobileView.set(isMobile);
-
-      // Stop carousel when switching to mobile, start when switching to desktop
-      if (isMobile && !wasMobile) {
-        this.stopKitCarousel();
-      } else if (!isMobile && wasMobile) {
-        this.startKitCarousel();
-      }
+      this.viewportHeight = window.innerHeight;
+      this.isMobileView.set(window.innerWidth <= 768);
     };
     // Set initial value
     this.isMobileView.set(window.innerWidth <= 768);
     window.addEventListener('resize', this.resizeListener, { passive: true });
-
-    // Start kit carousel auto-rotation (only on desktop)
-    this.startKitCarousel();
   }
 
   private loadFeaturedKits() {
@@ -121,41 +118,9 @@ export class LandingComponent implements OnInit, OnDestroy {
     if (this.resizeListener) {
       window.removeEventListener('resize', this.resizeListener);
     }
-    if (this.kitCarouselInterval) {
-      clearInterval(this.kitCarouselInterval);
-    }
   }
 
-  private startKitCarousel() {
-    // Don't auto-rotate on mobile
-    if (this.isMobileView()) {
-      return;
-    }
-    this.stopKitCarousel();
-    this.kitCarouselInterval = setInterval(() => {
-      this.nextKit();
-    }, 3500);
-  }
-
-  private stopKitCarousel() {
-    if (this.kitCarouselInterval) {
-      clearInterval(this.kitCarouselInterval);
-      this.kitCarouselInterval = null;
-    }
-  }
-
-  private restartKitCarousel() {
-    this.stopKitCarousel();
-    setTimeout(() => {
-      this.startKitCarousel();
-    }, 5000);
-  }
-
-  // Simple infinite loop: 0 -> 1 -> 2 -> 0 -> 1 -> 2 ...
-  protected nextKit(isManual = false) {
-    if (isManual) {
-      this.restartKitCarousel();
-    }
+  protected nextKit() {
     const len = this.featuredKits().length;
     if (len > 0) {
       this.currentKitIndex.set((this.currentKitIndex() + 1) % len);
@@ -163,7 +128,6 @@ export class LandingComponent implements OnInit, OnDestroy {
   }
 
   protected previousKit() {
-    this.restartKitCarousel();
     const len = this.featuredKits().length;
     if (len > 0) {
       this.currentKitIndex.set((this.currentKitIndex() - 1 + len) % len);
@@ -171,7 +135,6 @@ export class LandingComponent implements OnInit, OnDestroy {
   }
 
   protected goToKit(index: number) {
-    this.restartKitCarousel();
     this.currentKitIndex.set(index);
   }
 
@@ -180,11 +143,11 @@ export class LandingComponent implements OnInit, OnDestroy {
     return `${environment.baseUrl}${relativePath}`;
   }
 
-  protected readonly embers = Array.from({ length: 40 }, (_, i) => ({
+  protected readonly embers = Array.from({ length: 15 }, (_, i) => ({
     id: i,
     delay: Math.random() * 10,
-    duration: 6 + Math.random() * 8,
+    duration: 8 + Math.random() * 6,
     left: Math.random() * 100,
-    size: 5 + Math.random() * 6
+    size: 4 + Math.random() * 4
   }));
 }
