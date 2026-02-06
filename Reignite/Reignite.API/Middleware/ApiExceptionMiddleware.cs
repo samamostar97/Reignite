@@ -49,9 +49,7 @@ namespace Reignite.API.Middleware
 
             var response = new
             {
-                error = statusCode == HttpStatusCode.InternalServerError
-                    ? "Server error"
-                    : exception.Message,
+                error = exception.Message,
                 statusCode = (int)statusCode
             };
 
@@ -59,4 +57,3 @@ namespace Reignite.API.Middleware
         }
     }
 }
-

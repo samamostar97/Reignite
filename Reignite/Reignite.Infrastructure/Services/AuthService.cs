@@ -3,11 +3,14 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Reignite.Application.DTOs.Request;
 using Reignite.Application.DTOs.Response;
 using Reignite.Application.Exceptions;
+using Reignite.Application.IRepositories;
 using Reignite.Application.IServices;
+using Reignite.Application.Options;
 using Reignite.Core.Entities;
 using Reignite.Infrastructure.Data;
 
@@ -16,21 +19,17 @@ namespace Reignite.Infrastructure.Services
     public class AuthService : IAuthService
     {
         private readonly ReigniteDbContext _context;
-        private readonly string _jwtSecret;
-        private readonly string _jwtIssuer;
-        private readonly string _jwtAudience;
-        private const int AccessTokenExpiryHours = 24;
-        private const int RefreshTokenExpiryDays = 7;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly JwtSettings _jwtSettings;
 
-        public AuthService(ReigniteDbContext context)
+        public AuthService(
+            ReigniteDbContext context,
+            IRefreshTokenRepository refreshTokenRepository,
+            IOptions<JwtSettings> jwtSettings)
         {
             _context = context;
-            _jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET")
-                ?? throw new InvalidOperationException("JWT_SECRET nije konfigurisan");
-            _jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER")
-                ?? "Reignite";
-            _jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE")
-                ?? "ReigniteApp";
+            _refreshTokenRepository = refreshTokenRepository;
+            _jwtSettings = jwtSettings.Value;
         }
 
         public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
@@ -78,20 +77,12 @@ namespace Reignite.Infrastructure.Services
         public async Task<AuthResponse> RefreshTokenAsync(RefreshRequest request)
         {
             var refreshTokenHash = HashRefreshToken(request.RefreshToken);
-            var refreshToken = await _context.RefreshTokens
-                .Include(rt => rt.User)
-                .FirstOrDefaultAsync(rt => rt.Token == refreshTokenHash);
+            var refreshToken = await _refreshTokenRepository.GetByTokenHashAsync(refreshTokenHash);
 
+            // Fallback for unhashed tokens (migration support)
             if (refreshToken == null)
             {
-                refreshToken = await _context.RefreshTokens
-                    .Include(rt => rt.User)
-                    .FirstOrDefaultAsync(rt => rt.Token == request.RefreshToken);
-
-                if (refreshToken != null)
-                {
-                    refreshToken.Token = refreshTokenHash;
-                }
+                refreshToken = await _refreshTokenRepository.GetByTokenHashAsync(request.RefreshToken);
             }
 
             if (refreshToken == null)
@@ -101,15 +92,12 @@ namespace Reignite.Infrastructure.Services
 
             if (!refreshToken.IsActive)
             {
-                throw new UnauthorizedAccessException("Refresh token je istekao ili je poni?ten.");
+                throw new UnauthorizedAccessException("Refresh token je istekao ili je ponisten.");
             }
 
             await using var transaction = await _context.Database.BeginTransactionAsync();
 
-            refreshToken.RevokedAt = DateTime.UtcNow;
-            _context.RefreshTokens.Update(refreshToken);
-            await _context.SaveChangesAsync();
-
+            await _refreshTokenRepository.RevokeAsync(refreshToken);
             var response = await GenerateAuthResponse(refreshToken.User);
 
             await transaction.CommitAsync();
@@ -128,7 +116,7 @@ namespace Reignite.Infrastructure.Services
             {
                 AccessToken = accessToken,
                 RefreshToken = rawRefreshToken,
-                ExpiresAt = DateTime.UtcNow.AddHours(AccessTokenExpiryHours),
+                ExpiresAt = DateTime.UtcNow.AddHours(_jwtSettings.AccessTokenExpirationHours),
                 User = new UserAuthResponse
                 {
                     Id = user.Id,
@@ -142,7 +130,7 @@ namespace Reignite.Infrastructure.Services
 
         private string GenerateAccessToken(User user)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecret));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
@@ -155,10 +143,10 @@ namespace Reignite.Infrastructure.Services
             };
 
             var token = new JwtSecurityToken(
-                issuer: _jwtIssuer,
-                audience: _jwtAudience,
+                issuer: _jwtSettings.Issuer,
+                audience: _jwtSettings.Audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(AccessTokenExpiryHours),
+                expires: DateTime.UtcNow.AddHours(_jwtSettings.AccessTokenExpirationHours),
                 signingCredentials: credentials
             );
 
@@ -172,7 +160,7 @@ namespace Reignite.Infrastructure.Services
 
         private string HashRefreshToken(string token)
         {
-            using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(_jwtSecret));
+            using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
             var hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(token));
             return Convert.ToBase64String(hashBytes);
         }
@@ -183,12 +171,11 @@ namespace Reignite.Infrastructure.Services
             {
                 Token = HashRefreshToken(rawToken),
                 UserId = userId,
-                ExpiresAt = DateTime.UtcNow.AddDays(RefreshTokenExpiryDays),
+                ExpiresAt = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpirationDays),
                 CreatedAt = DateTime.UtcNow
             };
 
-            _context.RefreshTokens.Add(refreshToken);
-            await _context.SaveChangesAsync();
+            await _refreshTokenRepository.AddAsync(refreshToken);
         }
     }
 }

@@ -33,9 +33,7 @@ export interface ProjectResponse {
 export interface ProjectQueryFilter extends PaginationRequest {
   search?: string;
   orderBy?: string;
-  userId?: number;
   hobbyId?: number;
-  productId?: number;
 }
 
 // Request DTOs - match backend

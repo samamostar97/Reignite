@@ -20,14 +20,15 @@ export class ProjectService {
       if (filter.pageSize) params = params.set('pageSize', filter.pageSize.toString());
       if (filter.search) params = params.set('search', filter.search);
       if (filter.orderBy) params = params.set('orderBy', filter.orderBy);
+      if (filter.hobbyId) params = params.set('hobbyId', filter.hobbyId.toString());
     }
 
     return this.http.get<PagedResult<ProjectResponse>>(this.apiUrl, { params });
   }
 
-  getTopRatedProjects(count: number = 3): Observable<ProjectResponse[]> {
-    return this.http.get<ProjectResponse[]>(`${this.apiUrl}/top-rated`, {
-      params: { count: count.toString() }
+  getTopRatedProjects(pageNumber: number = 1, pageSize: number = 3): Observable<PagedResult<ProjectResponse>> {
+    return this.http.get<PagedResult<ProjectResponse>>(`${this.apiUrl}/top-rated`, {
+      params: { pageNumber: pageNumber.toString(), pageSize: pageSize.toString() }
     });
   }
 
