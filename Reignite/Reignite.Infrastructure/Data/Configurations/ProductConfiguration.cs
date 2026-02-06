@@ -47,7 +47,7 @@ namespace Reignite.Infrastructure.Data.Configurations
                 new Product { Id = 12, Name = "Keramičarski starter kit", Price = 165.00m, Description = "Početni set za keramiku: 2kg gline, alati za modeliranje i upute.", ProductCategoryId = 3, SupplierId = 2, ProductImageUrl = "https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?w=400", CreatedAt = seedDate },
 
                 // Pribor za Radionicu (Category 4)
-                new Product { Id = 13, Name = "Radionička pregača kožna", Price = 65.00m, Description = "Zaštitna pregača od prave goveđe kože sa 4 džepa za alat.", ProductCategoryId = 4, SupplierId = 1, ProductImageUrl = "https://images.unsplash.com/photo-1556909114-44e3e9699e2b?w=400", CreatedAt = seedDate },
+                new Product { Id = 13, Name = "Radionička pregača kožna", Price = 65.00m, Description = "Zaštitna pregača od prave goveđe kože sa 4 džepa za alat.", ProductCategoryId = 4, SupplierId = 1, ProductImageUrl = "https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=400", CreatedAt = seedDate },
                 new Product { Id = 14, Name = "Stega stolarska 300mm", Price = 28.75m, Description = "Brzo-stezna stolarska stega sa čeljustima od 300mm, pritisak do 200kg.", ProductCategoryId = 4, SupplierId = 1, ProductImageUrl = "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400", CreatedAt = seedDate },
                 new Product { Id = 15, Name = "Brusni papir set 50 kom", Price = 19.90m, Description = "Mješoviti set brusnih papira: granulacija 80, 120, 180, 240 i 320.", ProductCategoryId = 4, SupplierId = 3, ProductImageUrl = "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400", CreatedAt = seedDate }
             );

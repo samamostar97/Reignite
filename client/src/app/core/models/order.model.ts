@@ -34,3 +34,13 @@ export interface OrderQueryFilter extends PaginationRequest {
   userId?: number;
   status?: OrderStatus;
 }
+
+export interface CreateOrderItemRequest {
+  productId: number;
+  quantity: number;
+}
+
+export interface CreateOrderRequest {
+  userId: number;
+  items: CreateOrderItemRequest[];
+}

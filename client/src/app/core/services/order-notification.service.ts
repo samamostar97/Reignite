@@ -12,9 +12,11 @@ export class OrderNotificationService {
   private readonly _notifications = signal<OrderResponse[]>([]);
   private readonly _isLoading = signal(false);
   private readonly _lastSeenOrderId = signal<number>(this.getStoredLastSeenId());
+  private readonly _showCallout = signal(false);
 
   readonly notifications = this._notifications.asReadonly();
   readonly isLoading = this._isLoading.asReadonly();
+  readonly showCallout = this._showCallout.asReadonly();
 
   readonly unreadCount = computed(() => {
     const lastSeenId = this._lastSeenOrderId();
@@ -47,6 +49,16 @@ export class OrderNotificationService {
       this._lastSeenOrderId.set(latestId);
       localStorage.setItem(this.LAST_SEEN_KEY, latestId.toString());
     }
+  }
+
+  triggerNewOrderCallout(): void {
+    this._showCallout.set(true);
+    this.loadNotifications();
+    setTimeout(() => this._showCallout.set(false), 4000);
+  }
+
+  hideCallout(): void {
+    this._showCallout.set(false);
   }
 
   private getStoredLastSeenId(): number {

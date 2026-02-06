@@ -156,7 +156,7 @@ namespace Reignite.Infrastructure.Services
                 TotalAmount = o.TotalAmount,
                 PurchaseDate = o.PurchaseDate,
                 Status = o.Status.ToString(),
-                ItemCount = o.OrderItems?.Count ?? 0
+                ItemCount = o.OrderItems?.Sum(oi => oi.Quantity) ?? 0
             }).ToList();
         }
 

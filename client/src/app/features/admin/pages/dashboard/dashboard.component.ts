@@ -6,7 +6,11 @@ import { CategoryService } from '../../../../core/services/category.service';
 import { ProjectService } from '../../../../core/services/project.service';
 import { UserService } from '../../../../core/services/user.service';
 import { ActivityService } from '../../../../core/services/activity.service';
+import { OrderService } from '../../../../core/services/order.service';
+import { OrderNotificationService } from '../../../../core/services/order-notification.service';
 import { ActivityResponse, ActivityType } from '../../../../core/models/activity.model';
+import { CreateOrderRequest } from '../../../../core/models/order.model';
+import { CreateProjectRequest } from '../../../../core/models/project.model';
 import { environment } from '../../../../../environments/environment';
 
 interface StatCard {
@@ -34,11 +38,29 @@ export class DashboardComponent implements OnInit {
   private readonly projectService = inject(ProjectService);
   private readonly userService = inject(UserService);
   private readonly activityService = inject(ActivityService);
+  private readonly orderService = inject(OrderService);
+  private readonly orderNotificationService = inject(OrderNotificationService);
 
   protected readonly ActivityType = ActivityType;
   protected readonly activities = signal<ActivityResponse[]>([]);
   protected readonly isLoadingActivity = signal(true);
   protected readonly selectedActivityType = signal<ActivityType | null>(null);
+
+  // Dev tools state
+  protected readonly isCreatingOrder = signal(false);
+  protected readonly isCreatingProject = signal(false);
+  protected readonly devMessage = signal<{ type: 'success' | 'error'; text: string } | null>(null);
+  protected readonly showLoadingOverlay = signal(false);
+
+  // Valid IDs from seed data (to avoid FK violations)
+  private readonly VALID_USER_IDS = [2, 3, 4]; // Skip admin (1)
+  private readonly VALID_PRODUCT_IDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+  private readonly VALID_HOBBY_IDS = [1, 2, 3, 4, 5, 6];
+  private readonly PROJECT_TITLES = [
+    'Drvena kutija za nakit', 'Kožna torbica', 'Keramička vaza',
+    'Ručno rezbarena figura', 'Metalna skulptura', 'Drvena polica',
+    'Kožni remen', 'Keramička zdjela', 'Drveni okvir za sliku'
+  ];
 
   protected readonly stats = signal<StatCard[]>([
     {
@@ -206,5 +228,107 @@ export class DashboardComponent implements OnInit {
     const updated = [...currentStats];
     updated[index] = { ...updated[index], value, loading: false };
     this.stats.set(updated);
+  }
+
+  // Dev tools methods
+  protected createTestOrder(): void {
+    if (this.isCreatingOrder()) return;
+
+    this.isCreatingOrder.set(true);
+    this.showLoadingOverlay.set(true);
+    this.devMessage.set(null);
+
+    const request: CreateOrderRequest = this.generateRandomOrder();
+
+    this.orderService.createTestOrder(request).subscribe({
+      next: (order) => {
+        this.isCreatingOrder.set(false);
+        this.devMessage.set({ type: 'success', text: `Narudžba #${order.id} kreirana!` });
+        this.loadStats();
+        // Trigger the notification callout on the topbar
+        this.orderNotificationService.triggerNewOrderCallout();
+        // Hide overlay after delay so user can see the success message
+        setTimeout(() => this.showLoadingOverlay.set(false), 1500);
+        setTimeout(() => this.devMessage.set(null), 4000);
+      },
+      error: (err) => {
+        this.isCreatingOrder.set(false);
+        this.showLoadingOverlay.set(false);
+        this.devMessage.set({ type: 'error', text: 'Greška pri kreiranju narudžbe' });
+        console.error('Error creating test order:', err);
+        setTimeout(() => this.devMessage.set(null), 3000);
+      }
+    });
+  }
+
+  protected createTestProject(): void {
+    if (this.isCreatingProject()) return;
+
+    this.isCreatingProject.set(true);
+    this.showLoadingOverlay.set(true);
+    this.devMessage.set(null);
+
+    const request: CreateProjectRequest = this.generateRandomProject();
+
+    this.projectService.createProject(request).subscribe({
+      next: (project) => {
+        this.isCreatingProject.set(false);
+        this.devMessage.set({ type: 'success', text: `Projekat "${project.title}" kreiran!` });
+        this.loadStats();
+        this.loadActivity();
+        // Hide overlay after delay so user can see the success message
+        setTimeout(() => this.showLoadingOverlay.set(false), 1500);
+        setTimeout(() => this.devMessage.set(null), 4000);
+      },
+      error: (err) => {
+        this.isCreatingProject.set(false);
+        this.showLoadingOverlay.set(false);
+        this.devMessage.set({ type: 'error', text: 'Greška pri kreiranju projekta' });
+        console.error('Error creating test project:', err);
+        setTimeout(() => this.devMessage.set(null), 3000);
+      }
+    });
+  }
+
+  private generateRandomOrder(): CreateOrderRequest {
+    const userId = this.randomFrom(this.VALID_USER_IDS);
+    const itemCount = Math.floor(Math.random() * 3) + 1; // 1-3 items
+    const usedProducts = new Set<number>();
+    const items = [];
+
+    for (let i = 0; i < itemCount; i++) {
+      let productId: number;
+      do {
+        productId = this.randomFrom(this.VALID_PRODUCT_IDS);
+      } while (usedProducts.has(productId));
+      usedProducts.add(productId);
+
+      items.push({
+        productId,
+        quantity: Math.floor(Math.random() * 3) + 1 // 1-3 quantity
+      });
+    }
+
+    return { userId, items };
+  }
+
+  private generateRandomProject(): CreateProjectRequest {
+    const userId = this.randomFrom(this.VALID_USER_IDS);
+    const hobbyId = this.randomFrom(this.VALID_HOBBY_IDS);
+    const baseTitle = this.randomFrom(this.PROJECT_TITLES);
+    const title = `${baseTitle} #${Date.now().toString(36)}`; // Unique suffix
+
+    return {
+      title,
+      userId,
+      hobbyId,
+      description: 'Test projekat kreiran putem admin panela za testiranje.',
+      hoursSpent: Math.floor(Math.random() * 20) + 1,
+      productId: Math.random() > 0.5 ? this.randomFrom(this.VALID_PRODUCT_IDS) : undefined
+    };
+  }
+
+  private randomFrom<T>(arr: T[]): T {
+    return arr[Math.floor(Math.random() * arr.length)];
   }
 }

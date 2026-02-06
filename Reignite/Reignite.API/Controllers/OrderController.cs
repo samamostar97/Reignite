@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Reignite.Application.Common;
+using Reignite.Application.DTOs.Request;
 using Reignite.Application.DTOs.Response;
 using Reignite.Application.Filters;
 using Reignite.Application.IServices;
@@ -31,6 +32,13 @@ namespace Reignite.API.Controllers
         {
             var order = await _orderService.GetByIdAsync(id);
             return Ok(order);
+        }
+
+        [HttpPost("test")]
+        public async Task<ActionResult<OrderResponse>> CreateTestOrder([FromBody] CreateOrderRequest request)
+        {
+            var order = await _orderService.CreateTestOrderAsync(request);
+            return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
         }
     }
 }
