@@ -181,6 +181,12 @@ namespace Reignite.Infrastructure.Services
             }
         }
 
+        protected override async Task BeforeDeleteAsync(Project entity)
+        {
+            if (!string.IsNullOrEmpty(entity.ImageUrl))
+                await _fileStorageService.DeleteAsync(entity.ImageUrl);
+        }
+
         protected override async Task AfterCreateAsync(Project entity, CreateProjectRequest dto)
         {
             await LoadNavigationPropertiesAsync(entity);

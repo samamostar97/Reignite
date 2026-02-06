@@ -90,6 +90,12 @@ namespace Reignite.Infrastructure.Services
             return query;
         }
 
+        protected override async Task BeforeDeleteAsync(Product entity)
+        {
+            if (!string.IsNullOrEmpty(entity.ProductImageUrl))
+                await _fileStorageService.DeleteAsync(entity.ProductImageUrl);
+        }
+
         protected override async Task AfterUpdateAsync(Product entity, UpdateProductRequest dto)
         {
             var loaded = await _repository.AsQueryable()

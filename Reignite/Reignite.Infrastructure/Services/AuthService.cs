@@ -19,12 +19,12 @@ namespace Reignite.Infrastructure.Services
     public class AuthService : IAuthService
     {
         private readonly ReigniteDbContext _context;
-        private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IRepository<RefreshToken, int> _refreshTokenRepository;
         private readonly JwtSettings _jwtSettings;
 
         public AuthService(
             ReigniteDbContext context,
-            IRefreshTokenRepository refreshTokenRepository,
+            IRepository<RefreshToken, int> refreshTokenRepository,
             IOptions<JwtSettings> jwtSettings)
         {
             _context = context;
@@ -77,12 +77,16 @@ namespace Reignite.Infrastructure.Services
         public async Task<AuthResponse> RefreshTokenAsync(RefreshRequest request)
         {
             var refreshTokenHash = HashRefreshToken(request.RefreshToken);
-            var refreshToken = await _refreshTokenRepository.GetByTokenHashAsync(refreshTokenHash);
+            var refreshToken = await _refreshTokenRepository.AsQueryable()
+                .Include(rt => rt.User)
+                .FirstOrDefaultAsync(rt => rt.Token == refreshTokenHash);
 
             // Fallback for unhashed tokens (migration support)
             if (refreshToken == null)
             {
-                refreshToken = await _refreshTokenRepository.GetByTokenHashAsync(request.RefreshToken);
+                refreshToken = await _refreshTokenRepository.AsQueryable()
+                    .Include(rt => rt.User)
+                    .FirstOrDefaultAsync(rt => rt.Token == request.RefreshToken);
             }
 
             if (refreshToken == null)
@@ -95,14 +99,10 @@ namespace Reignite.Infrastructure.Services
                 throw new UnauthorizedAccessException("Refresh token je istekao ili je ponisten.");
             }
 
-            await using var transaction = await _context.Database.BeginTransactionAsync();
+            refreshToken.RevokedAt = DateTime.UtcNow;
+            await _refreshTokenRepository.UpdateAsync(refreshToken);
 
-            await _refreshTokenRepository.RevokeAsync(refreshToken);
-            var response = await GenerateAuthResponse(refreshToken.User);
-
-            await transaction.CommitAsync();
-
-            return response;
+            return await GenerateAuthResponse(refreshToken.User);
         }
 
         private async Task<AuthResponse> GenerateAuthResponse(User user)

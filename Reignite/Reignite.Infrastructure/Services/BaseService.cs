@@ -101,8 +101,9 @@ namespace Reignite.Infrastructure.Services
         protected virtual Task BeforePagedAsync(IQueryable<T> query) => Task.CompletedTask;
         protected virtual Task AfterPagedAsync(List<T> entities) => Task.CompletedTask;
 
+        protected virtual Task BeforeGetAsync(T entity) => Task.CompletedTask;
+
         protected virtual Task AfterGetAsync(T entity) => Task.CompletedTask;
-        protected virtual Task AfterGetAllAsync(IEnumerable<T> entities) => Task.CompletedTask;
     }
 }
 
