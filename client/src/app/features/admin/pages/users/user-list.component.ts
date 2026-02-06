@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { UserService } from '../../../../core/services/user.service';
 import { UserResponse, UserRole } from '../../../../core/models/user.model';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-user-list',
@@ -91,6 +92,14 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   protected getInitials(user: UserResponse): string {
     return `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
+  }
+
+  protected getImageUrl(path: string | null): string {
+    if (!path) return '';
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return path;
+    }
+    return `${environment.baseUrl}${path}`;
   }
 
   protected formatDate(dateString: string): string {

@@ -38,7 +38,7 @@ export class SidebarComponent {
 
   protected readonly managementNavItems: NavItem[] = [
     { label: 'Korisnici', route: '/admin/users', icon: 'users' },
-    { label: 'Narudžbe', route: '/admin/orders', icon: 'clipboard', placeholder: true },
+    { label: 'Narudžbe', route: '/admin/orders', icon: 'shopping-bag' },
   ];
 
   protected toggleCollapse(): void {

@@ -444,3 +444,164 @@ $smoke: #5a3a2a;
     font-size: 0.95rem;
   }
 }
+
+.activity-loading {
+  background: #fff;
+  border-radius: 14px;
+  padding: 3rem 2rem;
+  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba($ember, 0.15);
+    border-top-color: $ember;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 1rem;
+  }
+
+  p {
+    color: $smoke;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Orders list
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.order-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: rgba($ember, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  }
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+}
+
+.order-user {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  flex: 1;
+  min-width: 200px;
+
+  .user-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, $ember 0%, $flame 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .user-avatar-img {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .user-name {
+    font-weight: 600;
+    color: $ash;
+    font-size: 0.95rem;
+  }
+
+  .order-date {
+    font-size: 0.8rem;
+    color: $smoke;
+  }
+}
+
+.order-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+  min-width: 120px;
+
+  .order-items {
+    font-size: 0.85rem;
+    color: $smoke;
+  }
+
+  .order-amount {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: $ash;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+    flex: 1;
+  }
+}
+
+.order-status {
+  min-width: 120px;
+  display: flex;
+  justify-content: flex-end;
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    &.status-processing {
+      background: rgba($flame, 0.12);
+      color: darken($flame, 10%);
+      border: 1px solid rgba($flame, 0.25);
+    }
+
+    &.status-delivery {
+      background: rgba(16, 185, 129, 0.12);
+      color: #059669;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+  }
+}

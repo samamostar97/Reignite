@@ -255,6 +255,14 @@ $smoke: #5a3a2a;
     flex-shrink: 0;
   }
 
+  .user-avatar-img {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
   .user-info {
     display: flex;
     flex-direction: column;
