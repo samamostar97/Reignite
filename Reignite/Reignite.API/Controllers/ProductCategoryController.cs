@@ -11,6 +11,7 @@ namespace Reignite.API.Controllers
 {
     [ApiController]
     [Route("api/productcategory")]
+    [Authorize(Roles ="Admin")]
     public class ProductCategoryController : BaseController<ProductCategory, ProductCategoryResponse, CreateProductCategoryRequest, UpdateProductCategoryRequest, ProductCategoryQueryFilter, int>
     {
         private readonly IProductCategoryService _productCategoryService;

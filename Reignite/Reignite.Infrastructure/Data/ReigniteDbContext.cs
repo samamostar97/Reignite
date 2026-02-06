@@ -17,7 +17,7 @@ namespace Reignite.Infrastructure.Data
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<Review> Reviews { get; set; }
+        public DbSet<ProductReview> ProductReviews { get; set; }
         public DbSet<Coupon> Coupons { get; set; }
         public DbSet<Faq> Faqs { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }

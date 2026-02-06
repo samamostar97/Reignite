@@ -8,6 +8,7 @@ import { ProjectListComponent } from './pages/projects/project-list.component';
 import { UserListComponent } from './pages/users/user-list.component';
 import { UserFormComponent } from './pages/users/user-form/user-form.component';
 import { OrderListComponent } from './pages/orders/order-list.component';
+import { ReviewListComponent } from './pages/reviews/review-list.component';
 
 export const adminRoutes: Routes = [
   {
@@ -21,6 +22,7 @@ export const adminRoutes: Routes = [
       { path: 'products/:id/edit', component: ProductFormComponent },
       { path: 'categories', component: CategoryListComponent },
       { path: 'projects', component: ProjectListComponent },
+      { path: 'reviews', component: ReviewListComponent },
       { path: 'users', component: UserListComponent },
       { path: 'users/new', component: UserFormComponent },
       { path: 'users/:id/edit', component: UserFormComponent },

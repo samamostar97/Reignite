@@ -34,6 +34,7 @@ export class SidebarComponent {
     { label: 'Proizvodi', route: '/admin/products', icon: 'cube' },
     { label: 'Kategorije', route: '/admin/categories', icon: 'tag' },
     { label: 'Projekti', route: '/admin/projects', icon: 'photo' },
+    { label: 'Recenzije', route: '/admin/reviews', icon: 'star' },
   ];
 
   protected readonly managementNavItems: NavItem[] = [
