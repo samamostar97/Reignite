@@ -776,3 +776,226 @@ $smoke: #5a3a2a;
     }
   }
 }
+
+// Dev Tools Section
+$warning: #f59e0b;
+
+.dev-tools {
+  background: #fffbeb;
+  border: 2px dashed rgba($warning, 0.4);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+
+  .dev-tools-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: darken($warning, 15%);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      .warning-icon {
+        width: 20px;
+        height: 20px;
+        color: $warning;
+      }
+    }
+  }
+
+  .dev-message {
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.4rem 0.85rem;
+    border-radius: 20px;
+    animation: fadeIn 0.2s ease-out;
+
+    &.success {
+      background: rgba(16, 185, 129, 0.15);
+      color: #059669;
+    }
+
+    &.error {
+      background: rgba(239, 68, 68, 0.15);
+      color: #dc2626;
+    }
+  }
+}
+
+.dev-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dev-action-card {
+  background: #fff;
+  border: 1px solid rgba($warning, 0.25);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+
+  &:hover:not(:disabled) {
+    border-color: $warning;
+    box-shadow: 0 4px 12px rgba($warning, 0.15);
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  .dev-action-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: rgba($warning, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    svg {
+      width: 22px;
+      height: 22px;
+      color: darken($warning, 10%);
+    }
+
+    .spinner-small {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba($warning, 0.2);
+      border-top-color: $warning;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+  }
+
+  .dev-action-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .dev-action-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $ash;
+  }
+
+  .dev-action-desc {
+    font-size: 0.8rem;
+    color: $smoke;
+  }
+}
+
+// Loading overlay for test actions
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: overlay-fade-in 0.2s ease-out;
+
+  &.success {
+    animation: overlay-fade-in 0.2s ease-out, overlay-success 0.3s ease-out 0.1s forwards;
+  }
+
+  &.error {
+    animation: overlay-fade-in 0.2s ease-out;
+  }
+}
+
+@keyframes overlay-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes overlay-success {
+  0% { background: rgba(255, 255, 255, 0.92); }
+  50% { background: rgba(16, 185, 129, 0.08); }
+  100% { background: rgba(255, 255, 255, 0.92); }
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  animation: content-bounce 0.4s ease-out;
+
+  span {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $ash;
+  }
+}
+
+@keyframes content-bounce {
+  0% { opacity: 0; transform: scale(0.9) translateY(10px); }
+  60% { transform: scale(1.02) translateY(-2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid rgba($ember, 0.15);
+  border-top-color: $ember;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.loading-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: icon-pop 0.4s ease-out;
+
+  svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  &.success {
+    background: rgba(16, 185, 129, 0.15);
+    color: #059669;
+  }
+
+  &.error {
+    background: rgba(239, 68, 68, 0.15);
+    color: #dc2626;
+  }
+}
+
+@keyframes icon-pop {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}

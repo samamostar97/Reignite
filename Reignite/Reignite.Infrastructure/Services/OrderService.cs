@@ -1,22 +1,29 @@
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Reignite.Application.Common;
+using Reignite.Application.DTOs.Request;
 using Reignite.Application.DTOs.Response;
 using Reignite.Application.Filters;
 using Reignite.Application.IRepositories;
 using Reignite.Application.IServices;
 using Reignite.Core.Entities;
+using Reignite.Core.Enums;
 
 namespace Reignite.Infrastructure.Services
 {
     public class OrderService : IOrderService
     {
         private readonly IRepository<Order, int> _orderRepository;
+        private readonly IRepository<Product, int> _productRepository;
         private readonly IMapper _mapper;
 
-        public OrderService(IRepository<Order, int> repository, IMapper mapper)
+        public OrderService(
+            IRepository<Order, int> repository,
+            IRepository<Product, int> productRepository,
+            IMapper mapper)
         {
             _orderRepository = repository;
+            _productRepository = productRepository;
             _mapper = mapper;
         }
 
@@ -56,6 +63,46 @@ namespace Reignite.Infrastructure.Services
                 throw new KeyNotFoundException("Narudžba nije pronađena");
 
             return MapToResponse(order);
+        }
+
+        public async Task<OrderResponse> CreateTestOrderAsync(CreateOrderRequest request)
+        {
+            // Get product prices for calculating total
+            var productIds = request.Items.Select(i => i.ProductId).Distinct().ToList();
+            var products = await _productRepository.AsQueryable()
+                .Where(p => productIds.Contains(p.Id))
+                .ToDictionaryAsync(p => p.Id, p => p.Price);
+
+            // Validate all products exist
+            var missingProducts = productIds.Where(id => !products.ContainsKey(id)).ToList();
+            if (missingProducts.Any())
+                throw new KeyNotFoundException($"Proizvodi nisu pronađeni: {string.Join(", ", missingProducts)}");
+
+            // Create order items with prices
+            var orderItems = request.Items.Select(item => new OrderItem
+            {
+                ProductId = item.ProductId,
+                Quantity = item.Quantity,
+                UnitPrice = products[item.ProductId]
+            }).ToList();
+
+            // Calculate total amount
+            var totalAmount = orderItems.Sum(oi => oi.Quantity * oi.UnitPrice);
+
+            // Create order
+            var order = new Order
+            {
+                UserId = request.UserId,
+                TotalAmount = totalAmount,
+                PurchaseDate = DateTime.UtcNow,
+                Status = OrderStatus.Processing,
+                OrderItems = orderItems
+            };
+
+            await _orderRepository.AddAsync(order);
+
+            // Reload with navigation properties
+            return await GetByIdAsync(order.Id);
         }
 
         private IQueryable<Order> ApplyFilter(IQueryable<Order> query, OrderQueryFilter filter)
@@ -107,7 +154,7 @@ namespace Reignite.Infrastructure.Services
                 TotalAmount = order.TotalAmount,
                 PurchaseDate = order.PurchaseDate,
                 Status = order.Status,
-                ItemCount = order.OrderItems?.Count ?? 0,
+                ItemCount = order.OrderItems?.Sum(oi => oi.Quantity) ?? 0,
                 Items = order.OrderItems?.Select(oi => new OrderItemResponse
                 {
                     Id = oi.Id,

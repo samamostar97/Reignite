@@ -167,6 +167,83 @@ $smoke: #5a3a2a;
   position: relative;
 }
 
+// Pulse animation for notification button
+.icon-btn.pulse-ring {
+  animation: pulse-ring 1.5s ease-out infinite;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 14px;
+    background: rgba($ember, 0.3);
+    animation: pulse-scale 1.5s ease-out infinite;
+    z-index: -1;
+  }
+}
+
+@keyframes pulse-ring {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes pulse-scale {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+// Floating callout tooltip
+.notification-callout {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: -20px;
+  background: linear-gradient(135deg, $ember 0%, $flame 100%);
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba($ember, 0.4);
+  cursor: pointer;
+  animation: callout-bounce 0.5s ease-out, callout-float 2s ease-in-out infinite 0.5s;
+  z-index: 200;
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .callout-arrow {
+    position: absolute;
+    top: -8px;
+    right: 30px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid $ember;
+  }
+
+  &:hover {
+    transform: translateY(2px) scale(1.02);
+  }
+}
+
+@keyframes callout-bounce {
+  0% { opacity: 0; transform: translateY(-10px) scale(0.9); }
+  60% { transform: translateY(4px) scale(1.02); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes callout-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
 .notification-menu {
   position: absolute;
   top: calc(100% + 8px);

@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { PagedResult } from '../models/common.model';
-import { OrderResponse, OrderQueryFilter } from '../models/order.model';
+import { OrderResponse, OrderQueryFilter, CreateOrderRequest } from '../models/order.model';
 
 @Injectable({
   providedIn: 'root'
@@ -27,5 +27,9 @@ export class OrderService {
 
   getOrderById(id: number): Observable<OrderResponse> {
     return this.http.get<OrderResponse>(`${this.apiUrl}/${id}`);
+  }
+
+  createTestOrder(request: CreateOrderRequest): Observable<OrderResponse> {
+    return this.http.post<OrderResponse>(`${this.apiUrl}/test`, request);
   }
 }

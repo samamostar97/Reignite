@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { PagedResult } from '../models/common.model';
-import { ProjectResponse, ProjectQueryFilter } from '../models/project.model';
+import { ProjectResponse, ProjectQueryFilter, CreateProjectRequest } from '../models/project.model';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +37,10 @@ export class ProjectService {
 
   deleteProject(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  createProject(request: CreateProjectRequest): Observable<ProjectResponse> {
+    return this.http.post<ProjectResponse>(this.apiUrl, request);
   }
 
   uploadProjectImage(id: number, file: File): Observable<{ fileUrl: string }> {
