@@ -48,10 +48,10 @@ namespace Reignite.Infrastructure.Services
                     Title = "Nova recenzija proizvoda",
                     Description = r.Comment ?? string.Empty,
                     Rating = r.Rating,
-                    UserName = $"{r.User.FirstName} {r.User.LastName}",
-                    UserProfileImageUrl = r.User.ProfileImageUrl,
-                    TargetName = r.Product.Name,
-                    TargetImageUrl = r.Product.ProductImageUrl,
+                    UserName = r.User != null ? $"{r.User.FirstName} {r.User.LastName}" : "Nepoznat korisnik",
+                    UserProfileImageUrl = r.User?.ProfileImageUrl,
+                    TargetName = r.Product?.Name ?? "Nepoznat proizvod",
+                    TargetImageUrl = r.Product?.ProductImageUrl,
                     TargetId = r.ProductId,
                     CreatedAt = r.CreatedAt
                 }));
@@ -72,10 +72,10 @@ namespace Reignite.Infrastructure.Services
                     Title = "Nova recenzija projekta",
                     Description = r.Comment ?? string.Empty,
                     Rating = r.Rating,
-                    UserName = $"{r.User.FirstName} {r.User.LastName}",
-                    UserProfileImageUrl = r.User.ProfileImageUrl,
-                    TargetName = r.Project.Title,
-                    TargetImageUrl = r.Project.ImageUrl,
+                    UserName = r.User != null ? $"{r.User.FirstName} {r.User.LastName}" : "Nepoznat korisnik",
+                    UserProfileImageUrl = r.User?.ProfileImageUrl,
+                    TargetName = r.Project?.Title ?? "Nepoznat projekat",
+                    TargetImageUrl = r.Project?.ImageUrl,
                     TargetId = r.ProjectId,
                     CreatedAt = r.CreatedAt
                 }));
@@ -96,9 +96,9 @@ namespace Reignite.Infrastructure.Services
                     Title = "Novi projekat",
                     Description = p.Title,
                     Rating = null,
-                    UserName = $"{p.User.FirstName} {p.User.LastName}",
-                    UserProfileImageUrl = p.User.ProfileImageUrl,
-                    TargetName = p.Hobby.Name,
+                    UserName = p.User != null ? $"{p.User.FirstName} {p.User.LastName}" : "Nepoznat korisnik",
+                    UserProfileImageUrl = p.User?.ProfileImageUrl,
+                    TargetName = p.Hobby?.Name ?? "Nepoznat hobi",
                     TargetImageUrl = p.ImageUrl,
                     TargetId = p.Id,
                     CreatedAt = p.CreatedAt

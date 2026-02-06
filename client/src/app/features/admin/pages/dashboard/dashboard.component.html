@@ -123,7 +123,35 @@
   </div>
 
   <div class="recent-activity">
-    <h3>Nedavna Aktivnost</h3>
+    <div class="activity-header">
+      <h3>Nedavna Aktivnost</h3>
+      <div class="activity-filters">
+        <button
+          class="filter-btn"
+          [class.active]="selectedActivityType() === null"
+          (click)="filterActivity(null)">
+          Sve
+        </button>
+        <button
+          class="filter-btn"
+          [class.active]="selectedActivityType() === ActivityType.ProductReview"
+          (click)="filterActivity(ActivityType.ProductReview)">
+          Recenzije proizvoda
+        </button>
+        <button
+          class="filter-btn"
+          [class.active]="selectedActivityType() === ActivityType.ProjectReview"
+          (click)="filterActivity(ActivityType.ProjectReview)">
+          Recenzije projekata
+        </button>
+        <button
+          class="filter-btn"
+          [class.active]="selectedActivityType() === ActivityType.NewProject"
+          (click)="filterActivity(ActivityType.NewProject)">
+          Novi projekti
+        </button>
+      </div>
+    </div>
     @if (isLoadingActivity()) {
       <div class="activity-loading">
         <div class="spinner"></div>

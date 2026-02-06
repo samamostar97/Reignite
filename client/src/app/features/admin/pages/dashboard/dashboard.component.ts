@@ -38,6 +38,7 @@ export class DashboardComponent implements OnInit {
   protected readonly ActivityType = ActivityType;
   protected readonly activities = signal<ActivityResponse[]>([]);
   protected readonly isLoadingActivity = signal(true);
+  protected readonly selectedActivityType = signal<ActivityType | null>(null);
 
   protected readonly stats = signal<StatCard[]>([
     {
@@ -91,7 +92,15 @@ export class DashboardComponent implements OnInit {
 
   private loadActivity() {
     this.isLoadingActivity.set(true);
-    this.activityService.getActivities({ pageNumber: 1, pageSize: 8 }).subscribe({
+    const filter: { pageNumber: number; pageSize: number; type?: ActivityType } = {
+      pageNumber: 1,
+      pageSize: 8
+    };
+    const selectedType = this.selectedActivityType();
+    if (selectedType !== null) {
+      filter.type = selectedType;
+    }
+    this.activityService.getActivities(filter).subscribe({
       next: (result) => {
         this.activities.set(result.items);
         this.isLoadingActivity.set(false);
@@ -100,6 +109,12 @@ export class DashboardComponent implements OnInit {
         this.isLoadingActivity.set(false);
       }
     });
+  }
+
+  protected filterActivity(type: ActivityType | null) {
+    if (this.selectedActivityType() === type) return;
+    this.selectedActivityType.set(type);
+    this.loadActivity();
   }
 
   protected getImageUrl(path: string | undefined | null): string {

@@ -409,18 +409,7 @@ $smoke: #5a3a2a;
     font-size: 1.25rem;
     font-weight: 700;
     color: $ash;
-    margin: 0 0 1.25rem 0;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    &::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, rgba($ember, 0.2) 0%, transparent 100%);
-      margin-left: 1rem;
-    }
+    margin: 0;
   }
 }
 
@@ -430,6 +419,7 @@ $smoke: #5a3a2a;
   padding: 3rem 2rem;
   text-align: center;
   border: 1px dashed rgba($ember, 0.2);
+  animation: fadeIn 0.3s ease-out;
 
   svg {
     width: 48px;
@@ -445,11 +435,77 @@ $smoke: #5a3a2a;
   }
 }
 
+// Activity header with filters
+.activity-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+
+  h3 {
+    margin: 0;
+  }
+}
+
+.activity-filters {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  background: #fff;
+  color: $smoke;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: rgba($ember, 0.3);
+    color: $ember;
+  }
+
+  &.active {
+    background: linear-gradient(135deg, $ember 0%, $flame 100%);
+    color: #fff;
+    border-color: transparent;
+  }
+}
+
 // Activity list
 .activity-list {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .activity-card {
@@ -461,6 +517,13 @@ $smoke: #5a3a2a;
   gap: 1rem;
   border: 1px solid rgba(0, 0, 0, 0.04);
   transition: all 0.2s ease;
+  animation: slideIn 0.35s ease-out backwards;
+
+  @for $i from 1 through 10 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.04}s;
+    }
+  }
 
   &:hover {
     border-color: rgba($ember, 0.15);
@@ -558,6 +621,7 @@ $smoke: #5a3a2a;
   padding: 3rem 2rem;
   text-align: center;
   border: 1px solid rgba(0, 0, 0, 0.04);
+  animation: fadeIn 0.3s ease-out;
 
   .spinner {
     width: 40px;
