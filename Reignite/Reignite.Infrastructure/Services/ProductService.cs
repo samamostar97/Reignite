@@ -30,6 +30,19 @@ namespace Reignite.Infrastructure.Services
             _orderItemRepository = orderItemRepository;
         }
 
+        public override async Task<ProductResponse> GetByIdAsync(int id)
+        {
+            var product = await _repository.AsQueryable()
+                .Include(x => x.ProductCategory)
+                .Include(x => x.Supplier)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (product == null)
+                throw new KeyNotFoundException("Proizvod nije pronađen.");
+
+            return _mapper.Map<ProductResponse>(product);
+        }
+
         public async Task<ProductResponse> CreateWithImageAsync(CreateProductRequest dto, FileUploadRequest? imageRequest)
         {
             var product = _mapper.Map<Product>(dto);
@@ -76,6 +89,21 @@ namespace Reignite.Infrastructure.Services
             query = query.OrderBy(x => x.CreatedAt);
             return query;
         }
+
+        protected override async Task AfterUpdateAsync(Product entity, UpdateProductRequest dto)
+        {
+            var loaded = await _repository.AsQueryable()
+                .Include(x => x.ProductCategory)
+                .Include(x => x.Supplier)
+                .FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            if (loaded != null)
+            {
+                entity.ProductCategory = loaded.ProductCategory;
+                entity.Supplier = loaded.Supplier;
+            }
+        }
+
         public async Task<ProductResponse> UploadImageAsync(int productId, FileUploadRequest fileRequest)
         {
             var product = await _repository.AsQueryable()
