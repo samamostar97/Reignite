@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Reignite.Application.Common;
 using Reignite.Application.DTOs.Request;
 using Reignite.Application.DTOs.Response;
+using Reignite.Application.Exceptions;
 using Reignite.Application.Filters;
 using Reignite.Application.IRepositories;
 using Reignite.Application.IServices;
@@ -21,7 +22,24 @@ namespace Reignite.Infrastructure.Services
         {
             _fileStorageService = fileStorageService;
         }
-
+        protected override async Task BeforeCreateAsync(User entity, CreateUserRequest dto)
+        {
+            var emailExists= await _repository.AsQueryable().AnyAsync(x=>x.Email.ToLower()==dto.Email.ToLower());
+            if(emailExists) throw new ConflictException("Korisnik sa ovim emailom vec postoji");
+            var usernameExists= await _repository.AsQueryable().AnyAsync(x=>x.Username.ToLower()==dto.Username.ToLower());
+            if(usernameExists) throw new ConflictException("Korisnik sa ovim usernameom vec postoji");
+            var phoneNumberExists= await _repository.AsQueryable().AnyAsync(x=>x.PhoneNumber.ToLower()==dto.PhoneNumber.ToLower());
+            if(phoneNumberExists) throw new ConflictException("Korisnik sa ovim brojem telefona vec postoji");
+        }
+        protected override async Task BeforeUpdateAsync(User entity, UpdateUserRequest dto)
+        {
+            var emailExists= await _repository.AsQueryable().AnyAsync(x=>x.Email.Equals(dto.Email, StringComparison.CurrentCultureIgnoreCase) && x.Id!=entity.Id);
+            if(emailExists) throw new ConflictException("Korisnik sa ovim emailom vec postoji");
+            var usernameExists= await _repository.AsQueryable().AnyAsync(x=>x.Username.Equals(dto.Username, StringComparison.CurrentCultureIgnoreCase) && x.Id!=entity.Id);
+            if(usernameExists) throw new ConflictException("Korisnik sa ovim usernameom vec postoji");
+            var phoneNumberExists= await _repository.AsQueryable().AnyAsync(x=>x.PhoneNumber.Equals(dto.PhoneNumber, StringComparison.CurrentCultureIgnoreCase) && x.Id!=entity.Id);
+            if(phoneNumberExists) throw new ConflictException("Korisnik sa ovim brojem telefona vec postoji");
+        }
         public override async Task<UserResponse> CreateAsync(CreateUserRequest dto)
         {
             var user = _mapper.Map<User>(dto);

@@ -1,5 +1,15 @@
 import { PaginationRequest } from './common.model';
 
+// Review Response DTO - matches backend ProjectReviewResponse
+export interface ProjectReviewResponse {
+  id: number;
+  userId: number;
+  userName: string;
+  rating: number;
+  comment?: string;
+  createdAt: string;
+}
+
 // Response DTO - matches backend ProjectResponse
 export interface ProjectResponse {
   id: number;
@@ -16,6 +26,7 @@ export interface ProjectResponse {
   createdAt: string;
   averageRating: number;
   reviewCount: number;
+  reviews: ProjectReviewResponse[];
 }
 
 // Query filter - extends PaginationRequest, matches backend ProjectQueryFilter

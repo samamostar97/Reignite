@@ -296,7 +296,7 @@ $smoke: #5a3a2a;
 
 // Actions cell
 .cell-actions {
-  width: 80px;
+  width: 100px;
 
   .actions-wrapper {
     display: flex;
@@ -408,5 +408,395 @@ $smoke: #5a3a2a;
 
   .cell-name .project-desc {
     display: none;
+  }
+}
+
+// Modal Styles
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 700px;
+  max-height: 85vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: linear-gradient(to bottom, #faf9f8, #f5f4f2);
+
+  h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: $ash;
+  }
+}
+
+.modal-close {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.04);
+  border: none;
+  border-radius: 10px;
+  color: $smoke;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba($ember, 0.1);
+    color: $ember;
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.modal-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba($ember, 0.15);
+    border-top-color: $ember;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  p {
+    margin-top: 1rem;
+    color: $smoke;
+    font-size: 0.9rem;
+  }
+}
+
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+// Project Detail Header
+.project-detail-header {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.detail-image {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 16px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.detail-image-placeholder {
+  width: 180px;
+  height: 180px;
+  background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  svg {
+    width: 48px;
+    height: 48px;
+    color: #ccc;
+  }
+}
+
+.detail-info {
+  flex: 1;
+  min-width: 0;
+
+  h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: $ash;
+    line-height: 1.3;
+  }
+}
+
+.detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: $smoke;
+
+  svg {
+    width: 14px;
+    height: 14px;
+    color: $ember;
+  }
+}
+
+.detail-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, rgba($flame, 0.12) 0%, rgba($ember, 0.08) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba($flame, 0.2);
+
+  svg {
+    width: 20px;
+    height: 20px;
+    color: $flame;
+  }
+
+  .rating-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: $ash;
+  }
+
+  .rating-count {
+    font-size: 0.85rem;
+    color: $smoke;
+  }
+}
+
+// Description
+.detail-description {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+
+  h4 {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $ash;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: $smoke;
+    line-height: 1.6;
+  }
+}
+
+// Reviews Section
+.reviews-section {
+  h4 {
+    margin: 0 0 1rem 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $ash;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+.no-reviews {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.5rem;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 12px;
+  border: 1px dashed rgba(0, 0, 0, 0.1);
+
+  svg {
+    width: 40px;
+    height: 40px;
+    color: #ccc;
+    margin-bottom: 0.75rem;
+  }
+
+  p {
+    margin: 0;
+    color: $smoke;
+    font-size: 0.9rem;
+  }
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($ember, 0.3);
+    border-radius: 3px;
+
+    &:hover {
+      background: rgba($ember, 0.5);
+    }
+  }
+}
+
+.review-card {
+  padding: 1rem 1.25rem;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.reviewer-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.reviewer-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $ember 0%, $flame 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.reviewer-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+
+  .reviewer-name {
+    font-weight: 600;
+    color: $ash;
+    font-size: 0.9rem;
+  }
+
+  .review-date {
+    font-size: 0.75rem;
+    color: $smoke;
+  }
+}
+
+.review-rating {
+  display: flex;
+  gap: 0.15rem;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: #e0e0e0;
+
+    &.filled {
+      fill: $flame;
+    }
+  }
+}
+
+.review-comment {
+  margin: 0;
+  font-size: 0.9rem;
+  color: $smoke;
+  line-height: 1.5;
+}
+
+// Modal responsive
+@media (max-width: 600px) {
+  .modal-content {
+    max-height: 90vh;
+  }
+
+  .project-detail-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .detail-image,
+  .detail-image-placeholder {
+    width: 140px;
+    height: 140px;
+  }
+
+  .detail-meta {
+    justify-content: center;
+  }
+
+  .detail-rating {
+    justify-content: center;
   }
 }

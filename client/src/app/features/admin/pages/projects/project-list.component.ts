@@ -25,6 +25,11 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   protected readonly pageSize = signal(10);
   protected readonly searchQuery = signal('');
 
+  // Modal state
+  protected readonly selectedProject = signal<ProjectResponse | null>(null);
+  protected readonly projectDetail = signal<ProjectResponse | null>(null);
+  protected readonly isLoadingDetail = signal(false);
+
   protected readonly totalPages = computed(() =>
     Math.ceil(this.totalCount() / this.pageSize())
   );
@@ -90,5 +95,36 @@ export class ProjectListComponent implements OnInit, OnDestroy {
         next: () => this.loadProjects()
       });
     }
+  }
+
+  protected viewProject(project: ProjectResponse): void {
+    this.selectedProject.set(project);
+    this.isLoadingDetail.set(true);
+    this.projectDetail.set(null);
+
+    this.projectService.getProjectById(project.id).subscribe({
+      next: (detail) => {
+        this.projectDetail.set(detail);
+        this.isLoadingDetail.set(false);
+      },
+      error: () => {
+        this.isLoadingDetail.set(false);
+        this.closeModal();
+      }
+    });
+  }
+
+  protected closeModal(): void {
+    this.selectedProject.set(null);
+    this.projectDetail.set(null);
+  }
+
+  protected getInitials(name: string): string {
+    return name
+      .split(' ')
+      .map(n => n.charAt(0))
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
   }
 }

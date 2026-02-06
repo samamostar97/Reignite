@@ -17,6 +17,11 @@ namespace Reignite.Infrastructure.Mappings
                 .Map(dest => dest.ProductCategoryName, src => src.ProductCategory.Name)
                 .Map(dest => dest.SupplierName, src => src.Supplier.Name);
 
+            TypeAdapterConfig<ProjectReview, ProjectReviewResponse>.NewConfig()
+                .Map(dest => dest.UserName, src => src.User != null
+                    ? src.User.FirstName + " " + src.User.LastName
+                    : string.Empty);
+
             TypeAdapterConfig<Project, ProjectResponse>.NewConfig()
                 .Map(dest => dest.UserName, src => src.User.FirstName + " " + src.User.LastName)
                 .Map(dest => dest.HobbyName, src => src.Hobby.Name)
