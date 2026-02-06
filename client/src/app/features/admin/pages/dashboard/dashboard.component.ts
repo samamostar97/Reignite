@@ -5,6 +5,9 @@ import { ProductService } from '../../../../core/services/product.service';
 import { CategoryService } from '../../../../core/services/category.service';
 import { ProjectService } from '../../../../core/services/project.service';
 import { UserService } from '../../../../core/services/user.service';
+import { ActivityService } from '../../../../core/services/activity.service';
+import { ActivityResponse, ActivityType } from '../../../../core/models/activity.model';
+import { environment } from '../../../../../environments/environment';
 
 interface StatCard {
   label: string;
@@ -30,6 +33,11 @@ export class DashboardComponent implements OnInit {
   private readonly categoryService = inject(CategoryService);
   private readonly projectService = inject(ProjectService);
   private readonly userService = inject(UserService);
+  private readonly activityService = inject(ActivityService);
+
+  protected readonly ActivityType = ActivityType;
+  protected readonly activities = signal<ActivityResponse[]>([]);
+  protected readonly isLoadingActivity = signal(true);
 
   protected readonly stats = signal<StatCard[]>([
     {
@@ -76,8 +84,72 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.loadStats();
+    this.loadActivity();
     // Preload products for faster navigation to products page
     this.productService.preloadProducts();
+  }
+
+  private loadActivity() {
+    this.isLoadingActivity.set(true);
+    this.activityService.getActivities({ pageNumber: 1, pageSize: 8 }).subscribe({
+      next: (result) => {
+        this.activities.set(result.items);
+        this.isLoadingActivity.set(false);
+      },
+      error: () => {
+        this.isLoadingActivity.set(false);
+      }
+    });
+  }
+
+  protected getImageUrl(path: string | undefined | null): string {
+    if (!path) return '';
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return path;
+    }
+    return `${environment.baseUrl}${path}`;
+  }
+
+  protected getInitials(name: string): string {
+    return name
+      .split(' ')
+      .map(n => n.charAt(0))
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  }
+
+  protected formatTimeAgo(dateString: string): string {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return 'Upravo';
+    if (diffMins < 60) return `Prije ${diffMins} min`;
+    if (diffHours < 24) return `Prije ${diffHours}h`;
+    if (diffDays < 7) return `Prije ${diffDays} dana`;
+    return date.toLocaleDateString('bs-BA');
+  }
+
+  protected getActivityIcon(type: ActivityType): string {
+    switch (type) {
+      case ActivityType.ProductReview: return 'star';
+      case ActivityType.ProjectReview: return 'chat';
+      case ActivityType.NewProject: return 'photo';
+      default: return 'activity';
+    }
+  }
+
+  protected getActivityColor(type: ActivityType): string {
+    switch (type) {
+      case ActivityType.ProductReview: return '#f7931e';
+      case ActivityType.ProjectReview: return '#6366f1';
+      case ActivityType.NewProject: return '#10b981';
+      default: return '#ff6b35';
+    }
   }
 
   private loadStats() {
