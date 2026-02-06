@@ -1,0 +1,614 @@
+$ember: #ff6b35;
+$flame: #f7931e;
+$ash: #2c1810;
+$smoke: #5a3a2a;
+
+.reports-page {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Page Header
+.page-header {
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: $ash;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .subtitle {
+    color: $smoke;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+}
+
+// Loading & Error States
+.loading, .error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 2rem;
+  background: #fff;
+  border-radius: 16px;
+
+  .spinner {
+    width: 44px;
+    height: 44px;
+    border: 3px solid rgba($ember, 0.15);
+    border-top-color: $ember;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  p {
+    color: $smoke;
+    margin-top: 1.25rem;
+    font-size: 0.95rem;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Summary Grid
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.summary-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    &.revenue {
+      background: rgba($ember, 0.1);
+      color: $ember;
+    }
+
+    &.orders {
+      background: rgba(#10b981, 0.1);
+      color: #10b981;
+    }
+
+    &.average {
+      background: rgba(#6366f1, 0.1);
+      color: #6366f1;
+    }
+
+    &.users {
+      background: rgba($flame, 0.1);
+      color: $flame;
+    }
+  }
+
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .card-label {
+    font-size: 0.8rem;
+    color: $smoke;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+  }
+
+  .card-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $ash;
+  }
+
+  .card-change, .card-sub {
+    font-size: 0.8rem;
+    font-weight: 500;
+
+    &.positive {
+      color: #10b981;
+    }
+
+    &.negative {
+      color: #ef4444;
+    }
+  }
+
+  .card-sub {
+    color: $smoke;
+  }
+}
+
+// Section Styles
+.section-header {
+  margin-bottom: 1rem;
+
+  h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $ash;
+    margin: 0;
+  }
+}
+
+// Chart Section
+.chart-section {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.chart-container {
+  overflow-x: auto;
+}
+
+.sales-chart, .user-growth-chart {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+
+  .grid-line {
+    stroke: rgba(0, 0, 0, 0.06);
+    stroke-width: 1;
+  }
+
+  .axis-label {
+    font-size: 10px;
+    fill: $smoke;
+    font-family: inherit;
+
+    &.x-label {
+      font-size: 9px;
+    }
+  }
+
+  .chart-area {
+    fill: rgba($ember, 0.1);
+
+    &.user-area {
+      fill: rgba(#6366f1, 0.1);
+    }
+  }
+
+  .chart-line {
+    stroke: $ember;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    &.user-line {
+      stroke: #6366f1;
+    }
+  }
+
+  .chart-point {
+    fill: $ember;
+    stroke: #fff;
+    stroke-width: 2;
+
+    &.user-point {
+      fill: #6366f1;
+    }
+  }
+
+  .new-user-bar {
+    fill: rgba(#10b981, 0.6);
+  }
+}
+
+// User Growth Section
+.user-growth-section {
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .growth-stats {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+
+    .stat {
+      font-size: 0.85rem;
+      color: $smoke;
+
+      strong {
+        color: $ash;
+        font-weight: 600;
+      }
+    }
+
+    .growth {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-weight: 600;
+
+      &.positive {
+        background: rgba(#10b981, 0.12);
+        color: #059669;
+      }
+
+      &.negative {
+        background: rgba(#ef4444, 0.12);
+        color: #dc2626;
+      }
+    }
+  }
+}
+
+// Two Column Layout
+.two-column {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Data Section
+.data-section {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.data-table-container {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 0.875rem 1rem;
+    text-align: left;
+  }
+
+  th {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: $smoke;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: rgba($ember, 0.02);
+    }
+  }
+}
+
+// Product Cell
+.product-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  .product-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+
+  .product-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 20px;
+      height: 20px;
+      color: #ccc;
+    }
+  }
+
+  .product-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .product-name {
+    font-weight: 500;
+    color: $ash;
+    font-size: 0.9rem;
+  }
+
+  .product-category {
+    font-size: 0.75rem;
+    color: $smoke;
+  }
+}
+
+.quantity-cell {
+  font-weight: 600;
+  color: $ash;
+}
+
+.revenue-cell {
+  font-weight: 600;
+  color: $ember;
+}
+
+// Customer Cell
+.customer-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  .customer-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+
+  .customer-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, $ember 0%, $flame 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.75rem;
+  }
+
+  .customer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .customer-name {
+    font-weight: 500;
+    color: $ash;
+    font-size: 0.9rem;
+  }
+
+  .order-date {
+    font-size: 0.75rem;
+    color: $smoke;
+  }
+}
+
+.amount-cell {
+  font-weight: 600;
+  color: $ash;
+}
+
+.status-cell {
+  .status-badge {
+    display: inline-flex;
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+
+    &.status-processing {
+      background: rgba($flame, 0.12);
+      color: darken($flame, 10%);
+    }
+
+    &.status-delivered {
+      background: rgba(#10b981, 0.12);
+      color: #059669;
+    }
+
+    &.status-cancelled {
+      background: rgba(#ef4444, 0.12);
+      color: #dc2626;
+    }
+  }
+}
+
+// Rating Section
+.rating-section {
+  margin-bottom: 1.5rem;
+}
+
+.rating-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rating-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+
+  .rating-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: $ash;
+      margin: 0;
+    }
+  }
+
+  .rating-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+  }
+
+  .rating-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: $ash;
+    line-height: 1;
+  }
+
+  .rating-stars {
+    display: flex;
+    gap: 0.125rem;
+
+    .star-icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .rating-count {
+    font-size: 0.8rem;
+    color: $smoke;
+  }
+}
+
+.rating-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rating-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  .bar-label {
+    width: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: $smoke;
+    text-align: right;
+  }
+
+  .bar-container {
+    flex: 1;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    background: $flame;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+
+    &.project {
+      background: $ember;
+    }
+  }
+
+  .bar-count {
+    width: 30px;
+    font-size: 0.8rem;
+    color: $smoke;
+    text-align: left;
+  }
+}
+
+// Button
+.btn {
+  padding: 0.65rem 1.25rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+
+  &.btn-primary {
+    background: $ember;
+    color: #fff;
+
+    &:hover {
+      background: darken($ember, 8%);
+    }
+  }
+}

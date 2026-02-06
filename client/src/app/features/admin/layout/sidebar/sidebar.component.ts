@@ -42,6 +42,10 @@ export class SidebarComponent {
     { label: 'Narudžbe', route: '/admin/orders', icon: 'shopping-bag' },
   ];
 
+  protected readonly reportsNavItems: NavItem[] = [
+    { label: 'Izvještaji', route: '/admin/reports', icon: 'document-chart' },
+  ];
+
   protected toggleCollapse(): void {
     this.sidebarService.toggle();
   }

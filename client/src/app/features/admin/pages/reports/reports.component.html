@@ -1,0 +1,413 @@
+<div class="reports-page">
+  <div class="page-header">
+    <h1>Izvještaji</h1>
+    <p class="subtitle">Pregled poslovnih metrika i analitike</p>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Učitavanje izvještaja...</p>
+    </div>
+  } @else if (error()) {
+    <div class="error-state">
+      <p>{{ error() }}</p>
+      <button class="btn btn-primary" (click)="loadReport()">Pokušaj ponovo</button>
+    </div>
+  } @else if (report(); as r) {
+    <!-- Revenue Summary Cards -->
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="card-icon revenue">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+        </div>
+        <div class="card-content">
+          <span class="card-label">Ukupni prihod</span>
+          <span class="card-value">{{ formatCurrency(r.revenueSummary.totalRevenue) }}</span>
+          <span class="card-change" [class.positive]="r.revenueSummary.revenueChangePercent >= 0" [class.negative]="r.revenueSummary.revenueChangePercent < 0">
+            {{ r.revenueSummary.revenueChangePercent >= 0 ? '+' : '' }}{{ r.revenueSummary.revenueChangePercent | number:'1.1-1' }}% od prošlog mjeseca
+          </span>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="card-icon orders">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+          </svg>
+        </div>
+        <div class="card-content">
+          <span class="card-label">Ukupno narudžbi</span>
+          <span class="card-value">{{ r.revenueSummary.totalOrders }}</span>
+          <span class="card-sub">{{ r.revenueSummary.todayOrders }} danas</span>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="card-icon average">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+          </svg>
+        </div>
+        <div class="card-content">
+          <span class="card-label">Prosječna narudžba</span>
+          <span class="card-value">{{ formatCurrency(r.revenueSummary.averageOrderValue) }}</span>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="card-icon users">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+          </svg>
+        </div>
+        <div class="card-content">
+          <span class="card-label">Ukupno korisnika</span>
+          <span class="card-value">{{ r.userGrowth.totalUsers }}</span>
+          <span class="card-change positive" *ngIf="r.userGrowth.newUsersThisMonth > 0">
+            +{{ r.userGrowth.newUsersThisMonth }} ovaj mjesec
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sales Chart -->
+    <div class="chart-section">
+      <div class="section-header">
+        <h2>Prodaja (zadnjih 30 dana)</h2>
+      </div>
+      <div class="chart-container">
+        <svg [attr.viewBox]="'0 0 ' + chartWidth + ' ' + chartHeight" class="sales-chart">
+          <!-- Grid lines -->
+          <g class="grid-lines">
+            @for (i of [0, 1, 2, 3, 4]; track i) {
+              <line
+                [attr.x1]="chartPadding"
+                [attr.y1]="chartPadding + (i * (chartHeight - chartPadding * 2) / 4)"
+                [attr.x2]="chartWidth - chartPadding"
+                [attr.y2]="chartPadding + (i * (chartHeight - chartPadding * 2) / 4)"
+                class="grid-line" />
+            }
+          </g>
+
+          <!-- Y-axis labels -->
+          <g class="y-labels">
+            @for (i of [0, 1, 2, 3, 4]; track i) {
+              <text
+                [attr.x]="chartPadding - 10"
+                [attr.y]="chartPadding + (i * (chartHeight - chartPadding * 2) / 4) + 4"
+                class="axis-label"
+                text-anchor="end">
+                {{ formatChartCurrency(getMaxRevenue() * (4 - i) / 4) }}
+              </text>
+            }
+          </g>
+
+          <!-- Area fill -->
+          <path [attr.d]="getSalesChartArea()" class="chart-area" />
+
+          <!-- Line -->
+          <path [attr.d]="getSalesChartPath()" class="chart-line" fill="none" />
+
+          <!-- Data points -->
+          @for (point of getChartPoints(); track point.data.date; let i = $index) {
+            @if (i % 5 === 0 || i === getChartPoints().length - 1) {
+              <circle [attr.cx]="point.x" [attr.cy]="point.y" r="4" class="chart-point" />
+              <text
+                [attr.x]="point.x"
+                [attr.y]="chartHeight - 10"
+                class="axis-label x-label"
+                text-anchor="middle">
+                {{ formatShortDate(point.data.date) }}
+              </text>
+            }
+          }
+        </svg>
+      </div>
+    </div>
+
+    <!-- User Growth Chart -->
+    <div class="chart-section user-growth-section">
+      <div class="section-header">
+        <h2>Rast korisnika (zadnjih 30 dana)</h2>
+        <div class="growth-stats">
+          <span class="stat">
+            <strong>+{{ r.userGrowth.newUsersThisWeek }}</strong> ove sedmice
+          </span>
+          <span class="stat">
+            <strong>+{{ r.userGrowth.newUsersThisMonth }}</strong> ovaj mjesec
+          </span>
+          @if (r.userGrowth.growthPercent !== 0) {
+            <span class="stat growth" [class.positive]="r.userGrowth.growthPercent > 0" [class.negative]="r.userGrowth.growthPercent < 0">
+              {{ r.userGrowth.growthPercent > 0 ? '+' : '' }}{{ r.userGrowth.growthPercent | number:'1.1-1' }}%
+            </span>
+          }
+        </div>
+      </div>
+      <div class="chart-container">
+        <svg [attr.viewBox]="'0 0 ' + chartWidth + ' ' + chartHeight" class="user-growth-chart">
+          <!-- Grid lines -->
+          <g class="grid-lines">
+            @for (i of [0, 1, 2, 3, 4]; track i) {
+              <line
+                [attr.x1]="chartPadding"
+                [attr.y1]="chartPadding + (i * (chartHeight - chartPadding * 2) / 4)"
+                [attr.x2]="chartWidth - chartPadding"
+                [attr.y2]="chartPadding + (i * (chartHeight - chartPadding * 2) / 4)"
+                class="grid-line" />
+            }
+          </g>
+
+          <!-- Y-axis labels (Total Users) -->
+          <g class="y-labels">
+            @for (i of [0, 1, 2, 3, 4]; track i) {
+              <text
+                [attr.x]="chartPadding - 10"
+                [attr.y]="chartPadding + (i * (chartHeight - chartPadding * 2) / 4) + 4"
+                class="axis-label"
+                text-anchor="end">
+                {{ getMaxTotalUsers() * (4 - i) / 4 | number:'1.0-0' }}
+              </text>
+            }
+          </g>
+
+          <!-- Area fill -->
+          <path [attr.d]="getUserGrowthChartArea()" class="chart-area user-area" />
+
+          <!-- Line -->
+          <path [attr.d]="getUserGrowthChartPath()" class="chart-line user-line" fill="none" />
+
+          <!-- Data points -->
+          @for (point of getUserGrowthPoints(); track point.data.date; let i = $index) {
+            @if (i % 5 === 0 || i === getUserGrowthPoints().length - 1) {
+              <circle [attr.cx]="point.x" [attr.cy]="point.y" r="4" class="chart-point user-point" />
+              <text
+                [attr.x]="point.x"
+                [attr.y]="chartHeight - 10"
+                class="axis-label x-label"
+                text-anchor="middle">
+                {{ formatShortDate(point.data.date) }}
+              </text>
+            }
+          }
+
+          <!-- New users bars (secondary visualization) -->
+          @for (point of getUserGrowthPoints(); track point.data.date; let i = $index) {
+            @if (point.data.newUsers > 0) {
+              <rect
+                [attr.x]="point.x - 3"
+                [attr.y]="chartHeight - chartPadding - (point.data.newUsers / getMaxNewUsers()) * 40"
+                width="6"
+                [attr.height]="(point.data.newUsers / getMaxNewUsers()) * 40"
+                class="new-user-bar"
+                rx="2" />
+            }
+          }
+        </svg>
+      </div>
+    </div>
+
+    <!-- Two column layout for tables -->
+    <div class="two-column">
+      <!-- Top Products -->
+      <div class="data-section">
+        <div class="section-header">
+          <h2>Top proizvodi</h2>
+        </div>
+        <div class="data-table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Proizvod</th>
+                <th>Prodano</th>
+                <th>Prihod</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (product of r.topProducts; track product.productId) {
+                <tr>
+                  <td class="product-cell">
+                    @if (product.productImageUrl) {
+                      <img [src]="getImageUrl(product.productImageUrl)" [alt]="product.productName" class="product-img">
+                    } @else {
+                      <div class="product-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+                        </svg>
+                      </div>
+                    }
+                    <div class="product-info">
+                      <span class="product-name">{{ product.productName }}</span>
+                      <span class="product-category">{{ product.categoryName }}</span>
+                    </div>
+                  </td>
+                  <td class="quantity-cell">{{ product.quantitySold }}</td>
+                  <td class="revenue-cell">{{ formatCurrency(product.totalRevenue) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Recent Orders -->
+      <div class="data-section">
+        <div class="section-header">
+          <h2>Nedavne narudžbe</h2>
+        </div>
+        <div class="data-table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Kupac</th>
+                <th>Iznos</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (order of r.recentOrders; track order.orderId) {
+                <tr>
+                  <td class="customer-cell">
+                    @if (order.customerImageUrl) {
+                      <img [src]="getImageUrl(order.customerImageUrl)" [alt]="order.customerName" class="customer-img">
+                    } @else {
+                      <div class="customer-avatar">
+                        {{ getInitials(order.customerName) }}
+                      </div>
+                    }
+                    <div class="customer-info">
+                      <span class="customer-name">{{ order.customerName }}</span>
+                      <span class="order-date">{{ formatDate(order.purchaseDate) }}</span>
+                    </div>
+                  </td>
+                  <td class="amount-cell">{{ formatCurrency(order.totalAmount) }}</td>
+                  <td class="status-cell">
+                    <span class="status-badge" [class]="getStatusClass(order.status)">
+                      {{ getStatusLabel(order.status) }}
+                    </span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rating Overview -->
+    <div class="rating-section">
+      <div class="section-header">
+        <h2>Pregled ocjena</h2>
+      </div>
+      <div class="rating-grid">
+        <!-- Product Ratings -->
+        <div class="rating-card">
+          <div class="rating-header">
+            <h3>Recenzije proizvoda</h3>
+            <div class="rating-summary">
+              <span class="rating-value">{{ r.ratingOverview.averageProductRating }}</span>
+              <div class="rating-stars">
+                @for (star of [1,2,3,4,5]; track star) {
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    [attr.fill]="star <= r.ratingOverview.averageProductRating ? '#f7931e' : 'none'"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="#f7931e"
+                    class="star-icon">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+                  </svg>
+                }
+              </div>
+              <span class="rating-count">{{ r.ratingOverview.totalProductReviews }} recenzija</span>
+            </div>
+          </div>
+          <div class="rating-bars">
+            @for (star of [5,4,3,2,1]; track star) {
+              <div class="rating-bar-row">
+                <span class="bar-label">{{ star }}</span>
+                <div class="bar-container">
+                  <div
+                    class="bar-fill"
+                    [style.width.%]="getRatingBarWidth(
+                      star === 5 ? r.ratingOverview.productRatingDistribution.fiveStar :
+                      star === 4 ? r.ratingOverview.productRatingDistribution.fourStar :
+                      star === 3 ? r.ratingOverview.productRatingDistribution.threeStar :
+                      star === 2 ? r.ratingOverview.productRatingDistribution.twoStar :
+                      r.ratingOverview.productRatingDistribution.oneStar,
+                      getTotalProductReviews()
+                    )">
+                  </div>
+                </div>
+                <span class="bar-count">
+                  {{
+                    star === 5 ? r.ratingOverview.productRatingDistribution.fiveStar :
+                    star === 4 ? r.ratingOverview.productRatingDistribution.fourStar :
+                    star === 3 ? r.ratingOverview.productRatingDistribution.threeStar :
+                    star === 2 ? r.ratingOverview.productRatingDistribution.twoStar :
+                    r.ratingOverview.productRatingDistribution.oneStar
+                  }}
+                </span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Project Ratings -->
+        <div class="rating-card">
+          <div class="rating-header">
+            <h3>Recenzije projekata</h3>
+            <div class="rating-summary">
+              <span class="rating-value">{{ r.ratingOverview.averageProjectRating }}</span>
+              <div class="rating-stars">
+                @for (star of [1,2,3,4,5]; track star) {
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    [attr.fill]="star <= r.ratingOverview.averageProjectRating ? '#f7931e' : 'none'"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="#f7931e"
+                    class="star-icon">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+                  </svg>
+                }
+              </div>
+              <span class="rating-count">{{ r.ratingOverview.totalProjectReviews }} recenzija</span>
+            </div>
+          </div>
+          <div class="rating-bars">
+            @for (star of [5,4,3,2,1]; track star) {
+              <div class="rating-bar-row">
+                <span class="bar-label">{{ star }}</span>
+                <div class="bar-container">
+                  <div
+                    class="bar-fill project"
+                    [style.width.%]="getRatingBarWidth(
+                      star === 5 ? r.ratingOverview.projectRatingDistribution.fiveStar :
+                      star === 4 ? r.ratingOverview.projectRatingDistribution.fourStar :
+                      star === 3 ? r.ratingOverview.projectRatingDistribution.threeStar :
+                      star === 2 ? r.ratingOverview.projectRatingDistribution.twoStar :
+                      r.ratingOverview.projectRatingDistribution.oneStar,
+                      r.ratingOverview.totalProjectReviews
+                    )">
+                  </div>
+                </div>
+                <span class="bar-count">
+                  {{
+                    star === 5 ? r.ratingOverview.projectRatingDistribution.fiveStar :
+                    star === 4 ? r.ratingOverview.projectRatingDistribution.fourStar :
+                    star === 3 ? r.ratingOverview.projectRatingDistribution.threeStar :
+                    star === 2 ? r.ratingOverview.projectRatingDistribution.twoStar :
+                    r.ratingOverview.projectRatingDistribution.oneStar
+                  }}
+                </span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>
