@@ -67,9 +67,9 @@ namespace Reignite.API.Controllers
 
         [AllowAnonymous]
         [HttpGet("top-rated")]
-        public async Task<ActionResult<List<ProjectResponse>>> GetTopRated([FromQuery] int count = 3)
+        public async Task<ActionResult<PagedResult<ProjectResponse>>> GetTopRated([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 3)
         {
-            var result = await _projectService.GetTopRatedProjectsAsync(count);
+            var result = await _projectService.GetTopRatedProjectsAsync(pageNumber, pageSize);
             return Ok(result);
         }
 

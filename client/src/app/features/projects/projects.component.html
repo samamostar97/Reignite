@@ -1,0 +1,182 @@
+<div class="projects-page">
+  <!-- Header -->
+  <header class="main-header">
+    <div class="header-content">
+      <a routerLink="/" class="header-logo">REIGNITE</a>
+      <nav class="header-nav">
+        <a routerLink="/" class="nav-link">Početna</a>
+        <a routerLink="/projects" class="nav-link active">Projekti</a>
+      </nav>
+      @if (isAdmin()) {
+        <a routerLink="/admin" class="header-button">Admin Panel</a>
+      } @else if (isAuthenticated()) {
+        <a routerLink="/account" class="header-button">Moj Račun</a>
+      } @else {
+        <a routerLink="/login" class="header-button">Prijavi Se</a>
+      }
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1 class="page-title">Projekti Zajednice</h1>
+      <p class="page-subtitle">Pogledajte šta naša zajednica stvara</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <div class="filter-row">
+        <!-- Hobby Chips -->
+        <div class="hobby-chips">
+          <button
+            class="hobby-chip"
+            [class.active]="selectedHobbyId() === null"
+            (click)="selectHobby(null)">
+            Sve
+          </button>
+          @for (hobby of hobbies(); track hobby.id) {
+            <button
+              class="hobby-chip"
+              [class.active]="selectedHobbyId() === hobby.id"
+              (click)="selectHobby(hobby.id)">
+              {{ hobby.name }}
+            </button>
+          }
+        </div>
+
+        <!-- Search and Sort -->
+        <div class="filter-controls">
+          <div class="search-wrapper">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            </svg>
+            <input
+              type="text"
+              class="search-input"
+              placeholder="Pretraži projekte..."
+              [value]="searchQuery()"
+              (input)="onSearch($event)"
+            />
+          </div>
+
+          <select class="sort-select" [value]="sortOption()" (change)="onSortChange($event)">
+            <option value="createdatdesc">Najnovije</option>
+            <option value="title">Naslov A-Z</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="results-info">
+        <span class="results-count">{{ totalCount() }} projekata</span>
+        @if (selectedHobbyId() !== null) {
+          <button class="clear-filter" (click)="selectHobby(null)">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+            Očisti filter
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Projects Grid -->
+    @if (isLoading()) {
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Učitavanje projekata...</p>
+      </div>
+    } @else if (projects().length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+          </svg>
+        </div>
+        @if (searchQuery() || selectedHobbyId() !== null) {
+          <h3>Nema rezultata</h3>
+          <p>Pokušajte promijeniti filtere ili pretragu</p>
+        } @else {
+          <h3>Nema projekata</h3>
+          <p>Zajednica još nije objavila projekte.</p>
+        }
+      </div>
+    } @else {
+      <div class="projects-grid">
+        @for (project of projects(); track project.id) {
+          <a [routerLink]="['/projects', project.id]" class="project-card">
+            @if (project.imageUrl) {
+              <div class="project-image" [style.background-image]="getSafeBackgroundImage(project.imageUrl)"></div>
+            } @else {
+              <div class="project-image project-image-placeholder">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                </svg>
+              </div>
+            }
+            <div class="project-overlay">
+              <div class="project-content">
+                <span class="project-hobby">{{ project.hobbyName }}</span>
+                <h3 class="project-title">{{ project.title }}</h3>
+                <p class="project-author">{{ project.userName }}</p>
+                @if (project.description) {
+                  <p class="project-description">{{ project.description }}</p>
+                }
+                <div class="project-footer">
+                  <div class="project-rating">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                      <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+                    </svg>
+                    <span>{{ project.averageRating.toFixed(1) }}</span>
+                    <span class="review-count">({{ project.reviewCount }})</span>
+                  </div>
+                  @if (project.hoursSpent) {
+                    <div class="project-hours">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                      </svg>
+                      <span>{{ project.hoursSpent }}h</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </a>
+        }
+      </div>
+
+      <!-- Pagination -->
+      @if (totalPages() > 1) {
+        <div class="pagination">
+          <button
+            class="pagination-btn"
+            [disabled]="currentPage() === 1"
+            (click)="goToPage(currentPage() - 1)">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+            </svg>
+          </button>
+          <span class="pagination-info">
+            Stranica {{ currentPage() }} od {{ totalPages() }}
+          </span>
+          <button
+            class="pagination-btn"
+            [disabled]="currentPage() === totalPages()"
+            (click)="goToPage(currentPage() + 1)">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+          </button>
+        </div>
+      }
+    }
+  </main>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+    <p class="footer-tagline">Nije bitno šta praviš. Bitno je da praviš.</p>
+  </footer>
+</div>

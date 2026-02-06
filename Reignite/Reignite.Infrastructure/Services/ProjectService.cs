@@ -44,9 +44,9 @@ namespace Reignite.Infrastructure.Services
             return _mapper.Map<ProjectResponse>(project);
         }
 
-        public async Task<List<ProjectResponse>> GetTopRatedProjectsAsync(int count = 3)
+        public async Task<PagedResult<ProjectResponse>> GetTopRatedProjectsAsync(int pageNumber = 1, int pageSize = 3)
         {
-            var projects = await _projectRepository.AsQueryable()
+            var query = _projectRepository.AsQueryable()
                 .Include(p => p.User)
                 .Include(p => p.Hobby)
                 .Include(p => p.Product)
@@ -59,17 +59,29 @@ namespace Reignite.Infrastructure.Services
                     ReviewCount = p.Reviews.Count()
                 })
                 .OrderByDescending(x => x.AverageRating)
-                .ThenByDescending(x => x.ReviewCount)
-                .Take(count)
+                .ThenByDescending(x => x.ReviewCount);
+
+            var totalCount = await query.CountAsync();
+
+            var projects = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
-            return projects.Select(x =>
+            var items = projects.Select(x =>
             {
                 var response = _mapper.Map<ProjectResponse>(x.Project);
                 response.AverageRating = x.AverageRating;
                 response.ReviewCount = x.ReviewCount;
                 return response;
             }).ToList();
+
+            return new PagedResult<ProjectResponse>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber
+            };
         }
 
         public async Task<ProjectResponse> UploadImageAsync(int projectId, FileUploadRequest fileRequest)
@@ -125,14 +137,8 @@ namespace Reignite.Infrastructure.Services
             if (!string.IsNullOrEmpty(filter.Search))
                 query = query.Where(x => x.Title.ToLower().Contains(filter.Search.ToLower()));
 
-            if (filter.UserId.HasValue)
-                query = query.Where(x => x.UserId == filter.UserId.Value);
-
             if (filter.HobbyId.HasValue)
                 query = query.Where(x => x.HobbyId == filter.HobbyId.Value);
-
-            if (filter.ProductId.HasValue)
-                query = query.Where(x => x.ProductId == filter.ProductId.Value);
 
             if (!string.IsNullOrEmpty(filter.OrderBy))
             {

@@ -104,9 +104,9 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   private loadTopRatedProjects() {
     this.isLoadingProjects.set(true);
-    this.projectService.getTopRatedProjects().subscribe({
-      next: (projects) => {
-        this.topRatedProjects.set(projects);
+    this.projectService.getTopRatedProjects(1, 3).subscribe({
+      next: (result) => {
+        this.topRatedProjects.set(result.items);
         this.isLoadingProjects.set(false);
       },
       error: (err) => {
