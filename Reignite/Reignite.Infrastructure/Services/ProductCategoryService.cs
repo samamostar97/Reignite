@@ -19,7 +19,7 @@ namespace Reignite.Infrastructure.Services
         public ProductCategoryService(IRepository<ProductCategory, int> repository, IMapper mapper) : base(repository, mapper)
         {
         }
-
+        
         protected override IQueryable<ProductCategory> ApplyFilter(IQueryable<ProductCategory> query, ProductCategoryQueryFilter filter)
         {
             if (!string.IsNullOrEmpty(filter.Search))

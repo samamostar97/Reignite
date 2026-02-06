@@ -35,6 +35,7 @@ namespace Reignite.Infrastructure.Services
                 .Include(p => p.Hobby)
                 .Include(p => p.Product)
                 .Include(p => p.Reviews)
+                    .ThenInclude(r => r.User)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (project == null)
@@ -146,6 +147,61 @@ namespace Reignite.Infrastructure.Services
 
             query = query.OrderByDescending(x => x.CreatedAt);
             return query;
+        }
+
+        protected override async Task BeforeCreateAsync(Project entity, CreateProjectRequest dto)
+        {
+            // Check if user already has a project with the same title
+            var exists = await _projectRepository.AsQueryable()
+                .AnyAsync(p => p.UserId == entity.UserId &&
+                              p.Title.ToLower() == entity.Title.ToLower());
+
+            if (exists)
+                throw new InvalidOperationException("Već imate projekat sa istim nazivom");
+        }
+
+        protected override async Task BeforeUpdateAsync(Project entity, UpdateProjectRequest dto)
+        {
+            // Only check if title is being changed
+            if (!string.IsNullOrEmpty(dto.Title))
+            {
+                var exists = await _projectRepository.AsQueryable()
+                    .AnyAsync(p => p.Id != entity.Id &&
+                                  p.UserId == entity.UserId &&
+                                  p.Title.ToLower() == dto.Title.ToLower());
+
+                if (exists)
+                    throw new InvalidOperationException("Već imate projekat sa istim nazivom");
+            }
+        }
+
+        protected override async Task AfterCreateAsync(Project entity, CreateProjectRequest dto)
+        {
+            await LoadNavigationPropertiesAsync(entity);
+        }
+
+        protected override async Task AfterUpdateAsync(Project entity, UpdateProjectRequest dto)
+        {
+            await LoadNavigationPropertiesAsync(entity);
+        }
+
+        private async Task LoadNavigationPropertiesAsync(Project entity)
+        {
+            // Reload entity with all navigation properties for proper mapping
+            var loaded = await _projectRepository.AsQueryable()
+                .Include(p => p.User)
+                .Include(p => p.Hobby)
+                .Include(p => p.Product)
+                .Include(p => p.Reviews)
+                .FirstOrDefaultAsync(p => p.Id == entity.Id);
+
+            if (loaded != null)
+            {
+                entity.User = loaded.User;
+                entity.Hobby = loaded.Hobby;
+                entity.Product = loaded.Product;
+                entity.Reviews = loaded.Reviews;
+            }
         }
     }
 }

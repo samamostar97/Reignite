@@ -22,5 +22,6 @@ namespace Reignite.Application.DTOs.Response
         public DateTime CreatedAt { get; set; }
         public double AverageRating { get; set; }
         public int ReviewCount { get; set; }
+        public List<ProjectReviewResponse> Reviews { get; set; } = new();
     }
 }
