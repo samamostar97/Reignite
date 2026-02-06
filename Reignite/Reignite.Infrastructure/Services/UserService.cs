@@ -40,6 +40,12 @@ namespace Reignite.Infrastructure.Services
             var phoneNumberExists= await _repository.AsQueryable().AnyAsync(x=>x.PhoneNumber.Equals(dto.PhoneNumber, StringComparison.CurrentCultureIgnoreCase) && x.Id!=entity.Id);
             if(phoneNumberExists) throw new ConflictException("Korisnik sa ovim brojem telefona vec postoji");
         }
+
+        protected override async Task BeforeDeleteAsync(User entity)
+        {
+            if (!string.IsNullOrEmpty(entity.ProfileImageUrl))
+                await _fileStorageService.DeleteAsync(entity.ProfileImageUrl);
+        }
         public override async Task<UserResponse> CreateAsync(CreateUserRequest dto)
         {
             var user = _mapper.Map<User>(dto);

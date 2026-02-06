@@ -32,7 +32,6 @@ namespace Reignite.API.Extensions
 
             // Repositories
             services.AddScoped(typeof(IRepository<,>), typeof(BaseRepository<,>));
-            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             // Services
             services.AddScoped<IAuthService, AuthService>();
