@@ -10,16 +10,16 @@ namespace Reignite.Infrastructure.Services
 {
     public class ActivityService : IActivityService
     {
-        private readonly IRepository<Review, int> _reviewRepository;
+        private readonly IRepository<ProductReview, int> _productReviewRepository;
         private readonly IRepository<ProjectReview, int> _projectReviewRepository;
         private readonly IRepository<Project, int> _projectRepository;
 
         public ActivityService(
-            IRepository<Review, int> reviewRepository,
+            IRepository<ProductReview, int> productReviewRepository,
             IRepository<ProjectReview, int> projectReviewRepository,
             IRepository<Project, int> projectRepository)
         {
-            _reviewRepository = reviewRepository;
+            _productReviewRepository = productReviewRepository;
             _projectReviewRepository = projectReviewRepository;
             _projectRepository = projectRepository;
         }
@@ -35,7 +35,7 @@ namespace Reignite.Infrastructure.Services
 
             if (includeProductReviews)
             {
-                var productReviews = await _reviewRepository.AsQueryable()
+                var productReviews = await _productReviewRepository.AsQueryable()
                     .Include(r => r.User)
                     .Include(r => r.Product)
                     .OrderByDescending(r => r.CreatedAt)

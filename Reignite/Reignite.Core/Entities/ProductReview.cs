@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Reignite.Core.Entities
 {
-    public class Review : BaseEntity
+    public class ProductReview : BaseEntity
     {
         public int UserId { get; set; }
         public int ProductId { get; set; }

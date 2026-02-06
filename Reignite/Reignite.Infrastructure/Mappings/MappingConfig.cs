@@ -22,6 +22,13 @@ namespace Reignite.Infrastructure.Mappings
                     ? src.User.FirstName + " " + src.User.LastName
                     : string.Empty);
 
+            TypeAdapterConfig<ProductReview, ProductReviewResponse>.NewConfig()
+                .Map(dest => dest.UserName, src => src.User != null
+                    ? src.User.FirstName + " " + src.User.LastName
+                    : "Nepoznat korisnik")
+                .Map(dest => dest.UserProfileImageUrl, src => src.User != null ? src.User.ProfileImageUrl : null)
+                .Map(dest => dest.ProductName, src => src.Product != null ? src.Product.Name : "Nepoznat proizvod");
+
             TypeAdapterConfig<Project, ProjectResponse>.NewConfig()
                 .Map(dest => dest.UserName, src => src.User != null ? src.User.FirstName + " " + src.User.LastName : string.Empty)
                 .Map(dest => dest.HobbyName, src => src.Hobby != null ? src.Hobby.Name : string.Empty)

@@ -21,7 +21,7 @@ namespace Reignite.Core.Entities
         // Navigation properties
         public ProductCategory ProductCategory { get; set; } = null!;
         public Supplier Supplier { get; set; } = null!;
-        public ICollection<Review> Reviews { get; set; } = new List<Review>();
+        public ICollection<ProductReview> ProductReviews { get; set; } = new List<ProductReview>();
         public ICollection<Project> Projects { get; set; } = new List<Project>();
     }
 }
