@@ -48,7 +48,7 @@ namespace Reignite.Infrastructure.Repositories
             var entity = await _dbSet.FindAsync(id);
 
             if (entity is null || entity.IsDeleted)
-                throw new InvalidOperationException($"Entity tipa {typeof(T).Name} sa id '{id}' ne postoji.");
+                throw new KeyNotFoundException($"Entity tipa {typeof(T).Name} sa id '{id}' ne postoji.");
 
             return entity;
         }

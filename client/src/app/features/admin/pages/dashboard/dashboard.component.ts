@@ -11,7 +11,7 @@ import { OrderNotificationService } from '../../../../core/services/order-notifi
 import { ActivityResponse, ActivityType } from '../../../../core/models/activity.model';
 import { CreateOrderRequest } from '../../../../core/models/order.model';
 import { CreateProjectRequest } from '../../../../core/models/project.model';
-import { environment } from '../../../../../environments/environment';
+import { getImageUrl, getInitials } from '../../../../shared/utils/image.utils';
 
 interface StatCard {
   label: string;
@@ -139,21 +139,11 @@ export class DashboardComponent implements OnInit {
     this.loadActivity();
   }
 
-  protected getImageUrl(path: string | undefined | null): string {
-    if (!path) return '';
-    if (path.startsWith('http://') || path.startsWith('https://')) {
-      return path;
-    }
-    return `${environment.baseUrl}${path}`;
-  }
+  protected getImageUrl = getImageUrl;
 
-  protected getInitials(name: string): string {
-    return name
-      .split(' ')
-      .map(n => n.charAt(0))
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
+  protected getInitialsFromName(name: string): string {
+    const parts = name.split(' ');
+    return getInitials(parts[0] || '', parts[1] || '');
   }
 
   protected formatTimeAgo(dateString: string): string {
@@ -251,11 +241,10 @@ export class DashboardComponent implements OnInit {
         setTimeout(() => this.showLoadingOverlay.set(false), 1500);
         setTimeout(() => this.devMessage.set(null), 4000);
       },
-      error: (err) => {
+      error: () => {
         this.isCreatingOrder.set(false);
         this.showLoadingOverlay.set(false);
         this.devMessage.set({ type: 'error', text: 'Greška pri kreiranju narudžbe' });
-        console.error('Error creating test order:', err);
         setTimeout(() => this.devMessage.set(null), 3000);
       }
     });
@@ -280,11 +269,10 @@ export class DashboardComponent implements OnInit {
         setTimeout(() => this.showLoadingOverlay.set(false), 1500);
         setTimeout(() => this.devMessage.set(null), 4000);
       },
-      error: (err) => {
+      error: () => {
         this.isCreatingProject.set(false);
         this.showLoadingOverlay.set(false);
         this.devMessage.set({ type: 'error', text: 'Greška pri kreiranju projekta' });
-        console.error('Error creating test project:', err);
         setTimeout(() => this.devMessage.set(null), 3000);
       }
     });

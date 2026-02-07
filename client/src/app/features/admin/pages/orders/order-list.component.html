@@ -82,7 +82,7 @@
                   <img [src]="getImageUrl(order.userProfileImageUrl)" [alt]="order.userName" class="user-avatar-img">
                 } @else {
                   <div class="user-avatar">
-                    {{ getInitials(order.userName) }}
+                    {{ getInitialsFromName(order.userName) }}
                   </div>
                 }
                 <span class="user-name">{{ order.userName }}</span>
@@ -178,7 +178,7 @@
                   <img [src]="getImageUrl(orderDetail()?.userProfileImageUrl)" [alt]="orderDetail()?.userName" class="customer-avatar-img">
                 } @else {
                   <div class="customer-avatar">
-                    {{ getInitials(orderDetail()?.userName || '') }}
+                    {{ getInitialsFromName(orderDetail()?.userName || '') }}
                   </div>
                 }
                 <span class="customer-name">{{ orderDetail()?.userName }}</span>

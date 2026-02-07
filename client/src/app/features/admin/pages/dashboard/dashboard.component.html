@@ -266,7 +266,7 @@
               @if (activity.userProfileImageUrl) {
                 <img [src]="getImageUrl(activity.userProfileImageUrl)" [alt]="activity.userName" class="user-avatar-img">
               } @else {
-                <div class="user-avatar">{{ getInitials(activity.userName) }}</div>
+                <div class="user-avatar">{{ getInitialsFromName(activity.userName) }}</div>
               }
             </div>
             <div class="activity-content">

@@ -5,8 +5,8 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { ProductService } from '../../../../../core/services/product.service';
 import { ProductResponse } from '../../../../../core/models/product.model';
-import { environment } from '../../../../../../environments/environment';
 import { ConfirmDialogService } from '../../../../../shared/services/confirm-dialog.service';
+import { getImageUrl } from '../../../../../shared/utils/image.utils';
 
 @Component({
   selector: 'app-product-list',
@@ -82,14 +82,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.loadProducts();
   }
 
-  protected getImageUrl(path: string | undefined): string {
-    if (!path) return '';
-    // If it's already an absolute URL (Unsplash, etc.), return as-is
-    if (path.startsWith('http://') || path.startsWith('https://')) {
-      return path;
-    }
-    return `${environment.baseUrl}${path}`;
-  }
+  protected getImageUrl = getImageUrl;
 
   protected async deleteProduct(product: ProductResponse) {
     const confirmed = await this.confirmDialog.open({

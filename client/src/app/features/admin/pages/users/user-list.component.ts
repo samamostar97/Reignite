@@ -60,12 +60,9 @@ export class UserListComponent implements OnInit, OnDestroy {
       search: this.searchQuery() || undefined
     }).subscribe({
       next: (result) => {
-        // Filter out admin users - only show regular users
-        const nonAdminUsers = result.items.filter(u => u.role !== UserRole.Admin);
-        this.users.set(nonAdminUsers);
-        // Adjust total count to exclude admins
-        const adminCount = result.items.length - nonAdminUsers.length;
-        this.totalCount.set(result.totalCount - adminCount);
+        // Admins are now filtered on the backend
+        this.users.set(result.items);
+        this.totalCount.set(result.totalCount);
         this.isLoading.set(false);
       },
       error: () => {

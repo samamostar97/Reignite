@@ -7,7 +7,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { ProductResponse } from '../../core/models/product.model';
 import { ProjectResponse } from '../../core/models/project.model';
 import { HeaderComponent } from '../../shared/components/header/header.component';
-import { environment } from '../../../environments/environment';
+import { getImageUrl } from '../../shared/utils/image.utils';
 
 @Component({
   selector: 'app-landing',
@@ -95,8 +95,7 @@ export class LandingComponent implements OnInit, OnDestroy {
         this.featuredKits.set(products);
         this.isLoadingKits.set(false);
       },
-      error: (err) => {
-        console.error('Failed to load best selling kits:', err);
+      error: () => {
         this.isLoadingKits.set(false);
       }
     });
@@ -109,8 +108,7 @@ export class LandingComponent implements OnInit, OnDestroy {
         this.topRatedProjects.set(result.items);
         this.isLoadingProjects.set(false);
       },
-      error: (err) => {
-        console.error('Failed to load top rated projects:', err);
+      error: () => {
         this.isLoadingProjects.set(false);
       }
     });
@@ -143,14 +141,7 @@ export class LandingComponent implements OnInit, OnDestroy {
     this.currentKitIndex.set(index);
   }
 
-  protected getImageUrl(relativePath: string | null | undefined): string | null {
-    if (!relativePath) return null;
-    // If it's already an absolute URL (Unsplash, etc.), return as-is
-    if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
-      return relativePath;
-    }
-    return `${environment.baseUrl}${relativePath}`;
-  }
+  protected getImageUrl = getImageUrl;
 
   protected readonly embers = Array.from({ length: 15 }, (_, i) => ({
     id: i,

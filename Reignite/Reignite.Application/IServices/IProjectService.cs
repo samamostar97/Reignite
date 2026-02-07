@@ -11,5 +11,6 @@ namespace Reignite.Application.IServices
         Task<PagedResult<ProjectResponse>> GetTopRatedProjectsAsync(int pageNumber = 1, int pageSize = 3);
         Task<ProjectResponse> UploadImageAsync(int projectId, FileUploadRequest fileRequest);
         Task<bool> DeleteImageAsync(int projectId);
+        Task<bool> IsOwnerAsync(int projectId, int userId);
     }
 }

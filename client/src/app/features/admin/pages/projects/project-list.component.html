@@ -239,7 +239,7 @@
                   <div class="review-card">
                     <div class="review-header">
                       <div class="reviewer-info">
-                        <div class="reviewer-avatar">{{ getInitials(review.userName) }}</div>
+                        <div class="reviewer-avatar">{{ getInitialsFromName(review.userName) }}</div>
                         <div class="reviewer-details">
                           <span class="reviewer-name">{{ review.userName }}</span>
                           <span class="review-date">{{ review.createdAt | date:'dd.MM.yyyy' }}</span>

@@ -4,7 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { OrderNotificationService } from '../../../../core/services/order-notification.service';
 import { SidebarService } from '../../services/sidebar.service';
-import { environment } from '../../../../../environments/environment';
+import { getImageUrl, getInitials } from '../../../../shared/utils/image.utils';
 
 @Component({
   selector: 'app-topbar',
@@ -37,9 +37,7 @@ export class TopbarComponent implements OnInit {
 
   protected readonly userInitials = computed(() => {
     const user = this.currentUser();
-    const first = user?.firstName?.charAt(0) || '';
-    const last = user?.lastName?.charAt(0) || '';
-    return (first + last).toUpperCase();
+    return getInitials(user?.firstName || '', user?.lastName || '');
   });
 
   ngOnInit(): void {
@@ -82,21 +80,11 @@ export class TopbarComponent implements OnInit {
     this.router.navigate(['/admin/orders']);
   }
 
-  protected getImageUrl(path: string | undefined | null): string {
-    if (!path) return '';
-    if (path.startsWith('http://') || path.startsWith('https://')) {
-      return path;
-    }
-    return `${environment.baseUrl}${path}`;
-  }
+  protected getImageUrl = getImageUrl;
 
-  protected getInitials(name: string): string {
-    return name
-      .split(' ')
-      .map(n => n.charAt(0))
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
+  protected getInitialsFromName(name: string): string {
+    const parts = name.split(' ');
+    return getInitials(parts[0] || '', parts[1] || '');
   }
 
   protected formatTimeAgo(dateString: string): string {

@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { OrderService } from '../../../../core/services/order.service';
 import { OrderResponse, OrderStatus } from '../../../../core/models/order.model';
-import { environment } from '../../../../../environments/environment';
+import { getImageUrl, getInitials } from '../../../../shared/utils/image.utils';
 
 @Component({
   selector: 'app-order-list',
@@ -90,21 +90,11 @@ export class OrderListComponent implements OnInit, OnDestroy {
     this.loadOrders();
   }
 
-  protected getImageUrl(path: string | undefined | null): string {
-    if (!path) return '';
-    if (path.startsWith('http://') || path.startsWith('https://')) {
-      return path;
-    }
-    return `${environment.baseUrl}${path}`;
-  }
+  protected getImageUrl = getImageUrl;
 
-  protected getInitials(name: string): string {
-    return name
-      .split(' ')
-      .map(n => n.charAt(0))
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
+  protected getInitialsFromName(name: string): string {
+    const parts = name.split(' ');
+    return getInitials(parts[0] || '', parts[1] || '');
   }
 
   protected getStatusClass(status: OrderStatus): string {

@@ -79,11 +79,11 @@ namespace Reignite.API.Controllers
                 return true;
 
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(currentUserId))
+            if (string.IsNullOrEmpty(currentUserId) || !int.TryParse(currentUserId, out var userId))
                 return false;
 
-            var project = await _projectService.GetByIdAsync(projectId);
-            return project != null && project.UserId.ToString() == currentUserId;
+            // Efficient ownership check without loading the full project
+            return await _projectService.IsOwnerAsync(projectId, userId);
         }
 
         private int GetCurrentUserId()

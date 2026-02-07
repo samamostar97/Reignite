@@ -34,8 +34,7 @@ namespace Reignite.Infrastructure.Services
         public virtual async Task DeleteAsync(TKey id)
         {
             var entity = await _repository.GetByIdAsync(id);
-            if (entity == null)
-                throw new KeyNotFoundException($"Entity sa id '{id}' nije pronadjen.");
+            // Repository throws KeyNotFoundException if not found
 
             await BeforeDeleteAsync(entity);
             await _repository.DeleteAsync(entity);
@@ -46,8 +45,7 @@ namespace Reignite.Infrastructure.Services
         public virtual async Task<TDto> GetByIdAsync(TKey id)
         {
             var entity = await _repository.GetByIdAsync(id);
-            if (entity == null)
-                throw new KeyNotFoundException($"Entity sa id '{id}' nije pronadjen.");
+            // Repository throws KeyNotFoundException if not found
             await AfterGetAsync(entity);
             return _mapper.Map<TDto>(entity);
         }
@@ -73,8 +71,7 @@ namespace Reignite.Infrastructure.Services
         public virtual async Task<TDto> UpdateAsync(TKey id, TUpdateDto dto)
         {
             var entity = await _repository.GetByIdAsync(id);
-            if (entity == null)
-                throw new KeyNotFoundException($"Entity sa id '{id}' nije pronadjen.");
+            // Repository throws KeyNotFoundException if not found
 
             await BeforeUpdateAsync(entity, dto);
             _mapper.Map(dto, entity);

@@ -26,9 +26,9 @@ export class RegisterComponent {
   protected readonly registerForm: FormGroup = this.fb.group({
     firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
     lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-    username: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(50)]],
+    username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
     email: ['', [Validators.required, Validators.email, Validators.maxLength(50)]],
-    phoneNumber: ['', [Validators.required, Validators.pattern(/^(\+387|0)(6[0-9])\d{6,7}$/)]],
+    phoneNumber: ['', [Validators.required, Validators.pattern(/^(\+387|0)\s?6[0-9]\s?[0-9]{3}\s?[0-9]{3,4}$/)]],
     password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
     confirmPassword: ['', [Validators.required]]
   }, { validators: this.passwordMatchValidator });
