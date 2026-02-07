@@ -25,6 +25,15 @@ export class ShopComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
   private readonly searchSubject = new Subject<string>();
 
+  // Ember particles for background effect
+  protected readonly embers = Array.from({ length: 25 }, (_, i) => ({
+    id: i,
+    left: Math.random() * 100,
+    delay: Math.random() * 8,
+    duration: 8 + Math.random() * 6,
+    size: 3 + Math.random() * 4
+  }));
+
   // Data signals
   protected readonly products = signal<ProductResponse[]>([]);
   protected readonly categories = signal<ProductCategoryResponse[]>([]);
