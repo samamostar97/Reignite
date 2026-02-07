@@ -49,6 +49,42 @@
   }
 }
 
+// Back to Home
+.back-home {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover {
+    color: #fff;
+    background: rgba(255, 107, 53, 0.3);
+  }
+
+  @media (max-width: 480px) {
+    top: 1rem;
+    left: 1rem;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.75rem;
+  }
+}
+
 // Login Card
 .login-card {
   position: relative;
@@ -71,6 +107,16 @@
 .card-header {
   text-align: center;
   margin-bottom: 2rem;
+}
+
+.brand-link {
+  text-decoration: none;
+  display: inline-block;
+  transition: opacity 0.3s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
 }
 
 .brand-title {
