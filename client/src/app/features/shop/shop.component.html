@@ -1,0 +1,153 @@
+<div class="shop-page">
+  <!-- Header -->
+  <app-header [visible]="true" [activePath]="'/shop'"></app-header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1 class="page-title">Prodavnica</h1>
+      <p class="page-subtitle">Pronađi svoj sljedeći projekat</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <div class="filter-row">
+        <!-- Category Chips -->
+        <div class="category-chips">
+          <button
+            class="category-chip"
+            [class.active]="selectedCategoryId() === null"
+            (click)="selectCategory(null)">
+            Sve
+          </button>
+          @for (category of categories(); track category.id) {
+            <button
+              class="category-chip"
+              [class.active]="selectedCategoryId() === category.id"
+              (click)="selectCategory(category.id)">
+              {{ category.name }}
+            </button>
+          }
+        </div>
+
+        <!-- Search and Sort -->
+        <div class="filter-controls">
+          <div class="search-wrapper">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            </svg>
+            <input
+              type="text"
+              class="search-input"
+              placeholder="Pretraži proizvode..."
+              [value]="searchQuery()"
+              (input)="onSearch($event)"
+            />
+          </div>
+
+          <select class="sort-select" [value]="sortOption()" (change)="onSortChange($event)">
+            <option value="createdatdesc">Najnovije</option>
+            <option value="name">Naziv A-Z</option>
+            <option value="priceasc">Cijena: Najniža</option>
+            <option value="pricedesc">Cijena: Najviša</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="results-info">
+        <span class="results-count">{{ totalCount() }} proizvoda</span>
+        @if (selectedCategoryId() !== null) {
+          <button class="clear-filter" (click)="selectCategory(null)">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+            Očisti filter
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Products Grid -->
+    @if (isLoading()) {
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Učitavanje proizvoda...</p>
+      </div>
+    } @else if (products().length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+          </svg>
+        </div>
+        @if (searchQuery() || selectedCategoryId() !== null) {
+          <h3>Nema rezultata</h3>
+          <p>Pokušajte promijeniti filtere ili pretragu</p>
+        } @else {
+          <h3>Nema proizvoda</h3>
+          <p>Uskoro dolaze novi proizvodi.</p>
+        }
+      </div>
+    } @else {
+      <div class="products-grid">
+        @for (product of products(); track product.id) {
+          <a [routerLink]="['/shop', product.id]" class="product-card">
+            @if (product.productImageUrl) {
+              <div class="product-image" [style.background-image]="getSafeBackgroundImage(product.productImageUrl)"></div>
+            } @else {
+              <div class="product-image product-image-placeholder">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.4 2.245 4.5 4.5 0 0 0 8.4-2.245c0-.399-.078-.78-.22-1.128Zm0 0a15.998 15.998 0 0 0 3.388-1.62m-5.043-.025a15.994 15.994 0 0 1 1.622-3.395m3.42 3.42a15.995 15.995 0 0 0 4.764-4.648l3.876-5.814a1.151 1.151 0 0 0-1.597-1.597L14.146 6.32a15.996 15.996 0 0 0-4.649 4.763m3.42 3.42a6.776 6.776 0 0 0-3.42-3.42" />
+                </svg>
+              </div>
+            }
+            <div class="product-content">
+              <span class="product-badge">{{ product.productCategoryName }}</span>
+              <h3 class="product-name">{{ product.name }}</h3>
+              @if (product.description) {
+                <p class="product-description">{{ product.description }}</p>
+              }
+              <div class="product-footer">
+                <span class="product-price">{{ formatPrice(product.price) }} KM</span>
+                <span class="product-button">Pogledaj</span>
+              </div>
+            </div>
+          </a>
+        }
+      </div>
+
+      <!-- Pagination -->
+      @if (totalPages() > 1) {
+        <div class="pagination">
+          <button
+            class="pagination-btn"
+            [disabled]="currentPage() === 1"
+            (click)="goToPage(currentPage() - 1)">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+            </svg>
+          </button>
+          <span class="pagination-info">
+            Stranica {{ currentPage() }} od {{ totalPages() }}
+          </span>
+          <button
+            class="pagination-btn"
+            [disabled]="currentPage() === totalPages()"
+            (click)="goToPage(currentPage() + 1)">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+          </button>
+        </div>
+      }
+    }
+  </main>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+    <p class="footer-tagline">Nije bitno šta praviš. Bitno je da praviš.</p>
+  </footer>
+</div>

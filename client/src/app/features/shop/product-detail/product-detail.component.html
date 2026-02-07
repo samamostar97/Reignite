@@ -1,0 +1,192 @@
+<div class="product-detail-page">
+  <!-- Header -->
+  <app-header [visible]="true" [activePath]="'/shop'"></app-header>
+
+  <main class="main-content">
+    <!-- Back Link -->
+    <a routerLink="/shop" class="back-link">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+      </svg>
+      Nazad na prodavnicu
+    </a>
+
+    @if (isLoading()) {
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Učitavanje proizvoda...</p>
+      </div>
+    } @else if (error()) {
+      <div class="error-state">
+        <div class="error-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+          </svg>
+        </div>
+        <h3>{{ error() }}</h3>
+        <a routerLink="/shop" class="back-button">Povratak na prodavnicu</a>
+      </div>
+    } @else if (product()) {
+      <article class="product-article">
+        <!-- Product Hero -->
+        <div class="product-hero">
+          @if (product()!.productImageUrl) {
+            <div class="hero-image" [style.background-image]="getSafeBackgroundImage(product()!.productImageUrl)"></div>
+          } @else {
+            <div class="hero-image hero-image-placeholder">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.4 2.245 4.5 4.5 0 0 0 8.4-2.245c0-.399-.078-.78-.22-1.128Zm0 0a15.998 15.998 0 0 0 3.388-1.62m-5.043-.025a15.994 15.994 0 0 1 1.622-3.395m3.42 3.42a15.995 15.995 0 0 0 4.764-4.648l3.876-5.814a1.151 1.151 0 0 0-1.597-1.597L14.146 6.32a15.996 15.996 0 0 0-4.649 4.763m3.42 3.42a6.776 6.776 0 0 0-3.42-3.42" />
+              </svg>
+            </div>
+          }
+        </div>
+
+        <!-- Product Info -->
+        <div class="product-info">
+          <div class="info-header">
+            <span class="category-badge">{{ product()!.productCategoryName }}</span>
+            <h1 class="product-title">{{ product()!.name }}</h1>
+
+            <div class="product-meta">
+              @if (reviewCount() > 0) {
+                <div class="rating-display">
+                  <div class="stars">
+                    @for (star of [1,2,3,4,5]; track star) {
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" [class.filled]="star <= averageRating()">
+                        <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+                      </svg>
+                    }
+                  </div>
+                  <span class="rating-value">{{ averageRating().toFixed(1) }}</span>
+                  <span class="rating-count">({{ reviewCount() }} recenzija)</span>
+                </div>
+              } @else {
+                <span class="no-reviews-yet">Još nema recenzija</span>
+              }
+            </div>
+
+            <div class="price-section">
+              <span class="product-price">{{ formatPrice(product()!.price) }} <span class="currency">KM</span></span>
+            </div>
+
+            <!-- Add to Cart Section -->
+            <div class="cart-section">
+              @if (isAuthenticated()) {
+                <button class="add-to-cart-btn" disabled>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121 0 2.09-.773 2.34-1.864l1.74-7.603a1.125 1.125 0 0 0-1.09-1.408H5.727l-.367-1.372A1.125 1.125 0 0 0 4.272 3H3.25" />
+                  </svg>
+                  Uskoro dostupno
+                </button>
+              } @else {
+                <a routerLink="/login" class="add-to-cart-btn login-to-cart">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                  </svg>
+                  Prijavi se za kupovinu
+                </a>
+              }
+            </div>
+          </div>
+
+          @if (product()!.description) {
+            <div class="product-description">
+              <h2>Opis proizvoda</h2>
+              <p>{{ product()!.description }}</p>
+            </div>
+          }
+        </div>
+
+        <!-- Reviews Section -->
+        <div class="reviews-section">
+          <h2>Recenzije ({{ reviewCount() }})</h2>
+
+          <!-- Login prompt for anonymous users -->
+          @if (!isAuthenticated()) {
+            <div class="login-prompt">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
+              </svg>
+              <p><a routerLink="/login">Prijavi se</a> da bi ostavio recenziju</p>
+            </div>
+          }
+
+          @if (isLoadingReviews()) {
+            <div class="loading-reviews">
+              <div class="loading-spinner-small"></div>
+              <span>Učitavanje recenzija...</span>
+            </div>
+          } @else if (reviews().length === 0) {
+            <div class="no-reviews">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
+              </svg>
+              <p>Ovaj proizvod još nema recenzija. Budi prvi!</p>
+            </div>
+          } @else {
+            <div class="reviews-list">
+              @for (review of reviews(); track review.id) {
+                <div class="review-card">
+                  <div class="review-header">
+                    <div class="reviewer-info">
+                      @if (review.userProfileImageUrl) {
+                        <img [src]="getImageUrl(review.userProfileImageUrl)" [alt]="review.userName" class="reviewer-avatar-img">
+                      } @else {
+                        <div class="reviewer-avatar">{{ getInitials(review.userName) }}</div>
+                      }
+                      <div class="reviewer-details">
+                        <span class="reviewer-name">{{ review.userName }}</span>
+                        <span class="review-date">{{ formatDate(review.createdAt) }}</span>
+                      </div>
+                    </div>
+                    <div class="review-rating">
+                      @for (star of [1,2,3,4,5]; track star) {
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" [class.filled]="star <= review.rating">
+                          <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+                        </svg>
+                      }
+                    </div>
+                  </div>
+                  @if (review.comment) {
+                    <p class="review-comment">{{ review.comment }}</p>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </article>
+
+      <!-- Related Products -->
+      @if (relatedProducts().length > 0) {
+        <section class="related-section">
+          <h2>Slični proizvodi</h2>
+          <div class="related-grid">
+            @for (related of relatedProducts(); track related.id) {
+              <a [routerLink]="['/shop', related.id]" class="related-card">
+                @if (related.productImageUrl) {
+                  <div class="related-image" [style.background-image]="getSafeBackgroundImage(related.productImageUrl)"></div>
+                } @else {
+                  <div class="related-image related-image-placeholder">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.4 2.245 4.5 4.5 0 0 0 8.4-2.245c0-.399-.078-.78-.22-1.128Z" />
+                    </svg>
+                  </div>
+                }
+                <div class="related-content">
+                  <h4 class="related-name">{{ related.name }}</h4>
+                  <span class="related-price">{{ formatPrice(related.price) }} KM</span>
+                </div>
+              </a>
+            }
+          </div>
+        </section>
+      }
+    }
+  </main>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+    <p class="footer-tagline">Nije bitno šta praviš. Bitno je da praviš.</p>
+  </footer>
+</div>
