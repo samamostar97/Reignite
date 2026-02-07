@@ -1,4 +1,7 @@
-<aside class="sidebar" [class.collapsed]="isCollapsed()">
+<!-- Mobile backdrop overlay -->
+<div class="sidebar-backdrop" [class.visible]="isMobileOpen()" (click)="closeMobile()"></div>
+
+<aside class="sidebar" [class.collapsed]="isCollapsed()" [class.mobile-open]="isMobileOpen()">
   <div class="sidebar-header">
     <a routerLink="/admin" class="logo-container">
       <div class="logo-icon">
