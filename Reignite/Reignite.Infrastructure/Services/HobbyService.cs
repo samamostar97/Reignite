@@ -12,8 +12,23 @@ namespace Reignite.Infrastructure.Services
 {
     public class HobbyService : BaseService<Hobby, HobbyResponse, CreateHobbyRequest, UpdateHobbyRequest, HobbyQueryFilter, int>, IHobbyService
     {
-        public HobbyService(IRepository<Hobby, int> repository, IMapper mapper) : base(repository, mapper)
+        private readonly IRepository<Project, int> _projectRepository;
+
+        public HobbyService(
+            IRepository<Hobby, int> repository,
+            IRepository<Project, int> projectRepository,
+            IMapper mapper) : base(repository, mapper)
         {
+            _projectRepository = projectRepository;
+        }
+
+        protected override async Task BeforeDeleteAsync(Hobby entity)
+        {
+            var projectCount = await _projectRepository.AsQueryable()
+                .CountAsync(p => p.HobbyId == entity.Id);
+
+            if (projectCount > 0)
+                throw new EntityHasDependentsException("hobi", "projekata", projectCount);
         }
 
         public async Task<List<HobbyResponse>> GetAllAsync()

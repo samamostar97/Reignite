@@ -24,7 +24,9 @@ namespace Reignite.Application.DTOs.Request
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Lozinka mora imati najmanje 6 znakova.")]
         public string Password { get; set; } = string.Empty;
 
-        [Phone(ErrorMessage = "Broj telefona nije ispravan.")]
+        [Required(ErrorMessage = "Broj telefona je obavezan.")]
+        [RegularExpression(@"^(\+387|0)\s?6[0-9]\s?[0-9]{3}\s?[0-9]{3,4}$",
+            ErrorMessage = "Neispravan format broja telefona (npr. +387 61 234 567).")]
         public string PhoneNumber { get; set; } = string.Empty;
     }
 }

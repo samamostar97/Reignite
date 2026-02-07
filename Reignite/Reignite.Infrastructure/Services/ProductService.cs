@@ -3,15 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Reignite.Application.Common;
 using Reignite.Application.DTOs.Request;
 using Reignite.Application.DTOs.Response;
+using Reignite.Application.Exceptions;
 using Reignite.Application.Filters;
 using Reignite.Application.IRepositories;
 using Reignite.Application.IServices;
 using Reignite.Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Reignite.Infrastructure.Services
 {
@@ -19,15 +15,21 @@ namespace Reignite.Infrastructure.Services
     {
         private readonly IFileStorageService _fileStorageService;
         private readonly IRepository<OrderItem, int> _orderItemRepository;
+        private readonly IRepository<ProductCategory, int> _categoryRepository;
+        private readonly IRepository<Supplier, int> _supplierRepository;
 
         public ProductService(
             IRepository<Product, int> repository,
             IMapper mapper,
             IFileStorageService fileStorageService,
-            IRepository<OrderItem, int> orderItemRepository) : base(repository, mapper)
+            IRepository<OrderItem, int> orderItemRepository,
+            IRepository<ProductCategory, int> categoryRepository,
+            IRepository<Supplier, int> supplierRepository) : base(repository, mapper)
         {
             _fileStorageService = fileStorageService;
             _orderItemRepository = orderItemRepository;
+            _categoryRepository = categoryRepository;
+            _supplierRepository = supplierRepository;
         }
 
         public override async Task<ProductResponse> GetByIdAsync(int id)
@@ -46,6 +48,7 @@ namespace Reignite.Infrastructure.Services
         public async Task<ProductResponse> CreateWithImageAsync(CreateProductRequest dto, FileUploadRequest? imageRequest)
         {
             var product = _mapper.Map<Product>(dto);
+            await BeforeCreateAsync(product, dto);
             await _repository.AddAsync(product);
 
             if (imageRequest != null && imageRequest.FileStream != null && imageRequest.FileSize > 0)
@@ -93,8 +96,59 @@ namespace Reignite.Infrastructure.Services
             return query;
         }
 
+        protected override async Task BeforeCreateAsync(Product entity, CreateProductRequest dto)
+        {
+            var categoryExists = await _categoryRepository.AsQueryable()
+                .AnyAsync(c => c.Id == dto.ProductCategoryId);
+            if (!categoryExists)
+                throw new KeyNotFoundException($"Kategorija sa ID {dto.ProductCategoryId} ne postoji.");
+
+            var supplierExists = await _supplierRepository.AsQueryable()
+                .AnyAsync(s => s.Id == dto.SupplierId);
+            if (!supplierExists)
+                throw new KeyNotFoundException($"Dobavljač sa ID {dto.SupplierId} ne postoji.");
+
+            var nameExists = await _repository.AsQueryable()
+                .AnyAsync(p => p.Name.ToLower() == dto.Name.ToLower());
+            if (nameExists)
+                throw new ConflictException($"Proizvod sa nazivom '{dto.Name}' već postoji.");
+        }
+
+        protected override async Task BeforeUpdateAsync(Product entity, UpdateProductRequest dto)
+        {
+            if (dto.ProductCategoryId.HasValue)
+            {
+                var categoryExists = await _categoryRepository.AsQueryable()
+                    .AnyAsync(c => c.Id == dto.ProductCategoryId.Value);
+                if (!categoryExists)
+                    throw new KeyNotFoundException($"Kategorija sa ID {dto.ProductCategoryId} ne postoji.");
+            }
+
+            if (dto.SupplierId.HasValue)
+            {
+                var supplierExists = await _supplierRepository.AsQueryable()
+                    .AnyAsync(s => s.Id == dto.SupplierId.Value);
+                if (!supplierExists)
+                    throw new KeyNotFoundException($"Dobavljač sa ID {dto.SupplierId} ne postoji.");
+            }
+
+            if (!string.IsNullOrEmpty(dto.Name))
+            {
+                var nameExists = await _repository.AsQueryable()
+                    .AnyAsync(p => p.Id != entity.Id && p.Name.ToLower() == dto.Name.ToLower());
+                if (nameExists)
+                    throw new ConflictException($"Proizvod sa nazivom '{dto.Name}' već postoji.");
+            }
+        }
+
         protected override async Task BeforeDeleteAsync(Product entity)
         {
+            var orderItemCount = await _orderItemRepository.AsQueryable()
+                .CountAsync(oi => oi.ProductId == entity.Id);
+
+            if (orderItemCount > 0)
+                throw new EntityHasDependentsException("proizvod", "stavki narudžbi", orderItemCount);
+
             if (!string.IsNullOrEmpty(entity.ProductImageUrl))
                 await _fileStorageService.DeleteAsync(entity.ProductImageUrl);
         }

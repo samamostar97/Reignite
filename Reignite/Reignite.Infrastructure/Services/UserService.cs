@@ -49,6 +49,7 @@ namespace Reignite.Infrastructure.Services
         public override async Task<UserResponse> CreateAsync(CreateUserRequest dto)
         {
             var user = _mapper.Map<User>(dto);
+            await BeforeCreateAsync(user, dto);
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
             await _repository.AddAsync(user);
@@ -59,6 +60,7 @@ namespace Reignite.Infrastructure.Services
         public async Task<UserResponse> CreateWithImageAsync(CreateUserRequest dto, FileUploadRequest? imageRequest)
         {
             var user = _mapper.Map<User>(dto);
+            await BeforeCreateAsync(user, dto);
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
             await _repository.AddAsync(user);

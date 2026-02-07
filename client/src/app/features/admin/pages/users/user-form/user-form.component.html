@@ -92,13 +92,17 @@
                   id="firstName"
                   formControlName="firstName"
                   class="form-input"
-                  [class.error]="hasError('firstName', 'required') || hasError('firstName', 'minlength')"
-                  placeholder="Unesite ime">
+                  [class.error]="hasError('firstName', 'required') || hasError('firstName', 'minlength') || hasError('firstName', 'maxlength')"
+                  placeholder="Unesite ime"
+                  maxlength="100">
                 @if (hasError('firstName', 'required')) {
                   <span class="error-message">Ime je obavezno</span>
                 }
                 @if (hasError('firstName', 'minlength')) {
                   <span class="error-message">Ime mora imati najmanje 2 karaktera</span>
+                }
+                @if (hasError('firstName', 'maxlength')) {
+                  <span class="error-message">Ime može imati najviše 100 karaktera</span>
                 }
               </div>
 
@@ -112,13 +116,17 @@
                   id="lastName"
                   formControlName="lastName"
                   class="form-input"
-                  [class.error]="hasError('lastName', 'required') || hasError('lastName', 'minlength')"
-                  placeholder="Unesite prezime">
+                  [class.error]="hasError('lastName', 'required') || hasError('lastName', 'minlength') || hasError('lastName', 'maxlength')"
+                  placeholder="Unesite prezime"
+                  maxlength="100">
                 @if (hasError('lastName', 'required')) {
                   <span class="error-message">Prezime je obavezno</span>
                 }
                 @if (hasError('lastName', 'minlength')) {
                   <span class="error-message">Prezime mora imati najmanje 2 karaktera</span>
+                }
+                @if (hasError('lastName', 'maxlength')) {
+                  <span class="error-message">Prezime može imati najviše 100 karaktera</span>
                 }
               </div>
             </div>
@@ -134,13 +142,17 @@
                   id="username"
                   formControlName="username"
                   class="form-input"
-                  [class.error]="hasError('username', 'required') || hasError('username', 'minlength')"
-                  placeholder="Unesite korisnicko ime">
+                  [class.error]="hasError('username', 'required') || hasError('username', 'minlength') || hasError('username', 'maxlength')"
+                  placeholder="Unesite korisnicko ime"
+                  maxlength="50">
                 @if (hasError('username', 'required')) {
                   <span class="error-message">Korisnicko ime je obavezno</span>
                 }
                 @if (hasError('username', 'minlength')) {
                   <span class="error-message">Korisnicko ime mora imati najmanje 3 karaktera</span>
+                }
+                @if (hasError('username', 'maxlength')) {
+                  <span class="error-message">Korisnicko ime može imati najviše 50 karaktera</span>
                 }
               </div>
 
@@ -176,10 +188,13 @@
                   id="phoneNumber"
                   formControlName="phoneNumber"
                   class="form-input"
-                  [class.error]="hasError('phoneNumber', 'required')"
+                  [class.error]="hasError('phoneNumber', 'required') || hasError('phoneNumber', 'pattern')"
                   placeholder="+387 6X XXX XXX">
                 @if (hasError('phoneNumber', 'required')) {
                   <span class="error-message">Broj telefona je obavezan</span>
+                }
+                @if (hasError('phoneNumber', 'pattern')) {
+                  <span class="error-message">Neispravan format (npr. +387 61 234 567)</span>
                 }
               </div>
 
@@ -194,13 +209,17 @@
                     id="password"
                     formControlName="password"
                     class="form-input"
-                    [class.error]="hasError('password', 'required') || hasError('password', 'minlength')"
-                    placeholder="Unesite lozinku">
+                    [class.error]="hasError('password', 'required') || hasError('password', 'minlength') || hasError('password', 'maxlength')"
+                    placeholder="Unesite lozinku"
+                    maxlength="100">
                   @if (hasError('password', 'required')) {
                     <span class="error-message">Lozinka je obavezna</span>
                   }
                   @if (hasError('password', 'minlength')) {
                     <span class="error-message">Lozinka mora imati najmanje 6 karaktera</span>
+                  }
+                  @if (hasError('password', 'maxlength')) {
+                    <span class="error-message">Lozinka može imati najviše 100 karaktera</span>
                   }
                 </div>
               }
@@ -209,7 +228,12 @@
         </div>
 
         @if (errorMessage()) {
-          <div class="error-message">{{ errorMessage() }}</div>
+          <div class="api-error">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+            </svg>
+            <span>{{ errorMessage() }}</span>
+          </div>
         }
 
         <!-- Form Actions -->

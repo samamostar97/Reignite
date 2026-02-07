@@ -16,7 +16,8 @@ namespace Reignite.Application.DTOs.Request
         [EmailAddress(ErrorMessage = "Email adresa nije ispravna.")]
         public string? Email { get; set; }
 
-        [Phone(ErrorMessage = "Broj telefona nije ispravan.")]
+        [RegularExpression(@"^(\+387|0)\s?6[0-9]\s?[0-9]{3}\s?[0-9]{3,4}$",
+            ErrorMessage = "Neispravan format broja telefona (npr. +387 61 234 567).")]
         public string? PhoneNumber { get; set; }
 
         public string? ProfileImageUrl { get; set; }
