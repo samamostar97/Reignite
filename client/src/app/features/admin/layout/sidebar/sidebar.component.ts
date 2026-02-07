@@ -1,6 +1,7 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
+import { Subject, filter, takeUntil } from 'rxjs';
 import { AuthService } from '../../../../core/services/auth.service';
 import { SidebarService } from '../../services/sidebar.service';
 
@@ -19,11 +20,14 @@ interface NavItem {
   styleUrl: './sidebar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit, OnDestroy {
   private readonly authService = inject(AuthService);
   private readonly sidebarService = inject(SidebarService);
+  private readonly router = inject(Router);
+  private readonly destroy$ = new Subject<void>();
 
   protected readonly isCollapsed = this.sidebarService.isCollapsed;
+  protected readonly isMobileOpen = this.sidebarService.isMobileOpen;
 
   // Grouped navigation items
   protected readonly mainNavItems: NavItem[] = [
@@ -47,8 +51,27 @@ export class SidebarComponent {
     { label: 'Izvještaji', route: '/admin/reports', icon: 'document-chart' },
   ];
 
+  ngOnInit(): void {
+    // Close mobile sidebar on route navigation
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.sidebarService.closeMobile();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   protected toggleCollapse(): void {
     this.sidebarService.toggle();
+  }
+
+  protected closeMobile(): void {
+    this.sidebarService.closeMobile();
   }
 
   protected logout(): void {

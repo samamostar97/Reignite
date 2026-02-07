@@ -596,8 +596,54 @@ $smoke: #5a3a2a;
   margin: 0.5rem 0;
 }
 
+// Mobile menu button (hidden by default)
+.mobile-menu-btn {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  color: $ash;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: $ember;
+  }
+}
+
 // Responsive adjustments
 @media (max-width: 768px) {
+  .topbar {
+    padding: 0 1rem;
+  }
+
+  .topbar-left {
+    gap: 0.75rem;
+  }
+
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  .page-title {
+    font-size: 1.1rem;
+
+    &::after {
+      width: 30px;
+    }
+  }
+
   .topbar-center {
     display: none;
   }
@@ -608,5 +654,22 @@ $smoke: #5a3a2a;
 
   .dropdown-arrow {
     display: none;
+  }
+
+  .topbar-divider {
+    margin: 0 0.25rem;
+  }
+
+  .notification-menu {
+    width: 300px;
+    right: -60px;
+  }
+
+  .notification-callout {
+    right: -60px;
+
+    .callout-arrow {
+      right: 70px;
+    }
   }
 }

@@ -26,3 +26,14 @@ $sidebar-collapsed-width: 80px;
   padding: 2rem;
   overflow-y: auto;
 }
+
+// Mobile responsive
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0 !important;
+  }
+
+  .content-area {
+    padding: 1rem;
+  }
+}

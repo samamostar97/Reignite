@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { OrderNotificationService } from '../../../../core/services/order-notification.service';
+import { SidebarService } from '../../services/sidebar.service';
 import { environment } from '../../../../../environments/environment';
 
 @Component({
@@ -17,6 +18,7 @@ export class TopbarComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly elementRef = inject(ElementRef);
   private readonly router = inject(Router);
+  private readonly sidebarService = inject(SidebarService);
   protected readonly notificationService = inject(OrderNotificationService);
 
   pageTitle = input<string>('Dashboard');
@@ -119,5 +121,9 @@ export class TopbarComponent implements OnInit {
   protected logout(): void {
     this.isDropdownOpen.set(false);
     this.authService.logout();
+  }
+
+  protected toggleMobileSidebar(): void {
+    this.sidebarService.toggleMobile();
   }
 }
