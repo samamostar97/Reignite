@@ -73,7 +73,7 @@
               <div class="carousel-container">
                 <div class="carousel-track" [style.transform]="carouselTransform()">
                   @for (kit of featuredKits(); track kit.id; let idx = $index) {
-                    <div class="kit-card carousel-item" [class.active]="currentKitIndex() === idx">
+                    <a [routerLink]="['/shop', kit.id]" class="kit-card carousel-item" [class.active]="currentKitIndex() === idx">
                       @if (kit.productImageUrl) {
                         <div class="kit-image" [style.background-image]="'url(' + getImageUrl(kit.productImageUrl) + ')'"></div>
                       } @else {
@@ -89,10 +89,10 @@
                         <p class="kit-description">{{ kit.description }}</p>
                         <div class="kit-footer">
                           <span class="kit-price">{{ kit.price }} KM</span>
-                          <button class="kit-button">Detalji</button>
+                          <span class="kit-button">Detalji</span>
                         </div>
                       </div>
-                    </div>
+                    </a>
                   }
                 </div>
               </div>
