@@ -157,6 +157,10 @@
           </div>
         </div>
 
+        @if (errorMessage()) {
+          <div class="error-message">{{ errorMessage() }}</div>
+        }
+
         <!-- Form Actions -->
         <div class="form-actions">
           <a routerLink="/admin/products" class="btn-secondary">Otkazi</a>

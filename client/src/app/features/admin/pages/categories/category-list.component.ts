@@ -26,6 +26,7 @@ export class CategoryListComponent implements OnInit, OnDestroy {
   protected readonly currentPage = signal(1);
   protected readonly pageSize = signal(10);
   protected readonly searchQuery = signal('');
+  protected readonly errorMessage = signal<string | null>(null);
 
   protected readonly totalPages = computed(() =>
     Math.ceil(this.totalCount() / this.pageSize())
@@ -83,20 +84,26 @@ export class CategoryListComponent implements OnInit, OnDestroy {
   protected showAddForm() {
     this.isAdding.set(true);
     this.newCategoryName = '';
+    this.errorMessage.set(null);
   }
 
   protected cancelAdd() {
     this.isAdding.set(false);
     this.newCategoryName = '';
+    this.errorMessage.set(null);
   }
 
   protected addCategory() {
     if (!this.newCategoryName.trim()) return;
 
+    this.errorMessage.set(null);
     this.categoryService.createCategory({ name: this.newCategoryName.trim() }).subscribe({
       next: () => {
         this.cancelAdd();
         this.loadCategories();
+      },
+      error: (err) => {
+        this.errorMessage.set(err.error?.error || 'Greška pri dodavanju kategorije.');
       }
     });
   }
@@ -104,20 +111,26 @@ export class CategoryListComponent implements OnInit, OnDestroy {
   protected startEdit(category: ProductCategoryResponse) {
     this.editingId.set(category.id);
     this.editCategoryName = category.name;
+    this.errorMessage.set(null);
   }
 
   protected cancelEdit() {
     this.editingId.set(null);
     this.editCategoryName = '';
+    this.errorMessage.set(null);
   }
 
   protected saveEdit(id: number) {
     if (!this.editCategoryName.trim()) return;
 
+    this.errorMessage.set(null);
     this.categoryService.updateCategory(id, { name: this.editCategoryName.trim() }).subscribe({
       next: () => {
         this.cancelEdit();
         this.loadCategories();
+      },
+      error: (err) => {
+        this.errorMessage.set(err.error?.error || 'Greška pri ažuriranju kategorije.');
       }
     });
   }
@@ -125,7 +138,10 @@ export class CategoryListComponent implements OnInit, OnDestroy {
   protected deleteCategory(category: ProductCategoryResponse) {
     if (confirm(`Da li ste sigurni da želite obrisati kategoriju "${category.name}"?`)) {
       this.categoryService.deleteCategory(category.id).subscribe({
-        next: () => this.loadCategories()
+        next: () => this.loadCategories(),
+        error: (err) => {
+          this.errorMessage.set(err.error?.error || 'Greška pri brisanju kategorije.');
+        }
       });
     }
   }

@@ -19,6 +19,10 @@
     </div>
   </div>
 
+  @if (errorMessage()) {
+    <div class="error-message">{{ errorMessage() }}</div>
+  }
+
   @if (isLoading()) {
     <div class="loading">
       <div class="spinner"></div>

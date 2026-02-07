@@ -208,6 +208,10 @@
           </div>
         </div>
 
+        @if (errorMessage()) {
+          <div class="error-message">{{ errorMessage() }}</div>
+        }
+
         <!-- Form Actions -->
         <div class="form-actions">
           <a routerLink="/admin/users" class="btn-secondary">Otkazi</a>

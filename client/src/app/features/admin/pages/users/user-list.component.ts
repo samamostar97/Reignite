@@ -25,6 +25,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   protected readonly currentPage = signal(1);
   protected readonly pageSize = signal(10);
   protected readonly searchQuery = signal('');
+  protected readonly errorMessage = signal<string | null>(null);
 
   protected readonly totalPages = computed(() =>
     Math.ceil(this.totalCount() / this.pageSize())
@@ -113,9 +114,13 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   protected deleteUser(user: UserResponse) {
     if (confirm(`Da li ste sigurni da želite obrisati korisnika "${user.firstName} ${user.lastName}"?`)) {
+      this.errorMessage.set(null);
       this.userService.deleteUser(user.id).subscribe({
         next: () => {
           this.loadUsers();
+        },
+        error: (err) => {
+          this.errorMessage.set(err.error?.error || 'Greška pri brisanju korisnika.');
         }
       });
     }

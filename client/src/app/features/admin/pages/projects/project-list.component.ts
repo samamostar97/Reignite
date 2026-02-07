@@ -24,6 +24,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   protected readonly currentPage = signal(1);
   protected readonly pageSize = signal(10);
   protected readonly searchQuery = signal('');
+  protected readonly errorMessage = signal<string | null>(null);
 
   // Modal state
   protected readonly selectedProject = signal<ProjectResponse | null>(null);
@@ -91,8 +92,12 @@ export class ProjectListComponent implements OnInit, OnDestroy {
 
   protected deleteProject(project: ProjectResponse) {
     if (confirm(`Da li ste sigurni da želite obrisati projekat "${project.title}"?`)) {
+      this.errorMessage.set(null);
       this.projectService.deleteProject(project.id).subscribe({
-        next: () => this.loadProjects()
+        next: () => this.loadProjects(),
+        error: (err) => {
+          this.errorMessage.set(err.error?.error || 'Greška pri brisanju projekta.');
+        }
       });
     }
   }

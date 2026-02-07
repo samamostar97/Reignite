@@ -26,6 +26,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   protected readonly currentPage = signal(1);
   protected readonly pageSize = signal(10);
   protected readonly searchQuery = signal('');
+  protected readonly errorMessage = signal<string | null>(null);
 
   protected readonly totalPages = computed(() =>
     Math.ceil(this.totalCount() / this.pageSize())
@@ -90,9 +91,13 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   protected deleteProduct(product: ProductResponse) {
     if (confirm(`Da li ste sigurni da želite obrisati "${product.name}"?`)) {
+      this.errorMessage.set(null);
       this.productService.deleteProduct(product.id).subscribe({
         next: () => {
           this.loadProducts();
+        },
+        error: (err) => {
+          this.errorMessage.set(err.error?.error || 'Greška pri brisanju proizvoda.');
         }
       });
     }
