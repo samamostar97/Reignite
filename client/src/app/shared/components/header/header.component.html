@@ -6,10 +6,40 @@
       <a routerLink="/shop" class="nav-link" [class.active]="activePath === '/shop'">Prodavnica</a>
       <a routerLink="/projects" class="nav-link" [class.active]="activePath === '/projects'">Projekti</a>
     </nav>
-    @if (isAdmin()) {
-      <a routerLink="/admin" class="header-button">Admin Panel</a>
-    } @else if (isAuthenticated()) {
-      <a routerLink="/account" class="header-button">Moj Račun</a>
+
+    @if (isAuthenticated()) {
+      <div class="user-menu">
+        <button class="user-button" (click)="toggleDropdown($event)">
+          <span class="user-avatar">{{ getInitials() }}</span>
+          <svg class="dropdown-icon" [class.open]="dropdownOpen()" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+          </svg>
+        </button>
+
+        <div class="dropdown-menu" [class.open]="dropdownOpen()">
+          @if (isAdmin()) {
+            <a routerLink="/admin" class="dropdown-item" (click)="dropdownOpen.set(false)">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+              </svg>
+              Admin Panel
+            </a>
+          }
+          <a routerLink="/account" class="dropdown-item" (click)="dropdownOpen.set(false)">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+            </svg>
+            Moj Račun
+          </a>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item logout" (click)="logout()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15" />
+            </svg>
+            Odjavi Se
+          </button>
+        </div>
+      </div>
     } @else {
       <a routerLink="/login" class="header-button">Prijavi Se</a>
     }

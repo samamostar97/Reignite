@@ -46,6 +46,9 @@ namespace Reignite.Infrastructure.Services
 
         public async Task<PagedResult<ProjectResponse>> GetTopRatedProjectsAsync(int pageNumber = 1, int pageSize = 3)
         {
+            // Hard limit to 3 projects max for landing page display
+            pageSize = Math.Min(pageSize, 3);
+
             var query = _projectRepository.AsQueryable()
                 .Include(p => p.User)
                 .Include(p => p.Hobby)

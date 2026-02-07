@@ -98,3 +98,123 @@
     color: white;
   }
 }
+
+// User Menu Dropdown
+.user-menu {
+  position: relative;
+}
+
+.user-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  background: transparent;
+  border: 1px solid rgba(44, 24, 16, 0.2);
+  border-radius: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #ff6b35;
+    background: rgba(255, 107, 53, 0.05);
+  }
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.dropdown-icon {
+  width: 16px;
+  height: 16px;
+  color: #5a3a2a;
+  transition: transform 0.3s ease;
+
+  &.open {
+    transform: rotate(180deg);
+  }
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  min-width: 200px;
+  background: white;
+  border: 1px solid rgba(255, 107, 53, 0.1);
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 40px rgba(44, 24, 16, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 200;
+
+  &.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: transparent;
+  border: none;
+  color: #5a3a2a;
+  font-size: 0.9rem;
+  font-weight: 400;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    opacity: 0.7;
+  }
+
+  &:hover {
+    background: rgba(255, 107, 53, 0.08);
+    color: #ff6b35;
+
+    svg {
+      opacity: 1;
+    }
+  }
+
+  &:first-child {
+    border-radius: 0.5rem 0.5rem 0 0;
+  }
+
+  &.logout {
+    color: #dc2626;
+    border-radius: 0 0 0.5rem 0.5rem;
+
+    &:hover {
+      background: rgba(220, 38, 38, 0.08);
+      color: #dc2626;
+    }
+  }
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: rgba(44, 24, 16, 0.1);
+  margin: 0.25rem 0;
+}
