@@ -27,6 +27,10 @@
     </div>
   </div>
 
+  @if (errorMessage()) {
+    <div class="error-message">{{ errorMessage() }}</div>
+  }
+
   @if (isAdding()) {
     <div class="add-form">
       <input

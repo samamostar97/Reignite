@@ -307,6 +307,7 @@
 }
 
 .cta-button {
+  display: inline-block;
   padding: 1rem 2.5rem;
   font-size: 0.95rem;
   font-weight: 500;
@@ -315,6 +316,7 @@
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
   letter-spacing: 0.15em;
   text-transform: uppercase;
+  text-decoration: none;
   position: relative;
   overflow: hidden;
 

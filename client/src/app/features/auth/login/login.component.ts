@@ -61,10 +61,11 @@ export class LoginComponent {
       },
       error: (err) => {
         this.isLoading.set(false);
-        this.errorMessage.set(err.message);
+        const errorMsg = err.error?.error || 'Greška pri prijavi.';
+        this.errorMessage.set(errorMsg);
         this.notificationService.error({
           title: 'Greška pri prijavi',
-          message: err.message
+          message: errorMsg
         });
       }
     });

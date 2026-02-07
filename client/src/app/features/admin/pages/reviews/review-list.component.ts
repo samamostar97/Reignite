@@ -25,6 +25,7 @@ export class ReviewListComponent implements OnInit, OnDestroy {
   protected readonly pageSize = signal(10);
   protected readonly searchQuery = signal('');
   protected readonly ratingFilter = signal<number | null>(null);
+  protected readonly errorMessage = signal<string | null>(null);
 
   // Delete confirmation
   protected readonly reviewToDelete = signal<ProductReviewResponse | null>(null);
@@ -130,14 +131,17 @@ export class ReviewListComponent implements OnInit, OnDestroy {
     if (!review) return;
 
     this.isDeleting.set(true);
+    this.errorMessage.set(null);
     this.reviewService.deleteReview(review.id).subscribe({
       next: () => {
         this.reviewToDelete.set(null);
         this.isDeleting.set(false);
         this.loadReviews();
       },
-      error: () => {
+      error: (err) => {
         this.isDeleting.set(false);
+        this.reviewToDelete.set(null);
+        this.errorMessage.set(err.error?.error || 'Greška pri brisanju recenzije.');
       }
     });
   }

@@ -29,6 +29,7 @@ export class UserFormComponent implements OnInit {
   protected readonly isDragging = signal(false);
   protected readonly pendingImage = signal<File | null>(null);
   protected readonly pendingImagePreview = signal<string | null>(null);
+  protected readonly errorMessage = signal<string | null>(null);
 
   protected readonly form: FormGroup = this.fb.group({
     firstName: ['', [Validators.required, Validators.minLength(2)]],
@@ -86,6 +87,7 @@ export class UserFormComponent implements OnInit {
     }
 
     this.isSaving.set(true);
+    this.errorMessage.set(null);
     const data = this.form.value;
 
     if (this.isEditMode()) {
@@ -98,7 +100,10 @@ export class UserFormComponent implements OnInit {
           this.isSaving.set(false);
           this.router.navigate(['/admin/users']);
         },
-        error: () => this.isSaving.set(false)
+        error: (err) => {
+          this.isSaving.set(false);
+          this.errorMessage.set(err.error?.error || 'Greška pri ažuriranju korisnika.');
+        }
       });
     } else {
       this.userService.createUser(data, this.pendingImage() ?? undefined).subscribe({
@@ -106,7 +111,10 @@ export class UserFormComponent implements OnInit {
           this.isSaving.set(false);
           this.router.navigate(['/admin/users']);
         },
-        error: () => this.isSaving.set(false)
+        error: (err) => {
+          this.isSaving.set(false);
+          this.errorMessage.set(err.error?.error || 'Greška pri kreiranju korisnika.');
+        }
       });
     }
   }
@@ -168,9 +176,9 @@ export class UserFormComponent implements OnInit {
           }
           this.isUploading.set(false);
         },
-        error: () => {
+        error: (err) => {
           this.isUploading.set(false);
-          alert('Greska pri ucitavanju slike');
+          this.errorMessage.set(err.error?.error || 'Greška pri učitavanju slike.');
         }
       });
     } else {
@@ -196,9 +204,9 @@ export class UserFormComponent implements OnInit {
           this.currentImageUrl.set(null);
           this.isRemovingImage.set(false);
         },
-        error: () => {
+        error: (err) => {
           this.isRemovingImage.set(false);
-          alert('Greska pri uklanjanju slike');
+          this.errorMessage.set(err.error?.error || 'Greška pri uklanjanju slike.');
         }
       });
     } else {

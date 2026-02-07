@@ -214,8 +214,10 @@
 
             <!-- Call to Action -->
             <div class="cta-section">
-              <button class="cta-button primary">Istraži Setove</button>
-              <button class="cta-button secondary">Pridruži Se Zajednici</button>
+              <a routerLink="/shop" class="cta-button primary">Istraži Setove</a>
+              @if (!isAuthenticated()) {
+                <a routerLink="/register" class="cta-button secondary">Pridruži Se Zajednici</a>
+              }
             </div>
           </div>
         </section>
