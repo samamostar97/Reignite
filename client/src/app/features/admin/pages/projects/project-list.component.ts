@@ -5,6 +5,7 @@ import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { ProjectService } from '../../../../core/services/project.service';
 import { ProjectResponse } from '../../../../core/models/project.model';
 import { environment } from '../../../../../environments/environment';
+import { ConfirmDialogService } from '../../../../shared/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-project-list',
@@ -15,6 +16,7 @@ import { environment } from '../../../../../environments/environment';
 })
 export class ProjectListComponent implements OnInit, OnDestroy {
   private readonly projectService = inject(ProjectService);
+  private readonly confirmDialog = inject(ConfirmDialogService);
   private readonly destroy$ = new Subject<void>();
   private readonly searchSubject = new Subject<string>();
 
@@ -90,13 +92,26 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     return `${environment.baseUrl}${path}`;
   }
 
-  protected deleteProject(project: ProjectResponse) {
-    if (confirm(`Da li ste sigurni da želite obrisati projekat "${project.title}"?`)) {
-      this.errorMessage.set(null);
-      this.projectService.deleteProject(project.id).subscribe({
-        next: () => this.loadProjects(),
+  protected async deleteProject(project: ProjectResponse) {
+    const confirmed = await this.confirmDialog.open({
+      title: 'Obriši projekat',
+      message: `Da li ste sigurni da želite obrisati projekat "${project.title}"?`,
+      confirmText: 'Obriši',
+      cancelText: 'Otkaži',
+      confirmButtonClass: 'danger'
+    });
+
+    if (confirmed) {
+      this.confirmDialog.setLoading(true);
+      this.projectService.deleteProject(project.id).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe({
+        next: () => {
+          this.confirmDialog.close();
+          this.loadProjects();
+        },
         error: (err) => {
-          this.errorMessage.set(err.error?.error || 'Greška pri brisanju projekta.');
+          this.confirmDialog.setError(err.error?.error || 'Greška pri brisanju projekta.');
         }
       });
     }

@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { UserService } from '../../../../core/services/user.service';
 import { UserResponse, UserRole } from '../../../../core/models/user.model';
+import { ConfirmDialogService } from '../../../../shared/services/confirm-dialog.service';
 import { environment } from '../../../../../environments/environment';
 
 @Component({
@@ -16,6 +17,7 @@ import { environment } from '../../../../../environments/environment';
 })
 export class UserListComponent implements OnInit, OnDestroy {
   private readonly userService = inject(UserService);
+  private readonly confirmDialog = inject(ConfirmDialogService);
   private readonly destroy$ = new Subject<void>();
   private readonly searchSubject = new Subject<string>();
 
@@ -112,15 +114,26 @@ export class UserListComponent implements OnInit, OnDestroy {
     });
   }
 
-  protected deleteUser(user: UserResponse) {
-    if (confirm(`Da li ste sigurni da želite obrisati korisnika "${user.firstName} ${user.lastName}"?`)) {
-      this.errorMessage.set(null);
-      this.userService.deleteUser(user.id).subscribe({
+  protected async deleteUser(user: UserResponse) {
+    const confirmed = await this.confirmDialog.open({
+      title: 'Obriši korisnika',
+      message: `Da li ste sigurni da želite obrisati korisnika "${user.firstName} ${user.lastName}"?`,
+      confirmText: 'Obriši',
+      cancelText: 'Otkaži',
+      confirmButtonClass: 'danger'
+    });
+
+    if (confirmed) {
+      this.confirmDialog.setLoading(true);
+      this.userService.deleteUser(user.id).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe({
         next: () => {
+          this.confirmDialog.close();
           this.loadUsers();
         },
         error: (err) => {
-          this.errorMessage.set(err.error?.error || 'Greška pri brisanju korisnika.');
+          this.confirmDialog.setError(err.error?.error || 'Greška pri brisanju korisnika.');
         }
       });
     }

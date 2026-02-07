@@ -31,13 +31,16 @@ export class UserFormComponent implements OnInit {
   protected readonly pendingImagePreview = signal<string | null>(null);
   protected readonly errorMessage = signal<string | null>(null);
 
+  // Phone pattern: +387 6X XXX XXX or 06X XXX XXX formats
+  private readonly phonePattern = /^(\+387|0)\s?6[0-9]\s?[0-9]{3}\s?[0-9]{3,4}$/;
+
   protected readonly form: FormGroup = this.fb.group({
-    firstName: ['', [Validators.required, Validators.minLength(2)]],
-    lastName: ['', [Validators.required, Validators.minLength(2)]],
-    username: ['', [Validators.required, Validators.minLength(3)]],
+    firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+    lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+    username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
     email: ['', [Validators.required, Validators.email]],
-    phoneNumber: ['', [Validators.required]],
-    password: ['', [Validators.required, Validators.minLength(6)]]
+    phoneNumber: ['', [Validators.required, Validators.pattern(this.phonePattern)]],
+    password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]]
   });
 
   ngOnInit() {

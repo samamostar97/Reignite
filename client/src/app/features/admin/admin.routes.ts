@@ -4,6 +4,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProductListComponent } from './pages/products/product-list/product-list.component';
 import { ProductFormComponent } from './pages/products/product-form/product-form.component';
 import { CategoryListComponent } from './pages/categories/category-list.component';
+import { SupplierListComponent } from './pages/suppliers/supplier-list.component';
 import { HobbyListComponent } from './pages/hobbies/hobby-list.component';
 import { ProjectListComponent } from './pages/projects/project-list.component';
 import { UserListComponent } from './pages/users/user-list.component';
@@ -23,6 +24,7 @@ export const adminRoutes: Routes = [
       { path: 'products/new', component: ProductFormComponent },
       { path: 'products/:id/edit', component: ProductFormComponent },
       { path: 'categories', component: CategoryListComponent },
+      { path: 'suppliers', component: SupplierListComponent },
       { path: 'hobbies', component: HobbyListComponent },
       { path: 'projects', component: ProjectListComponent },
       { path: 'reviews', component: ReviewListComponent },

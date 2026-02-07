@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { HobbyService } from '../../../../core/services/hobby.service';
 import { HobbyResponse } from '../../../../core/models/hobby.model';
+import { ConfirmDialogService } from '../../../../shared/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-hobby-list',
@@ -15,6 +16,7 @@ import { HobbyResponse } from '../../../../core/models/hobby.model';
 })
 export class HobbyListComponent implements OnInit, OnDestroy {
   private readonly hobbyService = inject(HobbyService);
+  private readonly confirmDialog = inject(ConfirmDialogService);
   private readonly destroy$ = new Subject<void>();
   private readonly searchSubject = new Subject<string>();
 
@@ -98,12 +100,26 @@ export class HobbyListComponent implements OnInit, OnDestroy {
   }
 
   protected addHobby() {
-    if (!this.newHobbyName.trim()) return;
+    const name = this.newHobbyName.trim();
+    const description = this.newHobbyDescription.trim();
+
+    if (!name) {
+      this.errorMessage.set('Naziv hobija je obavezan.');
+      return;
+    }
+    if (name.length < 2 || name.length > 100) {
+      this.errorMessage.set('Naziv mora imati između 2 i 100 znakova.');
+      return;
+    }
+    if (description && description.length > 500) {
+      this.errorMessage.set('Opis može imati najviše 500 znakova.');
+      return;
+    }
 
     this.errorMessage.set(null);
     this.hobbyService.createHobby({
-      name: this.newHobbyName.trim(),
-      description: this.newHobbyDescription.trim() || undefined
+      name,
+      description: description || undefined
     }).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.cancelAdd();
@@ -130,12 +146,26 @@ export class HobbyListComponent implements OnInit, OnDestroy {
   }
 
   protected saveEdit(id: number) {
-    if (!this.editHobbyName.trim()) return;
+    const name = this.editHobbyName.trim();
+    const description = this.editHobbyDescription.trim();
+
+    if (!name) {
+      this.errorMessage.set('Naziv hobija je obavezan.');
+      return;
+    }
+    if (name.length < 2 || name.length > 100) {
+      this.errorMessage.set('Naziv mora imati između 2 i 100 znakova.');
+      return;
+    }
+    if (description && description.length > 500) {
+      this.errorMessage.set('Opis može imati najviše 500 znakova.');
+      return;
+    }
 
     this.errorMessage.set(null);
     this.hobbyService.updateHobby(id, {
-      name: this.editHobbyName.trim(),
-      description: this.editHobbyDescription.trim() || undefined
+      name,
+      description: description || undefined
     }).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.cancelEdit();
@@ -147,10 +177,25 @@ export class HobbyListComponent implements OnInit, OnDestroy {
     });
   }
 
-  protected deleteHobby(hobby: HobbyResponse) {
-    if (confirm(`Da li ste sigurni da zelite obrisati hobi "${hobby.name}"?`)) {
+  protected async deleteHobby(hobby: HobbyResponse) {
+    const confirmed = await this.confirmDialog.open({
+      title: 'Obriši hobi',
+      message: `Da li ste sigurni da želite obrisati hobi "${hobby.name}"?`,
+      confirmText: 'Obriši',
+      cancelText: 'Otkaži',
+      confirmButtonClass: 'danger'
+    });
+
+    if (confirmed) {
+      this.confirmDialog.setLoading(true);
       this.hobbyService.deleteHobby(hobby.id).pipe(takeUntil(this.destroy$)).subscribe({
-        next: () => this.loadHobbies()
+        next: () => {
+          this.confirmDialog.close();
+          this.loadHobbies();
+        },
+        error: (err) => {
+          this.confirmDialog.setError(err.error?.error || 'Greška pri brisanju hobija.');
+        }
       });
     }
   }

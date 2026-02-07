@@ -5,11 +5,12 @@ import { filter } from 'rxjs';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { TopbarComponent } from './topbar/topbar.component';
 import { SidebarService } from '../services/sidebar.service';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, SidebarComponent, TopbarComponent],
+  imports: [CommonModule, RouterOutlet, SidebarComponent, TopbarComponent, ConfirmDialogComponent],
   templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -26,10 +27,14 @@ export class AdminLayoutComponent {
     '/admin/products': 'Proizvodi',
     '/admin/products/new': 'Novi Proizvod',
     '/admin/categories': 'Kategorije',
+    '/admin/suppliers': 'Dobavljači',
+    '/admin/hobbies': 'Hobiji',
     '/admin/projects': 'Projekti',
+    '/admin/reviews': 'Recenzije',
     '/admin/users': 'Korisnici',
     '/admin/users/new': 'Novi Korisnik',
     '/admin/orders': 'Narudžbe',
+    '/admin/reports': 'Izvještaji',
   };
 
   constructor() {

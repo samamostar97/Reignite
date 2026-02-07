@@ -70,6 +70,7 @@ export class ProductService {
     if (data.description) formData.append('description', data.description);
     formData.append('price', data.price.toString());
     formData.append('productCategoryId', data.productCategoryId.toString());
+    formData.append('supplierId', data.supplierId.toString());
     if (image) formData.append('image', image);
     return this.http.post<ProductResponse>(this.apiUrl, formData).pipe(
       tap(() => this.invalidateCache())

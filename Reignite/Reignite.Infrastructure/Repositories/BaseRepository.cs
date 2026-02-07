@@ -25,6 +25,7 @@ namespace Reignite.Infrastructure.Repositories
 
         public virtual async Task AddAsync(T entity)
         {
+            entity.CreatedAt = DateTime.UtcNow;
             await _dbSet.AddAsync(entity);
             await _context.SaveChangesAsync();
         }

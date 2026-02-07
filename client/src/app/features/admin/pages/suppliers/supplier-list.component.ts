@@ -3,24 +3,24 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
-import { CategoryService } from '../../../../core/services/category.service';
-import { ProductCategoryResponse } from '../../../../core/models/category.model';
+import { SupplierService } from '../../../../core/services/supplier.service';
+import { SupplierResponse } from '../../../../core/models/supplier.model';
 import { ConfirmDialogService } from '../../../../shared/services/confirm-dialog.service';
 
 @Component({
-  selector: 'app-category-list',
+  selector: 'app-supplier-list',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './category-list.component.html',
-  styleUrl: './category-list.component.scss'
+  templateUrl: './supplier-list.component.html',
+  styleUrl: './supplier-list.component.scss'
 })
-export class CategoryListComponent implements OnInit, OnDestroy {
-  private readonly categoryService = inject(CategoryService);
+export class SupplierListComponent implements OnInit, OnDestroy {
+  private readonly supplierService = inject(SupplierService);
   private readonly confirmDialog = inject(ConfirmDialogService);
   private readonly destroy$ = new Subject<void>();
   private readonly searchSubject = new Subject<string>();
 
-  protected readonly categories = signal<ProductCategoryResponse[]>([]);
+  protected readonly suppliers = signal<SupplierResponse[]>([]);
   protected readonly isLoading = signal(true);
   protected readonly isAdding = signal(false);
   protected readonly editingId = signal<number | null>(null);
@@ -34,8 +34,10 @@ export class CategoryListComponent implements OnInit, OnDestroy {
     Math.ceil(this.totalCount() / this.pageSize())
   );
 
-  protected newCategoryName = '';
-  protected editCategoryName = '';
+  protected newSupplierName = '';
+  protected newSupplierWebsite = '';
+  protected editSupplierName = '';
+  protected editSupplierWebsite = '';
 
   ngOnInit() {
     this.searchSubject.pipe(
@@ -45,10 +47,10 @@ export class CategoryListComponent implements OnInit, OnDestroy {
     ).subscribe(query => {
       this.searchQuery.set(query);
       this.currentPage.set(1);
-      this.loadCategories();
+      this.loadSuppliers();
     });
 
-    this.loadCategories();
+    this.loadSuppliers();
   }
 
   ngOnDestroy(): void {
@@ -56,15 +58,15 @@ export class CategoryListComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private loadCategories() {
+  private loadSuppliers() {
     this.isLoading.set(true);
-    this.categoryService.getCategories({
+    this.supplierService.getSuppliers({
       pageNumber: this.currentPage(),
       pageSize: this.pageSize(),
       search: this.searchQuery() || undefined
-    }).subscribe({
+    }).pipe(takeUntil(this.destroy$)).subscribe({
       next: (result) => {
-        this.categories.set(result.items);
+        this.suppliers.set(result.items);
         this.totalCount.set(result.totalCount);
         this.isLoading.set(false);
       },
@@ -80,83 +82,115 @@ export class CategoryListComponent implements OnInit, OnDestroy {
   protected goToPage(page: number): void {
     if (page < 1 || page > this.totalPages()) return;
     this.currentPage.set(page);
-    this.loadCategories();
+    this.loadSuppliers();
   }
 
   protected showAddForm() {
     this.isAdding.set(true);
-    this.newCategoryName = '';
+    this.newSupplierName = '';
+    this.newSupplierWebsite = '';
     this.errorMessage.set(null);
   }
 
   protected cancelAdd() {
     this.isAdding.set(false);
-    this.newCategoryName = '';
+    this.newSupplierName = '';
+    this.newSupplierWebsite = '';
     this.errorMessage.set(null);
   }
 
-  protected addCategory() {
-    const name = this.newCategoryName.trim();
+  private readonly urlPattern = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/;
+
+  protected addSupplier() {
+    const name = this.newSupplierName.trim();
+    const website = this.newSupplierWebsite.trim();
+
     if (!name) {
-      this.errorMessage.set('Naziv kategorije je obavezan.');
+      this.errorMessage.set('Naziv dobavljača je obavezan.');
       return;
     }
     if (name.length < 2 || name.length > 100) {
       this.errorMessage.set('Naziv mora imati između 2 i 100 znakova.');
       return;
     }
+    if (website && !this.urlPattern.test(website)) {
+      this.errorMessage.set('Website mora biti validan URL.');
+      return;
+    }
+    if (website && website.length > 200) {
+      this.errorMessage.set('Website može imati najviše 200 znakova.');
+      return;
+    }
 
     this.errorMessage.set(null);
-    this.categoryService.createCategory({ name }).subscribe({
+    this.supplierService.createSupplier({
+      name,
+      website: website || undefined
+    }).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.cancelAdd();
-        this.loadCategories();
+        this.loadSuppliers();
       },
       error: (err) => {
-        this.errorMessage.set(err.error?.error || 'Greška pri dodavanju kategorije.');
+        this.errorMessage.set(err.error?.error || 'Greška pri dodavanju dobavljača.');
       }
     });
   }
 
-  protected startEdit(category: ProductCategoryResponse) {
-    this.editingId.set(category.id);
-    this.editCategoryName = category.name;
+  protected startEdit(supplier: SupplierResponse) {
+    this.editingId.set(supplier.id);
+    this.editSupplierName = supplier.name;
+    this.editSupplierWebsite = supplier.website || '';
     this.errorMessage.set(null);
   }
 
   protected cancelEdit() {
     this.editingId.set(null);
-    this.editCategoryName = '';
+    this.editSupplierName = '';
+    this.editSupplierWebsite = '';
     this.errorMessage.set(null);
   }
 
   protected saveEdit(id: number) {
-    const name = this.editCategoryName.trim();
+    const name = this.editSupplierName.trim();
+    const website = this.editSupplierWebsite.trim();
+
     if (!name) {
-      this.errorMessage.set('Naziv kategorije je obavezan.');
+      this.errorMessage.set('Naziv dobavljača je obavezan.');
       return;
     }
     if (name.length < 2 || name.length > 100) {
       this.errorMessage.set('Naziv mora imati između 2 i 100 znakova.');
       return;
     }
+    if (website && !this.urlPattern.test(website)) {
+      this.errorMessage.set('Website mora biti validan URL.');
+      return;
+    }
+    if (website && website.length > 200) {
+      this.errorMessage.set('Website može imati najviše 200 znakova.');
+      return;
+    }
 
     this.errorMessage.set(null);
-    this.categoryService.updateCategory(id, { name }).subscribe({
+    this.supplierService.updateSupplier(id, {
+      name,
+      website: website || undefined
+    }).pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
         this.cancelEdit();
-        this.loadCategories();
+        this.loadSuppliers();
       },
       error: (err) => {
-        this.errorMessage.set(err.error?.error || 'Greška pri ažuriranju kategorije.');
+        this.errorMessage.set(err.error?.error || 'Greška pri ažuriranju dobavljača.');
       }
     });
   }
 
-  protected async deleteCategory(category: ProductCategoryResponse) {
+  protected async deleteSupplier(supplier: SupplierResponse) {
     const confirmed = await this.confirmDialog.open({
-      title: 'Obriši kategoriju',
-      message: `Da li ste sigurni da želite obrisati kategoriju "${category.name}"?`,
+      title: 'Obriši dobavljača',
+      message: `Da li ste sigurni da želite obrisati dobavljača "${supplier.name}"?`,
       confirmText: 'Obriši',
       cancelText: 'Otkaži',
       confirmButtonClass: 'danger'
@@ -164,13 +198,13 @@ export class CategoryListComponent implements OnInit, OnDestroy {
 
     if (confirmed) {
       this.confirmDialog.setLoading(true);
-      this.categoryService.deleteCategory(category.id).pipe(takeUntil(this.destroy$)).subscribe({
+      this.supplierService.deleteSupplier(supplier.id).pipe(takeUntil(this.destroy$)).subscribe({
         next: () => {
           this.confirmDialog.close();
-          this.loadCategories();
+          this.loadSuppliers();
         },
         error: (err) => {
-          this.confirmDialog.setError(err.error?.error || 'Greška pri brisanju kategorije.');
+          this.confirmDialog.setError(err.error?.error || 'Greška pri brisanju dobavljača.');
         }
       });
     }

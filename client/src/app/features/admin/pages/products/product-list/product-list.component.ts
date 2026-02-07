@@ -6,6 +6,7 @@ import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { ProductService } from '../../../../../core/services/product.service';
 import { ProductResponse } from '../../../../../core/models/product.model';
 import { environment } from '../../../../../../environments/environment';
+import { ConfirmDialogService } from '../../../../../shared/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-product-list',
@@ -17,6 +18,7 @@ import { environment } from '../../../../../../environments/environment';
 })
 export class ProductListComponent implements OnInit, OnDestroy {
   private readonly productService = inject(ProductService);
+  private readonly confirmDialog = inject(ConfirmDialogService);
   private readonly destroy$ = new Subject<void>();
   private readonly searchSubject = new Subject<string>();
 
@@ -89,15 +91,24 @@ export class ProductListComponent implements OnInit, OnDestroy {
     return `${environment.baseUrl}${path}`;
   }
 
-  protected deleteProduct(product: ProductResponse) {
-    if (confirm(`Da li ste sigurni da želite obrisati "${product.name}"?`)) {
-      this.errorMessage.set(null);
-      this.productService.deleteProduct(product.id).subscribe({
+  protected async deleteProduct(product: ProductResponse) {
+    const confirmed = await this.confirmDialog.open({
+      title: 'Obriši proizvod',
+      message: `Da li ste sigurni da želite obrisati proizvod "${product.name}"?`,
+      confirmText: 'Obriši',
+      cancelText: 'Otkaži',
+      confirmButtonClass: 'danger'
+    });
+
+    if (confirmed) {
+      this.confirmDialog.setLoading(true);
+      this.productService.deleteProduct(product.id).pipe(takeUntil(this.destroy$)).subscribe({
         next: () => {
+          this.confirmDialog.close();
           this.loadProducts();
         },
         error: (err) => {
-          this.errorMessage.set(err.error?.error || 'Greška pri brisanju proizvoda.');
+          this.confirmDialog.setError(err.error?.error || 'Greška pri brisanju proizvoda.');
         }
       });
     }

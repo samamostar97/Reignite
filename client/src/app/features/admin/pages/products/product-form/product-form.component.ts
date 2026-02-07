@@ -4,7 +4,9 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductService } from '../../../../../core/services/product.service';
 import { CategoryService } from '../../../../../core/services/category.service';
+import { SupplierService } from '../../../../../core/services/supplier.service';
 import { ProductCategoryResponse } from '../../../../../core/models/category.model';
+import { SupplierResponse } from '../../../../../core/models/supplier.model';
 import { environment } from '../../../../../../environments/environment';
 
 @Component({
@@ -19,12 +21,14 @@ export class ProductFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly productService = inject(ProductService);
   private readonly categoryService = inject(CategoryService);
+  private readonly supplierService = inject(SupplierService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
   protected readonly isEditMode = signal(false);
   protected readonly productId = signal<number | null>(null);
   protected readonly categories = signal<ProductCategoryResponse[]>([]);
+  protected readonly suppliers = signal<SupplierResponse[]>([]);
   protected readonly isLoading = signal(false);
   protected readonly isSaving = signal(false);
   protected readonly currentImageUrl = signal<string | null>(null);
@@ -36,14 +40,16 @@ export class ProductFormComponent implements OnInit {
   protected readonly errorMessage = signal<string | null>(null);
 
   protected readonly form: FormGroup = this.fb.group({
-    name: ['', [Validators.required, Validators.minLength(2)]],
-    description: [''],
-    price: [0, [Validators.required, Validators.min(0)]],
-    productCategoryId: [null, [Validators.required]]
+    name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(200)]],
+    description: ['', [Validators.maxLength(2000)]],
+    price: [0, [Validators.required, Validators.min(0.01)]],
+    productCategoryId: [null, [Validators.required]],
+    supplierId: [null, [Validators.required]]
   });
 
   ngOnInit() {
     this.loadCategories();
+    this.loadSuppliers();
 
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -59,6 +65,12 @@ export class ProductFormComponent implements OnInit {
     });
   }
 
+  private loadSuppliers() {
+    this.supplierService.getAllSuppliers().subscribe({
+      next: (result) => this.suppliers.set(result)
+    });
+  }
+
   private loadProduct(id: number) {
     this.isLoading.set(true);
     this.productService.getProductById(id).subscribe({
@@ -67,7 +79,8 @@ export class ProductFormComponent implements OnInit {
           name: product.name,
           description: product.description,
           price: product.price,
-          productCategoryId: product.productCategoryId
+          productCategoryId: product.productCategoryId,
+          supplierId: product.supplierId
         });
         if (product.productImageUrl) {
           // If it's already an absolute URL (Unsplash, etc.), use as-is
