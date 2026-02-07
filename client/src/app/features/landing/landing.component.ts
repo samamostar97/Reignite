@@ -1,26 +1,21 @@
 import { Component, OnInit, OnDestroy, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { ProjectService } from '../../core/services/project.service';
-import { AuthService } from '../../core/services/auth.service';
 import { ProductResponse } from '../../core/models/product.model';
 import { ProjectResponse } from '../../core/models/project.model';
+import { HeaderComponent } from '../../shared/components/header/header.component';
 import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-landing',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, HeaderComponent],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.scss'
 })
 export class LandingComponent implements OnInit, OnDestroy {
   private readonly productService = inject(ProductService);
   private readonly projectService = inject(ProjectService);
-  private readonly authService = inject(AuthService);
-
-  protected readonly isAuthenticated = this.authService.isAuthenticated;
-  protected readonly isAdmin = this.authService.isAdmin;
 
   protected readonly animationComplete = signal(false);
   protected readonly showContent = signal(false);

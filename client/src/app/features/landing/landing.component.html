@@ -1,22 +1,6 @@
 <div class="landing-container">
   <!-- Header -->
-  <header class="main-header" [class.visible]="animationComplete() && !isOnHeroSection()">
-    <div class="header-content">
-      <div class="header-logo">REIGNITE</div>
-      <nav class="header-nav">
-        <a href="#" class="nav-link">Shop</a>
-        <a routerLink="/projects" class="nav-link">Projekti</a>
-        <a href="#" class="nav-link">Zajednica</a>
-      </nav>
-      @if (isAdmin()) {
-        <a routerLink="/admin" class="header-button">Admin Panel</a>
-      } @else if (isAuthenticated()) {
-        <a routerLink="/account" class="header-button">Moj Račun</a>
-      } @else {
-        <a routerLink="/login" class="header-button">Prijavi Se</a>
-      }
-    </div>
-  </header>
+  <app-header [visible]="animationComplete() && !isOnHeroSection()" [activePath]="'/'"></app-header>
 
   <!-- Embers Background -->
   <div class="embers-container">

@@ -1,22 +1,6 @@
 <div class="projects-page">
   <!-- Header -->
-  <header class="main-header">
-    <div class="header-content">
-      <a routerLink="/" class="header-logo">REIGNITE</a>
-      <nav class="header-nav">
-        <a routerLink="/" class="nav-link">Početna</a>
-        <a routerLink="/shop" class="nav-link">Prodavnica</a>
-        <a routerLink="/projects" class="nav-link active">Projekti</a>
-      </nav>
-      @if (isAdmin()) {
-        <a routerLink="/admin" class="header-button">Admin Panel</a>
-      } @else if (isAuthenticated()) {
-        <a routerLink="/account" class="header-button">Moj Račun</a>
-      } @else {
-        <a routerLink="/login" class="header-button">Prijavi Se</a>
-      }
-    </div>
-  </header>
+  <app-header [visible]="true" [activePath]="'/projects'"></app-header>
 
   <!-- Hero Section -->
   <section class="hero-section">

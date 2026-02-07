@@ -6,28 +6,24 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { ProjectService } from '../../core/services/project.service';
 import { HobbyService } from '../../core/services/hobby.service';
-import { AuthService } from '../../core/services/auth.service';
 import { ProjectResponse } from '../../core/models/project.model';
 import { HobbyResponse } from '../../core/models/hobby.model';
+import { HeaderComponent } from '../../shared/components/header/header.component';
 import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, HeaderComponent],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.scss'
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
   private readonly projectService = inject(ProjectService);
   private readonly hobbyService = inject(HobbyService);
-  private readonly authService = inject(AuthService);
   private readonly sanitizer = inject(DomSanitizer);
   private readonly destroy$ = new Subject<void>();
   private readonly searchSubject = new Subject<string>();
-
-  protected readonly isAuthenticated = this.authService.isAuthenticated;
-  protected readonly isAdmin = this.authService.isAdmin;
 
   // Data signals
   protected readonly projects = signal<ProjectResponse[]>([]);
