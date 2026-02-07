@@ -80,13 +80,16 @@ namespace Reignite.Infrastructure.Services
             if (!string.IsNullOrEmpty(filter.OrderBy)) {
                 query = filter.OrderBy.ToLower() switch
                 {
-                    "productname" => query.OrderBy(x => x.Name),
+                    "name" or "productname" => query.OrderBy(x => x.Name),
+                    "priceasc" => query.OrderBy(x => x.Price),
+                    "pricedesc" => query.OrderByDescending(x => x.Price),
                     "createdatdesc" => query.OrderByDescending(x => x.CreatedAt),
-                    _ => query.OrderBy(x => x.CreatedAt)
+                    "createdatasc" => query.OrderBy(x => x.CreatedAt),
+                    _ => query.OrderByDescending(x => x.CreatedAt)
                 };
                 return query;
             }
-            query = query.OrderBy(x => x.CreatedAt);
+            query = query.OrderByDescending(x => x.CreatedAt);
             return query;
         }
 
