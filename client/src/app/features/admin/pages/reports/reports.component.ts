@@ -6,7 +6,7 @@ import {
   SalesChartDataPoint,
   UserGrowthDataPoint
 } from '../../../../core/models/report.model';
-import { environment } from '../../../../../environments/environment';
+import { getImageUrl, getInitials } from '../../../../shared/utils/image.utils';
 
 @Component({
   selector: 'app-reports',
@@ -40,29 +40,18 @@ export class ReportsComponent implements OnInit {
         this.report.set(data);
         this.isLoading.set(false);
       },
-      error: (err) => {
+      error: () => {
         this.error.set('Greška pri učitavanju izvještaja');
         this.isLoading.set(false);
-        console.error(err);
       }
     });
   }
 
-  protected getImageUrl(path: string | undefined | null): string {
-    if (!path) return '';
-    if (path.startsWith('http://') || path.startsWith('https://')) {
-      return path;
-    }
-    return `${environment.baseUrl}${path}`;
-  }
+  protected getImageUrl = getImageUrl;
 
-  protected getInitials(name: string): string {
-    return name
-      .split(' ')
-      .map(n => n.charAt(0))
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
+  protected getInitialsFromName(name: string): string {
+    const parts = name.split(' ');
+    return getInitials(parts[0] || '', parts[1] || '');
   }
 
   protected formatCurrency(value: number): string {

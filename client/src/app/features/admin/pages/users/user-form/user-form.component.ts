@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { UserService } from '../../../../../core/services/user.service';
+import { NotificationService } from '../../../../../core/services/notification.service';
+import { getImageUrl } from '../../../../../shared/utils/image.utils';
 import { environment } from '../../../../../../environments/environment';
 
 @Component({
@@ -16,6 +18,7 @@ import { environment } from '../../../../../../environments/environment';
 export class UserFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly userService = inject(UserService);
+  private readonly notificationService = inject(NotificationService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
@@ -67,12 +70,7 @@ export class UserFormComponent implements OnInit {
           phoneNumber: user.phoneNumber
         });
         if (user.profileImageUrl) {
-          // If it's already an absolute URL (Unsplash, etc.), use as-is
-          if (user.profileImageUrl.startsWith('http://') || user.profileImageUrl.startsWith('https://')) {
-            this.currentImageUrl.set(user.profileImageUrl);
-          } else {
-            this.currentImageUrl.set(`${environment.baseUrl}${user.profileImageUrl}`);
-          }
+          this.currentImageUrl.set(getImageUrl(user.profileImageUrl));
         }
         this.isLoading.set(false);
       },
@@ -162,7 +160,10 @@ export class UserFormComponent implements OnInit {
 
   private uploadImage(file: File): void {
     if (file.size > 5 * 1024 * 1024) {
-      alert('Slika ne smije biti veca od 5MB');
+      this.notificationService.warning({
+        title: 'Prevelika slika',
+        message: 'Slika ne smije biti veća od 5MB'
+      });
       return;
     }
 
@@ -175,7 +176,7 @@ export class UserFormComponent implements OnInit {
       this.userService.uploadUserImage(userId, file).subscribe({
         next: (result) => {
           if (result.fileUrl) {
-            this.currentImageUrl.set(`${environment.baseUrl}${result.fileUrl}`);
+            this.currentImageUrl.set(getImageUrl(result.fileUrl));
           }
           this.isUploading.set(false);
         },

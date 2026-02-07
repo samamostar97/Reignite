@@ -35,6 +35,7 @@ namespace Reignite.Infrastructure.Services
         public override async Task<ProductResponse> GetByIdAsync(int id)
         {
             var product = await _repository.AsQueryable()
+                .AsNoTracking()
                 .Include(x => x.ProductCategory)
                 .Include(x => x.Supplier)
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -214,6 +215,7 @@ namespace Reignite.Infrastructure.Services
         public async Task<List<ProductResponse>> GetBestSellingAsync(int count = 5)
         {
             var bestSellingProductIds = await _orderItemRepository.AsQueryable()
+                .AsNoTracking()
                 .GroupBy(oi => oi.ProductId)
                 .Select(g => new
                 {
@@ -226,6 +228,7 @@ namespace Reignite.Infrastructure.Services
                 .ToListAsync();
 
             var products = await _repository.AsQueryable()
+                .AsNoTracking()
                 .Include(x => x.ProductCategory)
                 .Include(x => x.Supplier)
                 .Where(p => bestSellingProductIds.Contains(p.Id))

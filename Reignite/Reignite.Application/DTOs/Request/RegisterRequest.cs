@@ -15,11 +15,12 @@ namespace Reignite.Application.DTOs.Request
         public string Password { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Korisničko ime je obavezno.")]
-        [StringLength(50, MinimumLength = 4, ErrorMessage = "Korisničko ime mora imati između 4 i 50 znakova.")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "Korisničko ime mora imati između 3 i 50 znakova.")]
         public string Username { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Broj telefona je obavezan.")]
-        [RegularExpression(@"^(\+387|0)[0-9]{8,9}$", ErrorMessage = "Unesite ispravan format broj telefona.")]
+        [RegularExpression(@"^(\+387|0)\s?6[0-9]\s?[0-9]{3}\s?[0-9]{3,4}$",
+            ErrorMessage = "Neispravan format broja telefona (npr. +387 61 234 567).")]
         public string PhoneNumber { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Ime je obavezno.")]

@@ -59,7 +59,7 @@
                   @if (order.userProfileImageUrl) {
                     <img [src]="getImageUrl(order.userProfileImageUrl)" [alt]="order.userName">
                   } @else {
-                    <span>{{ getInitials(order.userName) }}</span>
+                    <span>{{ getInitialsFromName(order.userName) }}</span>
                   }
                 </div>
                 <div class="notification-content">

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, Router, NavigationEnd } from '@angular/router';
 import { Subject, filter, takeUntil } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
+import { getInitials } from '../../utils/image.utils';
 
 @Component({
   selector: 'app-header',
@@ -68,14 +69,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.authService.logout();
   }
 
-  protected getInitials(): string {
+  protected getUserInitials(): string {
     const name = this.userFullName();
     if (!name) return '?';
-    return name
-      .split(' ')
-      .map(n => n.charAt(0))
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
+    const parts = name.split(' ');
+    return getInitials(parts[0] || '', parts[1] || '');
   }
 }

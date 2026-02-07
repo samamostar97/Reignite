@@ -8,7 +8,7 @@ import { ProjectService } from '../../../core/services/project.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { ProjectResponse } from '../../../core/models/project.model';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
-import { environment } from '../../../../environments/environment';
+import { getImageUrl, getInitials } from '../../../shared/utils/image.utils';
 
 @Component({
   selector: 'app-project-detail',
@@ -63,27 +63,17 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
       });
   }
 
-  protected getImageUrl(path: string | undefined | null): string | null {
-    if (!path) return null;
-    if (path.startsWith('http://') || path.startsWith('https://')) {
-      return path;
-    }
-    return `${environment.baseUrl}${path}`;
-  }
+  protected getImageUrl = getImageUrl;
 
   protected getSafeBackgroundImage(path: string | undefined | null): SafeStyle | null {
-    const url = this.getImageUrl(path);
+    const url = getImageUrl(path);
     if (!url) return null;
     return this.sanitizer.bypassSecurityTrustStyle(`url(${url})`);
   }
 
-  protected getInitials(name: string): string {
-    return name
-      .split(' ')
-      .map(n => n.charAt(0))
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
+  protected getInitialsFromName(name: string): string {
+    const parts = name.split(' ');
+    return getInitials(parts[0] || '', parts[1] || '');
   }
 
   protected formatDate(dateString: string): string {

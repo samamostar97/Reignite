@@ -73,7 +73,7 @@
                   <img [src]="getImageUrl(review.userProfileImageUrl)" [alt]="review.userName" class="user-avatar-img">
                 } @else {
                   <div class="user-avatar">
-                    {{ getInitials(review.userName) }}
+                    {{ getInitialsFromName(review.userName) }}
                   </div>
                 }
                 <span class="user-name">{{ review.userName }}</span>

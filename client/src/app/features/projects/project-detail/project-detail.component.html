@@ -49,7 +49,7 @@
 
             <div class="project-meta">
               <div class="meta-item author">
-                <div class="author-avatar">{{ getInitials(project()!.userName) }}</div>
+                <div class="author-avatar">{{ getInitialsFromName(project()!.userName) }}</div>
                 <span class="author-name">{{ project()!.userName }}</span>
               </div>
 
@@ -127,7 +127,7 @@
                 <div class="review-card">
                   <div class="review-header">
                     <div class="reviewer-info">
-                      <div class="reviewer-avatar">{{ getInitials(review.userName) }}</div>
+                      <div class="reviewer-avatar">{{ getInitialsFromName(review.userName) }}</div>
                       <div class="reviewer-details">
                         <span class="reviewer-name">{{ review.userName }}</span>
                         <span class="review-date">{{ formatDate(review.createdAt) }}</span>

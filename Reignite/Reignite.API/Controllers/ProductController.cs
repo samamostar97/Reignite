@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.IO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Reignite.Application.Common;
 using Reignite.Application.DTOs.Request;
@@ -31,20 +32,29 @@ namespace Reignite.API.Controllers
         {
             var image = Request.Form.Files.Count > 0 ? Request.Form.Files[0] : null;
             FileUploadRequest? fileRequest = null;
+            Stream? imageStream = null;
 
-            if (image != null && image.Length > 0)
+            try
             {
-                fileRequest = new FileUploadRequest
+                if (image != null && image.Length > 0)
                 {
-                    FileStream = image.OpenReadStream(),
-                    FileName = image.FileName,
-                    ContentType = image.ContentType,
-                    FileSize = image.Length
-                };
-            }
+                    imageStream = image.OpenReadStream();
+                    fileRequest = new FileUploadRequest
+                    {
+                        FileStream = imageStream,
+                        FileName = image.FileName,
+                        ContentType = image.ContentType,
+                        FileSize = image.Length
+                    };
+                }
 
-            var result = await _productService.CreateWithImageAsync(dto, fileRequest);
-            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+                var result = await _productService.CreateWithImageAsync(dto, fileRequest);
+                return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+            }
+            finally
+            {
+                imageStream?.Dispose();
+            }
         }
 
         [AllowAnonymous]

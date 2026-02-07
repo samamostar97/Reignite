@@ -1,4 +1,3 @@
-using System.Security.Cryptography.X509Certificates;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Reignite.Application.Common;
@@ -24,21 +23,33 @@ namespace Reignite.Infrastructure.Services
         }
         protected override async Task BeforeCreateAsync(User entity, CreateUserRequest dto)
         {
-            var emailExists= await _repository.AsQueryable().AnyAsync(x=>x.Email.ToLower()==dto.Email.ToLower());
-            if(emailExists) throw new ConflictException("Korisnik sa ovim emailom vec postoji");
-            var usernameExists= await _repository.AsQueryable().AnyAsync(x=>x.Username.ToLower()==dto.Username.ToLower());
-            if(usernameExists) throw new ConflictException("Korisnik sa ovim usernameom vec postoji");
-            var phoneNumberExists= await _repository.AsQueryable().AnyAsync(x=>x.PhoneNumber.ToLower()==dto.PhoneNumber.ToLower());
-            if(phoneNumberExists) throw new ConflictException("Korisnik sa ovim brojem telefona vec postoji");
+            await ValidateUniqueFieldsAsync(dto.Email, dto.Username, dto.PhoneNumber, excludeUserId: null);
         }
+
         protected override async Task BeforeUpdateAsync(User entity, UpdateUserRequest dto)
         {
-            var emailExists= await _repository.AsQueryable().AnyAsync(x=>x.Email.Equals(dto.Email, StringComparison.CurrentCultureIgnoreCase) && x.Id!=entity.Id);
-            if(emailExists) throw new ConflictException("Korisnik sa ovim emailom vec postoji");
-            var usernameExists= await _repository.AsQueryable().AnyAsync(x=>x.Username.Equals(dto.Username, StringComparison.CurrentCultureIgnoreCase) && x.Id!=entity.Id);
-            if(usernameExists) throw new ConflictException("Korisnik sa ovim usernameom vec postoji");
-            var phoneNumberExists= await _repository.AsQueryable().AnyAsync(x=>x.PhoneNumber.Equals(dto.PhoneNumber, StringComparison.CurrentCultureIgnoreCase) && x.Id!=entity.Id);
-            if(phoneNumberExists) throw new ConflictException("Korisnik sa ovim brojem telefona vec postoji");
+            await ValidateUniqueFieldsAsync(dto.Email, dto.Username, dto.PhoneNumber, excludeUserId: entity.Id);
+        }
+
+        private async Task ValidateUniqueFieldsAsync(string email, string username, string phoneNumber, int? excludeUserId)
+        {
+            var emailLower = email.ToLower();
+            var usernameLower = username.ToLower();
+            var phoneLower = phoneNumber.ToLower();
+
+            var query = _repository.AsQueryable().AsNoTracking();
+
+            if (excludeUserId.HasValue)
+                query = query.Where(x => x.Id != excludeUserId.Value);
+
+            var emailExists = await query.AnyAsync(x => x.Email.ToLower() == emailLower);
+            if (emailExists) throw new ConflictException("Korisnik sa ovim emailom vec postoji");
+
+            var usernameExists = await query.AnyAsync(x => x.Username.ToLower() == usernameLower);
+            if (usernameExists) throw new ConflictException("Korisnik sa ovim usernameom vec postoji");
+
+            var phoneNumberExists = await query.AnyAsync(x => x.PhoneNumber.ToLower() == phoneLower);
+            if (phoneNumberExists) throw new ConflictException("Korisnik sa ovim brojem telefona vec postoji");
         }
 
         protected override async Task BeforeDeleteAsync(User entity)
@@ -86,10 +97,14 @@ namespace Reignite.Infrastructure.Services
 
         protected override IQueryable<User> ApplyFilter(IQueryable<User> query, UserQueryFilter filter)
         {
-           query=query.Include(x=>x.Orders).ThenInclude(x=>x.OrderItems).Include(x=>x.Projects);
+            // Exclude admins from the list
+            query = query.Where(u => u.Role != Core.Enums.UserRole.Admin);
+
+            // Include related data for counts (but not OrderItems - not needed for count)
+            query = query.Include(x => x.Orders).Include(x => x.Projects);
+
             if (!string.IsNullOrEmpty(filter.Search))
             {
-
                 var searchLower = filter.Search.ToLower();
                 query = query.Where(u =>
                     u.FirstName.ToLower().Contains(searchLower) ||

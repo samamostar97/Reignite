@@ -5,7 +5,7 @@ using Reignite.Application.DTOs.Response;
 using Reignite.Application.Filters;
 using Reignite.Application.IServices;
 
-namespace reignite.api.Controllers
+namespace Reignite.API.Controllers
 {
     [ApiController]
     [Route("api/activity")]

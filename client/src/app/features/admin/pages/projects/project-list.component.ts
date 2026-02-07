@@ -4,8 +4,8 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { ProjectService } from '../../../../core/services/project.service';
 import { ProjectResponse } from '../../../../core/models/project.model';
-import { environment } from '../../../../../environments/environment';
 import { ConfirmDialogService } from '../../../../shared/services/confirm-dialog.service';
+import { getImageUrl, getInitials } from '../../../../shared/utils/image.utils';
 
 @Component({
   selector: 'app-project-list',
@@ -83,14 +83,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     this.loadProjects();
   }
 
-  protected getImageUrl(path: string | undefined): string {
-    if (!path) return '';
-    // If it's already an absolute URL (Unsplash, etc.), return as-is
-    if (path.startsWith('http://') || path.startsWith('https://')) {
-      return path;
-    }
-    return `${environment.baseUrl}${path}`;
-  }
+  protected getImageUrl = getImageUrl;
 
   protected async deleteProject(project: ProjectResponse) {
     const confirmed = await this.confirmDialog.open({
@@ -139,12 +132,8 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     this.projectDetail.set(null);
   }
 
-  protected getInitials(name: string): string {
-    return name
-      .split(' ')
-      .map(n => n.charAt(0))
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
+  protected getInitialsFromName(name: string): string {
+    const parts = name.split(' ');
+    return getInitials(parts[0] || '', parts[1] || '');
   }
 }

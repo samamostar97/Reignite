@@ -274,7 +274,7 @@
                       <img [src]="getImageUrl(order.customerImageUrl)" [alt]="order.customerName" class="customer-img">
                     } @else {
                       <div class="customer-avatar">
-                        {{ getInitials(order.customerName) }}
+                        {{ getInitialsFromName(order.customerName) }}
                       </div>
                     }
                     <div class="customer-info">

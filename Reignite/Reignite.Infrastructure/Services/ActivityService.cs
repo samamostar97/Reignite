@@ -33,12 +33,31 @@ namespace Reignite.Infrastructure.Services
             var includeProjectReviews = !filter.Type.HasValue || filter.Type == ActivityType.ProjectReview;
             var includeNewProjects = !filter.Type.HasValue || filter.Type == ActivityType.NewProject;
 
+            // Calculate how many records we need from each source for proper pagination
+            // We need enough records to fill pageNumber * pageSize, then take pageSize
+            var maxRecordsNeeded = filter.PageNumber * filter.PageSize;
+
+            // Get counts for total calculation (lightweight queries)
+            var productReviewCount = includeProductReviews
+                ? await _productReviewRepository.AsQueryable().AsNoTracking().CountAsync()
+                : 0;
+            var projectReviewCount = includeProjectReviews
+                ? await _projectReviewRepository.AsQueryable().AsNoTracking().CountAsync()
+                : 0;
+            var projectCount = includeNewProjects
+                ? await _projectRepository.AsQueryable().AsNoTracking().CountAsync()
+                : 0;
+
+            var totalCount = productReviewCount + projectReviewCount + projectCount;
+
             if (includeProductReviews)
             {
                 var productReviews = await _productReviewRepository.AsQueryable()
+                    .AsNoTracking()
                     .Include(r => r.User)
                     .Include(r => r.Product)
                     .OrderByDescending(r => r.CreatedAt)
+                    .Take(maxRecordsNeeded)
                     .ToListAsync();
 
                 activities.AddRange(productReviews.Select(r => new ActivityResponse
@@ -60,9 +79,11 @@ namespace Reignite.Infrastructure.Services
             if (includeProjectReviews)
             {
                 var projectReviews = await _projectReviewRepository.AsQueryable()
+                    .AsNoTracking()
                     .Include(r => r.User)
                     .Include(r => r.Project)
                     .OrderByDescending(r => r.CreatedAt)
+                    .Take(maxRecordsNeeded)
                     .ToListAsync();
 
                 activities.AddRange(projectReviews.Select(r => new ActivityResponse
@@ -84,9 +105,11 @@ namespace Reignite.Infrastructure.Services
             if (includeNewProjects)
             {
                 var projects = await _projectRepository.AsQueryable()
+                    .AsNoTracking()
                     .Include(p => p.User)
                     .Include(p => p.Hobby)
                     .OrderByDescending(p => p.CreatedAt)
+                    .Take(maxRecordsNeeded)
                     .ToListAsync();
 
                 activities.AddRange(projects.Select(p => new ActivityResponse
@@ -105,12 +128,9 @@ namespace Reignite.Infrastructure.Services
                 }));
             }
 
-            // Sort all activities by date
-            var sorted = activities.OrderByDescending(a => a.CreatedAt).ToList();
-            var totalCount = sorted.Count;
-
-            // Apply paging
-            var paged = sorted
+            // Sort combined activities by date and apply paging
+            var paged = activities
+                .OrderByDescending(a => a.CreatedAt)
                 .Skip((filter.PageNumber - 1) * filter.PageSize)
                 .Take(filter.PageSize)
                 .ToList();

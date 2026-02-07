@@ -133,6 +133,13 @@ namespace Reignite.Infrastructure.Services
             return deleted;
         }
 
+        public async Task<bool> IsOwnerAsync(int projectId, int userId)
+        {
+            return await _projectRepository.AsQueryable()
+                .AsNoTracking()
+                .AnyAsync(p => p.Id == projectId && p.UserId == userId);
+        }
+
         protected override IQueryable<Project> ApplyFilter(IQueryable<Project> query, ProjectQueryFilter filter)
         {
             query = query.Include(x => x.User).Include(x => x.Hobby).Include(x => x.Product).Include(x => x.Reviews);

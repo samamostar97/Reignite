@@ -9,7 +9,7 @@ import { HobbyService } from '../../core/services/hobby.service';
 import { ProjectResponse } from '../../core/models/project.model';
 import { HobbyResponse } from '../../core/models/hobby.model';
 import { HeaderComponent } from '../../shared/components/header/header.component';
-import { environment } from '../../../environments/environment';
+import { getImageUrl } from '../../shared/utils/image.utils';
 
 @Component({
   selector: 'app-projects',
@@ -134,16 +134,10 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
-  protected getImageUrl(path: string | undefined | null): string | null {
-    if (!path) return null;
-    if (path.startsWith('http://') || path.startsWith('https://')) {
-      return path;
-    }
-    return `${environment.baseUrl}${path}`;
-  }
+  protected getImageUrl = getImageUrl;
 
   protected getSafeBackgroundImage(path: string | undefined | null): SafeStyle | null {
-    const url = this.getImageUrl(path);
+    const url = getImageUrl(path);
     if (!url) return null;
     return this.sanitizer.bypassSecurityTrustStyle(`url(${url})`);
   }

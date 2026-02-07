@@ -60,16 +60,18 @@ namespace Reignite.Infrastructure.Services
             var lastMonthStart = monthStart.AddMonths(-1);
             var lastMonthEnd = monthStart.AddDays(-1);
 
-            var orders = await _orderRepository.AsQueryable().ToListAsync();
+            var query = _orderRepository.AsQueryable().AsNoTracking();
 
-            var totalRevenue = orders.Sum(o => o.TotalAmount);
-            var todayRevenue = orders.Where(o => o.PurchaseDate >= todayStart).Sum(o => o.TotalAmount);
-            var weekRevenue = orders.Where(o => o.PurchaseDate >= weekStart).Sum(o => o.TotalAmount);
-            var monthRevenue = orders.Where(o => o.PurchaseDate >= monthStart).Sum(o => o.TotalAmount);
-
-            var lastMonthRevenue = orders
+            // Execute aggregations in the database
+            var totalRevenue = await query.SumAsync(o => o.TotalAmount);
+            var totalOrders = await query.CountAsync();
+            var todayRevenue = await query.Where(o => o.PurchaseDate >= todayStart).SumAsync(o => o.TotalAmount);
+            var todayOrders = await query.Where(o => o.PurchaseDate >= todayStart).CountAsync();
+            var weekRevenue = await query.Where(o => o.PurchaseDate >= weekStart).SumAsync(o => o.TotalAmount);
+            var monthRevenue = await query.Where(o => o.PurchaseDate >= monthStart).SumAsync(o => o.TotalAmount);
+            var lastMonthRevenue = await query
                 .Where(o => o.PurchaseDate >= lastMonthStart && o.PurchaseDate <= lastMonthEnd)
-                .Sum(o => o.TotalAmount);
+                .SumAsync(o => o.TotalAmount);
 
             var revenueChangePercent = lastMonthRevenue > 0
                 ? ((monthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100
@@ -81,9 +83,9 @@ namespace Reignite.Infrastructure.Services
                 TodayRevenue = todayRevenue,
                 WeekRevenue = weekRevenue,
                 MonthRevenue = monthRevenue,
-                TotalOrders = orders.Count,
-                TodayOrders = orders.Count(o => o.PurchaseDate >= todayStart),
-                AverageOrderValue = orders.Count > 0 ? totalRevenue / orders.Count : 0,
+                TotalOrders = totalOrders,
+                TodayOrders = todayOrders,
+                AverageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0,
                 RevenueChangePercent = revenueChangePercent
             };
         }
@@ -92,22 +94,25 @@ namespace Reignite.Infrastructure.Services
         {
             var startDate = DateTime.UtcNow.Date.AddDays(-days + 1);
 
-            var orders = await _orderRepository.AsQueryable()
+            // Group by date in database
+            var dailyData = await _orderRepository.AsQueryable()
+                .AsNoTracking()
                 .Where(o => o.PurchaseDate >= startDate)
+                .GroupBy(o => o.PurchaseDate.Date)
+                .Select(g => new { Date = g.Key, Revenue = g.Sum(o => o.TotalAmount), OrderCount = g.Count() })
                 .ToListAsync();
 
-            var result = new List<SalesChartDataPoint>();
+            var lookup = dailyData.ToDictionary(d => d.Date, d => d);
 
+            var result = new List<SalesChartDataPoint>();
             for (int i = 0; i < days; i++)
             {
                 var date = startDate.AddDays(i);
-                var dayOrders = orders.Where(o => o.PurchaseDate.Date == date).ToList();
-
                 result.Add(new SalesChartDataPoint
                 {
                     Date = date,
-                    Revenue = dayOrders.Sum(o => o.TotalAmount),
-                    OrderCount = dayOrders.Count
+                    Revenue = lookup.TryGetValue(date, out var data) ? data.Revenue : 0,
+                    OrderCount = lookup.TryGetValue(date, out var dataCount) ? dataCount.OrderCount : 0
                 });
             }
 
@@ -116,32 +121,45 @@ namespace Reignite.Infrastructure.Services
 
         public async Task<List<TopProductResponse>> GetTopProductsAsync(int count = 5)
         {
-            var orderItems = await _orderItemRepository.AsQueryable()
-                .Include(oi => oi.Product)
-                    .ThenInclude(p => p.ProductCategory)
-                .ToListAsync();
-
-            var topProducts = orderItems
+            // Do aggregation in database, then fetch product details
+            var topProductIds = await _orderItemRepository.AsQueryable()
+                .AsNoTracking()
                 .GroupBy(oi => oi.ProductId)
-                .Select(g => new TopProductResponse
+                .Select(g => new
                 {
                     ProductId = g.Key,
-                    ProductName = g.First().Product?.Name ?? "Nepoznat proizvod",
-                    ProductImageUrl = g.First().Product?.ProductImageUrl,
-                    CategoryName = g.First().Product?.ProductCategory?.Name ?? "Nepoznata kategorija",
                     QuantitySold = g.Sum(oi => oi.Quantity),
                     TotalRevenue = g.Sum(oi => oi.Quantity * oi.UnitPrice)
                 })
-                .OrderByDescending(p => p.TotalRevenue)
+                .OrderByDescending(x => x.TotalRevenue)
                 .Take(count)
-                .ToList();
+                .ToListAsync();
 
-            return topProducts;
+            var productIds = topProductIds.Select(x => x.ProductId).ToList();
+
+            var products = await _productRepository.AsQueryable()
+                .AsNoTracking()
+                .Include(p => p.ProductCategory)
+                .Where(p => productIds.Contains(p.Id))
+                .ToListAsync();
+
+            var productLookup = products.ToDictionary(p => p.Id);
+
+            return topProductIds.Select(tp => new TopProductResponse
+            {
+                ProductId = tp.ProductId,
+                ProductName = productLookup.TryGetValue(tp.ProductId, out var p) ? p.Name : "Nepoznat proizvod",
+                ProductImageUrl = productLookup.TryGetValue(tp.ProductId, out var p2) ? p2.ProductImageUrl : null,
+                CategoryName = productLookup.TryGetValue(tp.ProductId, out var p3) ? p3.ProductCategory?.Name ?? "Nepoznata kategorija" : "Nepoznata kategorija",
+                QuantitySold = tp.QuantitySold,
+                TotalRevenue = tp.TotalRevenue
+            }).ToList();
         }
 
         public async Task<List<RecentOrderResponse>> GetRecentOrdersAsync(int count = 10)
         {
             var orders = await _orderRepository.AsQueryable()
+                .AsNoTracking()
                 .Include(o => o.User)
                 .Include(o => o.OrderItems)
                 .OrderByDescending(o => o.PurchaseDate)
@@ -170,25 +188,36 @@ namespace Reignite.Infrastructure.Services
             var lastMonthStart = monthStart.AddMonths(-1);
             var lastMonthEnd = monthStart.AddDays(-1);
 
-            var users = await _userRepository.AsQueryable().ToListAsync();
+            var query = _userRepository.AsQueryable().AsNoTracking();
 
-            var totalUsers = users.Count;
-            var newUsersToday = users.Count(u => u.CreatedAt >= todayStart);
-            var newUsersThisWeek = users.Count(u => u.CreatedAt >= weekStart);
-            var newUsersThisMonth = users.Count(u => u.CreatedAt >= monthStart);
+            // Execute counts in database
+            var totalUsers = await query.CountAsync();
+            var newUsersToday = await query.CountAsync(u => u.CreatedAt >= todayStart);
+            var newUsersThisWeek = await query.CountAsync(u => u.CreatedAt >= weekStart);
+            var newUsersThisMonth = await query.CountAsync(u => u.CreatedAt >= monthStart);
+            var lastMonthUsers = await query.CountAsync(u => u.CreatedAt >= lastMonthStart && u.CreatedAt <= lastMonthEnd);
+            var usersBeforeStartDate = await query.CountAsync(u => u.CreatedAt < startDate);
 
-            var lastMonthUsers = users.Count(u => u.CreatedAt >= lastMonthStart && u.CreatedAt <= lastMonthEnd);
             var growthPercent = lastMonthUsers > 0
                 ? ((double)(newUsersThisMonth - lastMonthUsers) / lastMonthUsers) * 100
                 : (newUsersThisMonth > 0 ? 100 : 0);
 
+            // Get daily counts grouped in database
+            var dailyCounts = await query
+                .Where(u => u.CreatedAt >= startDate)
+                .GroupBy(u => u.CreatedAt.Date)
+                .Select(g => new { Date = g.Key, Count = g.Count() })
+                .ToListAsync();
+
+            var dailyLookup = dailyCounts.ToDictionary(d => d.Date, d => d.Count);
+
             var growthChart = new List<UserGrowthDataPoint>();
-            var runningTotal = users.Count(u => u.CreatedAt < startDate);
+            var runningTotal = usersBeforeStartDate;
 
             for (int i = 0; i < days; i++)
             {
                 var date = startDate.AddDays(i);
-                var newUsers = users.Count(u => u.CreatedAt.Date == date);
+                var newUsers = dailyLookup.TryGetValue(date, out var count) ? count : 0;
                 runningTotal += newUsers;
 
                 growthChart.Add(new UserGrowthDataPoint
@@ -212,33 +241,51 @@ namespace Reignite.Infrastructure.Services
 
         public async Task<RatingOverviewResponse> GetRatingOverviewAsync()
         {
-            var productReviews = await _productReviewRepository.AsQueryable().ToListAsync();
-            var projectReviews = await _projectReviewRepository.AsQueryable().ToListAsync();
+            var productQuery = _productReviewRepository.AsQueryable().AsNoTracking();
+            var projectQuery = _projectReviewRepository.AsQueryable().AsNoTracking();
 
-            var avgProductRating = productReviews.Count > 0 ? productReviews.Average(r => r.Rating) : 0;
-            var avgProjectRating = projectReviews.Count > 0 ? projectReviews.Average(r => r.Rating) : 0;
+            // Execute aggregations in database
+            var totalProductReviews = await productQuery.CountAsync();
+            var avgProductRating = totalProductReviews > 0 ? await productQuery.AverageAsync(r => r.Rating) : 0;
+
+            var totalProjectReviews = await projectQuery.CountAsync();
+            var avgProjectRating = totalProjectReviews > 0 ? await projectQuery.AverageAsync(r => r.Rating) : 0;
+
+            // Get rating distributions with single queries
+            var productRatingDist = await productQuery
+                .GroupBy(r => r.Rating)
+                .Select(g => new { Rating = g.Key, Count = g.Count() })
+                .ToListAsync();
+
+            var projectRatingDist = await projectQuery
+                .GroupBy(r => r.Rating)
+                .Select(g => new { Rating = g.Key, Count = g.Count() })
+                .ToListAsync();
+
+            var productDistLookup = productRatingDist.ToDictionary(r => r.Rating, r => r.Count);
+            var projectDistLookup = projectRatingDist.ToDictionary(r => r.Rating, r => r.Count);
 
             return new RatingOverviewResponse
             {
                 AverageProductRating = Math.Round(avgProductRating, 1),
-                TotalProductReviews = productReviews.Count,
+                TotalProductReviews = totalProductReviews,
                 AverageProjectRating = Math.Round(avgProjectRating, 1),
-                TotalProjectReviews = projectReviews.Count,
+                TotalProjectReviews = totalProjectReviews,
                 ProductRatingDistribution = new RatingDistribution
                 {
-                    OneStar = productReviews.Count(r => r.Rating == 1),
-                    TwoStar = productReviews.Count(r => r.Rating == 2),
-                    ThreeStar = productReviews.Count(r => r.Rating == 3),
-                    FourStar = productReviews.Count(r => r.Rating == 4),
-                    FiveStar = productReviews.Count(r => r.Rating == 5)
+                    OneStar = productDistLookup.GetValueOrDefault(1, 0),
+                    TwoStar = productDistLookup.GetValueOrDefault(2, 0),
+                    ThreeStar = productDistLookup.GetValueOrDefault(3, 0),
+                    FourStar = productDistLookup.GetValueOrDefault(4, 0),
+                    FiveStar = productDistLookup.GetValueOrDefault(5, 0)
                 },
                 ProjectRatingDistribution = new RatingDistribution
                 {
-                    OneStar = projectReviews.Count(r => r.Rating == 1),
-                    TwoStar = projectReviews.Count(r => r.Rating == 2),
-                    ThreeStar = projectReviews.Count(r => r.Rating == 3),
-                    FourStar = projectReviews.Count(r => r.Rating == 4),
-                    FiveStar = projectReviews.Count(r => r.Rating == 5)
+                    OneStar = projectDistLookup.GetValueOrDefault(1, 0),
+                    TwoStar = projectDistLookup.GetValueOrDefault(2, 0),
+                    ThreeStar = projectDistLookup.GetValueOrDefault(3, 0),
+                    FourStar = projectDistLookup.GetValueOrDefault(4, 0),
+                    FiveStar = projectDistLookup.GetValueOrDefault(5, 0)
                 }
             };
         }

@@ -5,8 +5,10 @@ import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductService } from '../../../../../core/services/product.service';
 import { CategoryService } from '../../../../../core/services/category.service';
 import { SupplierService } from '../../../../../core/services/supplier.service';
+import { NotificationService } from '../../../../../core/services/notification.service';
 import { ProductCategoryResponse } from '../../../../../core/models/category.model';
 import { SupplierResponse } from '../../../../../core/models/supplier.model';
+import { getImageUrl } from '../../../../../shared/utils/image.utils';
 import { environment } from '../../../../../../environments/environment';
 
 @Component({
@@ -22,6 +24,7 @@ export class ProductFormComponent implements OnInit {
   private readonly productService = inject(ProductService);
   private readonly categoryService = inject(CategoryService);
   private readonly supplierService = inject(SupplierService);
+  private readonly notificationService = inject(NotificationService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
@@ -83,12 +86,7 @@ export class ProductFormComponent implements OnInit {
           supplierId: product.supplierId
         });
         if (product.productImageUrl) {
-          // If it's already an absolute URL (Unsplash, etc.), use as-is
-          if (product.productImageUrl.startsWith('http://') || product.productImageUrl.startsWith('https://')) {
-            this.currentImageUrl.set(product.productImageUrl);
-          } else {
-            this.currentImageUrl.set(`${environment.baseUrl}${product.productImageUrl}`);
-          }
+          this.currentImageUrl.set(getImageUrl(product.productImageUrl));
         }
         this.isLoading.set(false);
       },
@@ -175,7 +173,10 @@ export class ProductFormComponent implements OnInit {
   private uploadImage(file: File): void {
     // Validate file size (5MB max)
     if (file.size > 5 * 1024 * 1024) {
-      alert('Slika ne smije biti veca od 5MB');
+      this.notificationService.warning({
+        title: 'Prevelika slika',
+        message: 'Slika ne smije biti veća od 5MB'
+      });
       return;
     }
 
@@ -188,7 +189,7 @@ export class ProductFormComponent implements OnInit {
       this.productService.uploadProductImage(productId, file).subscribe({
         next: (result) => {
           if (result.fileUrl) {
-            this.currentImageUrl.set(`${environment.baseUrl}${result.fileUrl}`);
+            this.currentImageUrl.set(getImageUrl(result.fileUrl));
           }
           this.isUploading.set(false);
         },
