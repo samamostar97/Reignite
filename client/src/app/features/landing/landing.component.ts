@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { ProjectService } from '../../core/services/project.service';
 import { ProductResponse } from '../../core/models/product.model';
@@ -9,7 +10,7 @@ import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-landing',
-  imports: [CommonModule, HeaderComponent],
+  imports: [CommonModule, RouterLink, HeaderComponent],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.scss'
 })
