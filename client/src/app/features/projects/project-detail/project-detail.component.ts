@@ -7,12 +7,13 @@ import { takeUntil } from 'rxjs/operators';
 import { ProjectService } from '../../../core/services/project.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { ProjectResponse } from '../../../core/models/project.model';
+import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-project-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, HeaderComponent],
   templateUrl: './project-detail.component.html',
   styleUrl: './project-detail.component.scss'
 })
@@ -25,7 +26,6 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
 
   protected readonly isAuthenticated = this.authService.isAuthenticated;
-  protected readonly isAdmin = this.authService.isAdmin;
 
   protected readonly project = signal<ProjectResponse | null>(null);
   protected readonly isLoading = signal(true);

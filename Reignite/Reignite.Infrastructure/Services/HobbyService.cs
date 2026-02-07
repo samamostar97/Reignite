@@ -2,6 +2,7 @@ using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Reignite.Application.DTOs.Request;
 using Reignite.Application.DTOs.Response;
+using Reignite.Application.Exceptions;
 using Reignite.Application.Filters;
 using Reignite.Application.IRepositories;
 using Reignite.Application.IServices;
@@ -22,6 +23,24 @@ namespace Reignite.Infrastructure.Services
                 .ToListAsync();
 
             return _mapper.Map<List<HobbyResponse>>(hobbies);
+        }
+
+        protected override async Task BeforeCreateAsync(Hobby entity, CreateHobbyRequest dto)
+        {
+            var exists = await _repository.AsQueryable()
+                .AnyAsync(h => h.Name.ToLower() == dto.Name.ToLower());
+
+            if (exists)
+                throw new ConflictException($"Hobi sa imenom '{dto.Name}' već postoji.");
+        }
+
+        protected override async Task BeforeUpdateAsync(Hobby entity, UpdateHobbyRequest dto)
+        {
+            var exists = await _repository.AsQueryable()
+                .AnyAsync(h => h.Id != entity.Id && h.Name.ToLower() == dto.Name.ToLower());
+
+            if (exists)
+                throw new ConflictException($"Hobi sa imenom '{dto.Name}' već postoji.");
         }
 
         protected override IQueryable<Hobby> ApplyFilter(IQueryable<Hobby> query, HobbyQueryFilter filter)

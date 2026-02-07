@@ -26,6 +26,7 @@ export class HobbyListComponent implements OnInit, OnDestroy {
   protected readonly currentPage = signal(1);
   protected readonly pageSize = signal(10);
   protected readonly searchQuery = signal('');
+  protected readonly errorMessage = signal<string | null>(null);
 
   protected readonly totalPages = computed(() =>
     Math.ceil(this.totalCount() / this.pageSize())
@@ -86,17 +87,20 @@ export class HobbyListComponent implements OnInit, OnDestroy {
     this.isAdding.set(true);
     this.newHobbyName = '';
     this.newHobbyDescription = '';
+    this.errorMessage.set(null);
   }
 
   protected cancelAdd() {
     this.isAdding.set(false);
     this.newHobbyName = '';
     this.newHobbyDescription = '';
+    this.errorMessage.set(null);
   }
 
   protected addHobby() {
     if (!this.newHobbyName.trim()) return;
 
+    this.errorMessage.set(null);
     this.hobbyService.createHobby({
       name: this.newHobbyName.trim(),
       description: this.newHobbyDescription.trim() || undefined
@@ -104,6 +108,9 @@ export class HobbyListComponent implements OnInit, OnDestroy {
       next: () => {
         this.cancelAdd();
         this.loadHobbies();
+      },
+      error: (err) => {
+        this.errorMessage.set(err.error?.error || 'Greška pri dodavanju hobija.');
       }
     });
   }
@@ -112,17 +119,20 @@ export class HobbyListComponent implements OnInit, OnDestroy {
     this.editingId.set(hobby.id);
     this.editHobbyName = hobby.name;
     this.editHobbyDescription = hobby.description || '';
+    this.errorMessage.set(null);
   }
 
   protected cancelEdit() {
     this.editingId.set(null);
     this.editHobbyName = '';
     this.editHobbyDescription = '';
+    this.errorMessage.set(null);
   }
 
   protected saveEdit(id: number) {
     if (!this.editHobbyName.trim()) return;
 
+    this.errorMessage.set(null);
     this.hobbyService.updateHobby(id, {
       name: this.editHobbyName.trim(),
       description: this.editHobbyDescription.trim() || undefined
@@ -130,6 +140,9 @@ export class HobbyListComponent implements OnInit, OnDestroy {
       next: () => {
         this.cancelEdit();
         this.loadHobbies();
+      },
+      error: (err) => {
+        this.errorMessage.set(err.error?.error || 'Greška pri ažuriranju hobija.');
       }
     });
   }
