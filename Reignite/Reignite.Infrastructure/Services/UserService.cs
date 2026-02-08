@@ -15,15 +15,18 @@ namespace Reignite.Infrastructure.Services
     {
         private readonly IFileStorageService _fileStorageService;
         private readonly IRepository<UserAddress, int> _userAddressRepository;
+        private readonly IRepository<UserHobby, int> _userHobbyRepository;
 
         public UserService(
             IRepository<User, int> repository,
             IMapper mapper,
             IFileStorageService fileStorageService,
-            IRepository<UserAddress, int> userAddressRepository) : base(repository, mapper)
+            IRepository<UserAddress, int> userAddressRepository,
+            IRepository<UserHobby, int> userHobbyRepository) : base(repository, mapper)
         {
             _fileStorageService = fileStorageService;
             _userAddressRepository = userAddressRepository;
+            _userHobbyRepository = userHobbyRepository;
         }
         protected override async Task BeforeCreateAsync(User entity, CreateUserRequest dto)
         {
@@ -256,6 +259,77 @@ namespace Reignite.Infrastructure.Services
                 throw new KeyNotFoundException("Adresa nije pronađena.");
 
             await _userAddressRepository.DeleteAsync(address);
+        }
+
+        // User Hobby Management
+        public async Task<List<UserHobbyResponse>> GetUserHobbiesAsync(int userId)
+        {
+            var userHobbies = await _userHobbyRepository.AsQueryable()
+                .Include(uh => uh.Hobby)
+                .Where(uh => uh.UserId == userId)
+                .ToListAsync();
+
+            return userHobbies.Select(uh => new UserHobbyResponse
+            {
+                Id = uh.Id,
+                UserId = uh.UserId,
+                HobbyId = uh.HobbyId,
+                HobbyName = uh.Hobby.Name,
+                SkillLevel = uh.SkillLevel,
+                Bio = uh.Bio
+            }).ToList();
+        }
+
+        public async Task<UserHobbyResponse> AddUserHobbyAsync(int userId, AddUserHobbyRequest request)
+        {
+            // Check if user exists
+            var userExists = await _repository.AsQueryable().AnyAsync(u => u.Id == userId);
+            if (!userExists)
+                throw new KeyNotFoundException("Korisnik nije pronađen.");
+
+            // Check if hobby already added
+            var exists = await _userHobbyRepository.AsQueryable()
+                .AnyAsync(uh => uh.UserId == userId && uh.HobbyId == request.HobbyId);
+
+            if (exists)
+                throw new ValidationException("Korisnik već ima ovaj hobi.");
+
+            var userHobby = new UserHobby
+            {
+                UserId = userId,
+                HobbyId = request.HobbyId,
+                SkillLevel = request.SkillLevel,
+                Bio = request.Bio
+            };
+
+            await _userHobbyRepository.AddAsync(userHobby);
+
+            // Load hobby name
+            var hobbyName = await _userHobbyRepository.AsQueryable()
+                .Where(uh => uh.Id == userHobby.Id)
+                .Select(uh => uh.Hobby.Name)
+                .FirstOrDefaultAsync() ?? string.Empty;
+
+            return new UserHobbyResponse
+            {
+                Id = userHobby.Id,
+                UserId = userHobby.UserId,
+                HobbyId = userHobby.HobbyId,
+                HobbyName = hobbyName,
+                SkillLevel = userHobby.SkillLevel,
+                Bio = userHobby.Bio
+            };
+        }
+
+        public async Task DeleteUserHobbyAsync(int userId, int hobbyId)
+        {
+            var userHobby = await _userHobbyRepository.AsQueryable()
+                .FirstOrDefaultAsync(uh => uh.UserId == userId && uh.HobbyId == hobbyId);
+
+            if (userHobby == null)
+                throw new KeyNotFoundException("Korisnikov hobi nije pronađen.");
+
+            await _userHobbyRepository.DeleteAsync(userHobby);
         }
     }
 }
