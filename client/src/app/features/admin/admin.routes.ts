@@ -14,6 +14,8 @@ import { ReviewListComponent } from './pages/reviews/review-list.component';
 import { ReportsComponent } from './pages/reports/reports.component';
 import { CouponListComponent } from './pages/coupons/coupon-list.component';
 import { CouponFormComponent } from './pages/coupons/coupon-form.component';
+import { FaqListComponent } from './pages/faqs/faq-list.component';
+import { FaqFormComponent } from './pages/faqs/faq-form.component';
 
 export const adminRoutes: Routes = [
   {
@@ -37,6 +39,9 @@ export const adminRoutes: Routes = [
       { path: 'coupons', component: CouponListComponent },
       { path: 'coupons/new', component: CouponFormComponent },
       { path: 'coupons/:id/edit', component: CouponFormComponent },
+      { path: 'faqs', component: FaqListComponent },
+      { path: 'faqs/new', component: FaqFormComponent },
+      { path: 'faqs/:id/edit', component: FaqFormComponent },
       { path: 'reports', component: ReportsComponent },
     ]
   }
