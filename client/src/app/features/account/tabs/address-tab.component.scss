@@ -2,10 +2,10 @@ $ember: #ff6b35;
 $flame: #f7931e;
 
 .tab-panel {
-  background: #1A1410;
+  background: white;
   border-radius: 16px;
-  border: 1px solid rgba(255, 107, 53, 0.08);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(255, 107, 53, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   padding: 2rem;
   animation: fadeIn 0.3s ease-out;
 }
@@ -19,12 +19,12 @@ $flame: #f7931e;
   font-family: 'Cinzel', serif;
   font-size: 1.35rem;
   font-weight: 700;
-  color: #FAF5F0;
+  color: #2c1810;
   margin: 0 0 0.25rem 0;
 }
 
 .tab-description {
-  color: #7A6B59;
+  color: #8b4513;
   font-size: 0.9rem;
   margin: 0 0 2rem 0;
 }
@@ -46,7 +46,7 @@ $flame: #f7931e;
   }
 
   p {
-    color: #C4B5A3;
+    color: #5a3a2a;
     margin-top: 1rem;
     font-size: 0.9rem;
   }
@@ -68,7 +68,7 @@ $flame: #f7931e;
     width: 72px;
     height: 72px;
     border-radius: 50%;
-    background: rgba($ember, 0.1);
+    background: rgba($ember, 0.08);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -83,13 +83,13 @@ $flame: #f7931e;
 
   h4 {
     font-size: 1.1rem;
-    color: #FAF5F0;
+    color: #2c1810;
     margin: 0 0 0.5rem 0;
     font-weight: 600;
   }
 
   p {
-    color: #7A6B59;
+    color: #8b4513;
     font-size: 0.9rem;
     margin: 0 0 1.5rem 0;
   }
@@ -101,16 +101,16 @@ $flame: #f7931e;
   align-items: flex-start;
   gap: 1.25rem;
   padding: 1.5rem;
-  background: #0D0A07;
+  background: #faf8f5;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 107, 53, 0.08);
 }
 
 .address-icon {
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background: rgba($ember, 0.1);
+  background: rgba($ember, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -128,13 +128,13 @@ $flame: #f7931e;
 }
 
 .address-line {
-  color: #FAF5F0;
+  color: #2c1810;
   font-size: 1rem;
   font-weight: 600;
   margin: 0 0 0.25rem 0;
 
   &.secondary {
-    color: #C4B5A3;
+    color: #5a3a2a;
     font-weight: 400;
     font-size: 0.9rem;
   }
@@ -168,7 +168,7 @@ $flame: #f7931e;
 .form-label {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #C4B5A3;
+  color: #5a3a2a;
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
@@ -176,20 +176,20 @@ $flame: #f7931e;
 .form-input {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 107, 53, 0.2);
   border-radius: 10px;
   font-size: 0.95rem;
-  color: #FAF5F0;
-  background: #0D0A07;
+  color: #2c1810;
+  background: #faf8f5;
   transition: all 0.2s ease;
 
   &::placeholder {
-    color: #7A6B59;
+    color: #a08070;
   }
 
   &:focus {
     outline: none;
-    border-color: rgba($ember, 0.4);
+    border-color: $ember;
     box-shadow: 0 0 0 3px rgba($ember, 0.1);
   }
 
@@ -244,9 +244,9 @@ $flame: #f7931e;
 
 .btn-secondary {
   padding: 0.75rem 1.25rem;
-  background: rgba(255, 255, 255, 0.06);
-  color: #C4B5A3;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: white;
+  color: #5a3a2a;
+  border: 1px solid rgba(255, 107, 53, 0.2);
   border-radius: 10px;
   font-weight: 500;
   font-size: 0.95rem;
@@ -254,7 +254,8 @@ $flame: #f7931e;
   transition: all 0.2s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 107, 53, 0.4);
+    color: #2c1810;
   }
 }
 
@@ -263,10 +264,10 @@ $flame: #f7931e;
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: white;
+  border: 1px solid rgba(255, 107, 53, 0.2);
   border-radius: 8px;
-  color: #C4B5A3;
+  color: #5a3a2a;
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
@@ -278,13 +279,13 @@ $flame: #f7931e;
   }
 
   &:hover {
-    background: rgba($ember, 0.1);
-    border-color: rgba($ember, 0.3);
+    background: rgba($ember, 0.06);
+    border-color: rgba($ember, 0.4);
     color: $ember;
   }
 
   &.btn-danger-outline:hover {
-    background: rgba(#ef4444, 0.1);
+    background: rgba(#ef4444, 0.06);
     border-color: rgba(#ef4444, 0.3);
     color: #ef4444;
   }
