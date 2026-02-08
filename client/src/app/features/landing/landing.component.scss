@@ -131,7 +131,7 @@
   letter-spacing: 0.3em;
   color: #2c1810;
   margin: 0;
-  font-family: 'Georgia', serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   text-transform: uppercase;
   position: relative;
 
@@ -382,7 +382,7 @@
   color: #2c1810;
   margin: 0 0 0.5rem 0;
   letter-spacing: 0.1em;
-  font-family: 'Georgia', serif;
+  font-family: var(--font-display, 'Cinzel', serif);
 }
 
 .section-description {
@@ -703,7 +703,7 @@
   font-size: 1.5rem;
   font-weight: 700;
   color: #ff6b35;
-  font-family: 'Georgia', serif;
+  font-family: var(--font-display, 'Cinzel', serif);
 
   @media (max-width: 640px) {
     font-size: 1.3rem;

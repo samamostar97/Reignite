@@ -9,6 +9,12 @@
     rgba(240, 200, 140, 0.82) 100%);
   position: relative;
   overflow: hidden;
+  animation: pageIn 0.3s ease-out;
+}
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 // Hero Section
@@ -31,7 +37,7 @@
   letter-spacing: 0.15em;
   color: #2c1810;
   margin: 0 0 1rem 0;
-  font-family: 'Georgia', serif;
+  font-family: var(--font-display, 'Cinzel', serif);
 }
 
 .page-subtitle {
