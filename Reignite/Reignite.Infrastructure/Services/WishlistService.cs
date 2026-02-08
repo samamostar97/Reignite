@@ -40,7 +40,7 @@ namespace Reignite.Infrastructure.Services
                 ProductName = item.Product.Name,
                 ProductPrice = item.Product.Price,
                 ProductImageUrl = item.Product.ImageUrl,
-                AddedAt = item.AddedAt
+                AddedAt = item.CreatedAt
             }).ToList();
 
             return response;
