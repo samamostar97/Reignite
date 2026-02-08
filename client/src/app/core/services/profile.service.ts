@@ -11,7 +11,9 @@ import {
   UpdateUserAddressRequest,
   UserHobbyResponse,
   AddUserHobbyRequest,
-  ChangePasswordRequest
+  ChangePasswordRequest,
+  WishlistResponse,
+  WishlistItemResponse
 } from '../models/user.model';
 import { OrderResponse } from '../models/order.model';
 
@@ -81,5 +83,18 @@ export class ProfileService {
 
   deleteHobby(hobbyId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/hobbies/${hobbyId}`);
+  }
+
+  // Wishlist
+  getWishlist(): Observable<WishlistResponse> {
+    return this.http.get<WishlistResponse>(`${this.apiUrl}/wishlist`);
+  }
+
+  addToWishlist(productId: number): Observable<WishlistItemResponse> {
+    return this.http.post<WishlistItemResponse>(`${this.apiUrl}/wishlist/${productId}`, {});
+  }
+
+  removeFromWishlist(productId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/wishlist/${productId}`);
   }
 }
