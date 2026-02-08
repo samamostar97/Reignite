@@ -91,11 +91,17 @@ export class FaqListComponent implements OnInit, OnDestroy {
 
     this.faqService.delete(id).subscribe({
       next: () => {
-        this.notification.success('Pitanje je uspješno obrisano.');
+        this.notification.success({
+          title: 'Uspješno obrisano',
+          message: 'Pitanje je uspješno obrisano.'
+        });
         this.loadFaqs();
       },
       error: () => {
-        this.notification.error('Greška prilikom brisanja pitanja.');
+        this.notification.error({
+          title: 'Greška',
+          message: 'Greška prilikom brisanja pitanja.'
+        });
       }
     });
   }

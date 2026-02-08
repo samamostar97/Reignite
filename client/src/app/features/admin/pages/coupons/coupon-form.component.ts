@@ -57,7 +57,7 @@ export class CouponFormComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.notification.error('Greška prilikom učitavanja kupona.');
+        this.notification.error({ title: 'Greška', message: 'Greška prilikom učitavanja kupona.' });
         this.router.navigate(['/admin/coupons']);
       }
     });
@@ -84,42 +84,43 @@ export class CouponFormComponent implements OnInit {
 
     operation.subscribe({
       next: () => {
-        this.notification.success(
-          this.isEditMode() ? 'Kupon je uspješno ažuriran.' : 'Kupon je uspješno kreiran.'
-        );
+        this.notification.success({
+          title: 'Uspješno spremljeno',
+          message: this.isEditMode() ? 'Kupon je uspješno ažuriran.' : 'Kupon je uspješno kreiran.'
+        });
         this.router.navigate(['/admin/coupons']);
       },
       error: (error) => {
         this.isSaving.set(false);
         const errorMessage = error?.error?.error || 'Greška prilikom spremanja kupona.';
-        this.notification.error(errorMessage);
+        this.notification.error({ title: 'Greška', message: errorMessage });
       }
     });
   }
 
   private validateForm(): boolean {
     if (!this.code.trim()) {
-      this.notification.error('Kod kupona je obavezan.');
+      this.notification.error({ title: 'Greška', message: 'Kod kupona je obavezan.' });
       return false;
     }
 
     if (this.discountValue <= 0) {
-      this.notification.error('Vrijednost popusta mora biti veća od 0.');
+      this.notification.error({ title: 'Greška', message: 'Vrijednost popusta mora biti veća od 0.' });
       return false;
     }
 
     if (this.discountType === 'Percentage' && this.discountValue > 100) {
-      this.notification.error('Procenat popusta ne može biti veći od 100.');
+      this.notification.error({ title: 'Greška', message: 'Procenat popusta ne može biti veći od 100.' });
       return false;
     }
 
     if (this.minimumOrderAmount !== null && this.minimumOrderAmount < 0) {
-      this.notification.error('Minimalni iznos ne može biti negativan.');
+      this.notification.error({ title: 'Greška', message: 'Minimalni iznos ne može biti negativan.' });
       return false;
     }
 
     if (this.maxUses !== null && this.maxUses < 1) {
-      this.notification.error('Maksimalan broj korištenja mora biti barem 1.');
+      this.notification.error({ title: 'Greška', message: 'Maksimalan broj korištenja mora biti barem 1.' });
       return false;
     }
 

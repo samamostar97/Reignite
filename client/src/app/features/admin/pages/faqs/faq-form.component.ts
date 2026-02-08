@@ -47,7 +47,7 @@ export class FaqFormComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.notification.error('Greška prilikom učitavanja pitanja.');
+        this.notification.error({ title: 'Greška', message: 'Greška prilikom učitavanja pitanja.' });
         this.router.navigate(['/admin/faqs']);
       }
     });
@@ -69,37 +69,38 @@ export class FaqFormComponent implements OnInit {
 
     operation.subscribe({
       next: () => {
-        this.notification.success(
-          this.isEditMode() ? 'Pitanje je uspješno ažurirano.' : 'Pitanje je uspješno kreirano.'
-        );
+        this.notification.success({
+          title: 'Uspješno spremljeno',
+          message: this.isEditMode() ? 'Pitanje je uspješno ažurirano.' : 'Pitanje je uspješno kreirano.'
+        });
         this.router.navigate(['/admin/faqs']);
       },
       error: (error) => {
         this.isSaving.set(false);
         const errorMessage = error?.error?.error || 'Greška prilikom spremanja pitanja.';
-        this.notification.error(errorMessage);
+        this.notification.error({ title: 'Greška', message: errorMessage });
       }
     });
   }
 
   private validateForm(): boolean {
     if (!this.question.trim()) {
-      this.notification.error('Pitanje je obavezno.');
+      this.notification.error({ title: 'Greška', message: 'Pitanje je obavezno.' });
       return false;
     }
 
     if (this.question.length > 500) {
-      this.notification.error('Pitanje ne smije biti duže od 500 karaktera.');
+      this.notification.error({ title: 'Greška', message: 'Pitanje ne smije biti duže od 500 karaktera.' });
       return false;
     }
 
     if (!this.answer.trim()) {
-      this.notification.error('Odgovor je obavezan.');
+      this.notification.error({ title: 'Greška', message: 'Odgovor je obavezan.' });
       return false;
     }
 
     if (this.answer.length > 2000) {
-      this.notification.error('Odgovor ne smije biti duži od 2000 karaktera.');
+      this.notification.error({ title: 'Greška', message: 'Odgovor ne smije biti duži od 2000 karaktera.' });
       return false;
     }
 
