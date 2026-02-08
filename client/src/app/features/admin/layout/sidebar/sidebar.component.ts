@@ -46,6 +46,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   protected readonly managementNavItems: NavItem[] = [
     { label: 'Korisnici', route: '/admin/users', icon: 'users' },
     { label: 'Narudžbe', route: '/admin/orders', icon: 'shopping-bag' },
+    { label: 'Kuponi', route: '/admin/coupons', icon: 'ticket' },
   ];
 
   protected readonly reportsNavItems: NavItem[] = [

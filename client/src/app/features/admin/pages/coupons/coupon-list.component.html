@@ -1,0 +1,151 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">Kuponi</h1>
+    <a routerLink="/admin/coupons/new" class="btn-primary">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+      </svg>
+      Dodaj kupon
+    </a>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="search-box">
+      <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+      <input
+        type="text"
+        placeholder="Pretraži kupone..."
+        (input)="onSearch($event)"
+        class="search-input"
+      />
+    </div>
+
+    <div class="filter-buttons">
+      <button
+        (click)="onFilterActive(null)"
+        [class.active]="activeFilter() === null"
+        class="filter-btn"
+      >
+        Svi
+      </button>
+      <button
+        (click)="onFilterActive(true)"
+        [class.active]="activeFilter() === true"
+        class="filter-btn"
+      >
+        Aktivni
+      </button>
+      <button
+        (click)="onFilterActive(false)"
+        [class.active]="activeFilter() === false"
+        class="filter-btn"
+      >
+        Neaktivni
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Učitavanje...</p>
+    </div>
+  }
+
+  <!-- Coupons Table -->
+  @if (!isLoading() && coupons().length > 0) {
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Kod</th>
+            <th>Popust</th>
+            <th>Min. iznos</th>
+            <th>Istek</th>
+            <th>Korištenja</th>
+            <th>Status</th>
+            <th class="text-right">Akcije</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (coupon of coupons(); track coupon.id) {
+            <tr>
+              <td class="font-medium">{{ coupon.code }}</td>
+              <td>{{ formatDiscount(coupon) }}</td>
+              <td>{{ coupon.minimumOrderAmount ? (coupon.minimumOrderAmount | number:'1.2-2') + ' KM' : '-' }}</td>
+              <td>{{ formatDate(coupon.expiryDate) }}</td>
+              <td>{{ coupon.timesUsed }} {{ coupon.maxUses ? '/ ' + coupon.maxUses : '' }}</td>
+              <td>
+                <span [class]="getStatusBadgeClass(coupon)">
+                  {{ getStatusText(coupon) }}
+                </span>
+              </td>
+              <td class="text-right">
+                <div class="action-buttons">
+                  <a
+                    [routerLink]="['/admin/coupons', coupon.id, 'edit']"
+                    class="btn-icon btn-edit"
+                    title="Uredi"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                  </a>
+                  <button
+                    (click)="deleteCoupon(coupon.id, coupon.code)"
+                    class="btn-icon btn-delete"
+                    title="Obriši"
+                  >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <button
+          (click)="goToPage(currentPage() - 1)"
+          [disabled]="currentPage() === 1"
+          class="pagination-btn"
+        >
+          Prethodna
+        </button>
+
+        <span class="pagination-info">
+          Stranica {{ currentPage() }} od {{ totalPages() }}
+        </span>
+
+        <button
+          (click)="goToPage(currentPage() + 1)"
+          [disabled]="currentPage() === totalPages()"
+          class="pagination-btn"
+        >
+          Sljedeća
+        </button>
+      </div>
+    }
+  }
+
+  <!-- Empty State -->
+  @if (!isLoading() && coupons().length === 0) {
+    <div class="empty-state">
+      <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+      </svg>
+      <h3 class="empty-title">Nema kupona</h3>
+      <p class="empty-description">Započnite kreiranjem prvog kupona.</p>
+    </div>
+  }
+</div>

@@ -1,0 +1,152 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">{{ isEditMode() ? 'Uredi kupon' : 'Novi kupon' }}</h1>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Učitavanje...</p>
+    </div>
+  } @else {
+    <form (ngSubmit)="onSubmit()" class="form-container">
+      <div class="form-grid">
+        <!-- Code -->
+        <div class="form-group">
+          <label for="code" class="form-label">Kod kupona *</label>
+          <input
+            type="text"
+            id="code"
+            [(ngModel)]="code"
+            name="code"
+            class="form-input"
+            placeholder="npr. LJETO2026"
+            required
+            [disabled]="isSaving()"
+          />
+        </div>
+
+        <!-- Discount Type -->
+        <div class="form-group">
+          <label for="discountType" class="form-label">Tip popusta *</label>
+          <select
+            id="discountType"
+            [(ngModel)]="discountType"
+            name="discountType"
+            class="form-input"
+            required
+            [disabled]="isSaving()"
+          >
+            <option value="Percentage">Procenat</option>
+            <option value="Fixed">Fiksni iznos</option>
+          </select>
+        </div>
+
+        <!-- Discount Value -->
+        <div class="form-group">
+          <label for="discountValue" class="form-label">
+            Vrijednost popusta * {{ discountType === 'Percentage' ? '(%)' : '(KM)' }}
+          </label>
+          <input
+            type="number"
+            id="discountValue"
+            [(ngModel)]="discountValue"
+            name="discountValue"
+            class="form-input"
+            [placeholder]="discountType === 'Percentage' ? '10' : '5.00'"
+            step="0.01"
+            min="0.01"
+            [max]="discountType === 'Percentage' ? 100 : 999999"
+            required
+            [disabled]="isSaving()"
+          />
+        </div>
+
+        <!-- Minimum Order Amount -->
+        <div class="form-group">
+          <label for="minimumOrderAmount" class="form-label">Minimalni iznos narudžbe (KM)</label>
+          <input
+            type="number"
+            id="minimumOrderAmount"
+            [(ngModel)]="minimumOrderAmount"
+            name="minimumOrderAmount"
+            class="form-input"
+            placeholder="npr. 50.00"
+            step="0.01"
+            min="0"
+            [disabled]="isSaving()"
+          />
+          <p class="form-hint">Ostavite prazno ako nema minimalnog iznosa</p>
+        </div>
+
+        <!-- Expiry Date -->
+        <div class="form-group">
+          <label for="expiryDate" class="form-label">Datum isteka</label>
+          <input
+            type="date"
+            id="expiryDate"
+            [(ngModel)]="expiryDate"
+            name="expiryDate"
+            class="form-input"
+            [disabled]="isSaving()"
+          />
+          <p class="form-hint">Ostavite prazno ako kupon nema rok isteka</p>
+        </div>
+
+        <!-- Max Uses -->
+        <div class="form-group">
+          <label for="maxUses" class="form-label">Maksimalan broj korištenja</label>
+          <input
+            type="number"
+            id="maxUses"
+            [(ngModel)]="maxUses"
+            name="maxUses"
+            class="form-input"
+            placeholder="npr. 100"
+            min="1"
+            [disabled]="isSaving()"
+          />
+          <p class="form-hint">Ostavite prazno za neograničen broj korištenja</p>
+        </div>
+      </div>
+
+      <!-- Is Active -->
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [(ngModel)]="isActive"
+            name="isActive"
+            class="checkbox-input"
+            [disabled]="isSaving()"
+          />
+          <span>Kupon je aktivan</span>
+        </label>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button
+          type="button"
+          (click)="onCancel()"
+          class="btn-secondary"
+          [disabled]="isSaving()"
+        >
+          Otkaži
+        </button>
+        <button
+          type="submit"
+          class="btn-primary"
+          [disabled]="isSaving()"
+        >
+          @if (isSaving()) {
+            <span class="spinner-small"></span>
+            Spremanje...
+          } @else {
+            {{ isEditMode() ? 'Ažuriraj' : 'Kreiraj' }}
+          }
+        </button>
+      </div>
+    </form>
+  }
+</div>
