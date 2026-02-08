@@ -276,7 +276,7 @@
             <div class="address-info">
               <div class="info-row">
                 <span class="info-label">Adresa:</span>
-                <span class="info-value">{{ userAddress()!.addressLine }}</span>
+                <span class="info-value">{{ userAddress()!.street }}</span>
               </div>
               <div class="info-row">
                 <span class="info-label">Grad:</span>
@@ -310,19 +310,19 @@
           <form [formGroup]="addressForm" (ngSubmit)="saveAddress()">
             <div class="form-row">
               <div class="form-group">
-                <label for="addressLine" class="form-label">
+                <label for="street" class="form-label">
                   Adresa
                   <span class="required">*</span>
                 </label>
                 <input
                   type="text"
-                  id="addressLine"
-                  formControlName="addressLine"
+                  id="street"
+                  formControlName="street"
                   class="form-input"
-                  [class.error]="hasAddressError('addressLine', 'required')"
+                  [class.error]="hasAddressError('street', 'required')"
                   placeholder="Ulica i broj"
                   maxlength="200">
-                @if (hasAddressError('addressLine', 'required')) {
+                @if (hasAddressError('street', 'required')) {
                   <span class="error-message">Adresa je obavezna</span>
                 }
               </div>

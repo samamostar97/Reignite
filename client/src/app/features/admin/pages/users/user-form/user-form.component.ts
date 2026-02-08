@@ -58,7 +58,7 @@ export class UserFormComponent implements OnInit {
   });
 
   protected readonly addressForm: FormGroup = this.fb.group({
-    addressLine: ['', [Validators.required, Validators.maxLength(200)]],
+    street: ['', [Validators.required, Validators.maxLength(200)]],
     city: ['', [Validators.required, Validators.maxLength(100)]],
     postalCode: ['', [Validators.required, Validators.maxLength(20)]],
     country: ['', [Validators.required, Validators.maxLength(100)]]
@@ -108,7 +108,7 @@ export class UserFormComponent implements OnInit {
       next: (address) => {
         this.userAddress.set(address);
         this.addressForm.patchValue({
-          addressLine: address.addressLine,
+          street: address.street,
           city: address.city,
           postalCode: address.postalCode,
           country: address.country

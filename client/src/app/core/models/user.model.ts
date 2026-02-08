@@ -45,7 +45,7 @@ export interface UpdateUserRequest {
 export interface UserAddressResponse {
   id: number;
   userId: number;
-  addressLine: string;
+  street: string;
   city: string;
   postalCode: string;
   country: string;
@@ -54,14 +54,14 @@ export interface UserAddressResponse {
 }
 
 export interface CreateUserAddressRequest {
-  addressLine: string;
+  street: string;
   city: string;
   postalCode: string;
   country: string;
 }
 
 export interface UpdateUserAddressRequest {
-  addressLine: string;
+  street: string;
   city: string;
   postalCode: string;
   country: string;
