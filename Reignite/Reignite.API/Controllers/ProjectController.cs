@@ -11,7 +11,7 @@ using System.Security.Claims;
 namespace Reignite.API.Controllers
 {
     [ApiController]
-    [Route("api/project")]
+    [Route("api/projects")]
     [Authorize(Roles = "Admin")]
     public class ProjectController : BaseController<Project, ProjectResponse, CreateProjectRequest, UpdateProjectRequest, ProjectQueryFilter, int>
     {

@@ -15,7 +15,7 @@ import {
 })
 export class HobbyService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}/hobby`;
+  private readonly apiUrl = `${environment.apiUrl}/hobbies`;
 
   getHobbies(): Observable<HobbyResponse[]> {
     return this.http.get<HobbyResponse[]>(`${this.apiUrl}/all`);

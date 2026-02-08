@@ -15,7 +15,7 @@ import {
 })
 export class CategoryService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}/productcategory`;
+  private readonly apiUrl = `${environment.apiUrl}/product-categories`;
 
   getCategories(filter?: ProductCategoryQueryFilter): Observable<PagedResult<ProductCategoryResponse>> {
     let params = new HttpParams();
