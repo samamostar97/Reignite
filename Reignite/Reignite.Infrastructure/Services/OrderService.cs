@@ -11,61 +11,19 @@ using Reignite.Core.Enums;
 
 namespace Reignite.Infrastructure.Services
 {
-    public class OrderService : IOrderService
+    public class OrderService : BaseService<Order, OrderResponse, CreateOrderRequest, UpdateOrderRequest, OrderQueryFilter, int>, IOrderService
     {
-        private readonly IRepository<Order, int> _orderRepository;
         private readonly IRepository<Product, int> _productRepository;
-        private readonly IMapper _mapper;
 
         public OrderService(
             IRepository<Order, int> repository,
             IRepository<Product, int> productRepository,
-            IMapper mapper)
+            IMapper mapper) : base(repository, mapper)
         {
-            _orderRepository = repository;
             _productRepository = productRepository;
-            _mapper = mapper;
         }
 
-        public async Task<PagedResult<OrderResponse>> GetPagedAsync(OrderQueryFilter filter)
-        {
-            var query = _orderRepository.AsQueryable()
-                .Include(o => o.User)
-                .Include(o => o.OrderItems)
-                    .ThenInclude(oi => oi.Product)
-                .AsQueryable();
-
-            query = ApplyFilter(query, filter);
-
-            var totalCount = await query.CountAsync();
-            var items = await query
-                .Skip((filter.PageNumber - 1) * filter.PageSize)
-                .Take(filter.PageSize)
-                .ToListAsync();
-
-            return new PagedResult<OrderResponse>
-            {
-                Items = items.Select(MapToResponse).ToList(),
-                TotalCount = totalCount,
-                PageNumber = filter.PageNumber
-            };
-        }
-
-        public async Task<OrderResponse> GetByIdAsync(int id)
-        {
-            var order = await _orderRepository.AsQueryable()
-                .Include(o => o.User)
-                .Include(o => o.OrderItems)
-                    .ThenInclude(oi => oi.Product)
-                .FirstOrDefaultAsync(o => o.Id == id);
-
-            if (order == null)
-                throw new KeyNotFoundException("Narudžba nije pronađena");
-
-            return MapToResponse(order);
-        }
-
-        public async Task<OrderResponse> CreateTestOrderAsync(CreateOrderRequest request)
+        public override async Task<OrderResponse> CreateAsync(CreateOrderRequest request)
         {
             // Get product prices for calculating total
             var productIds = request.Items.Select(i => i.ProductId).Distinct().ToList();
@@ -99,13 +57,50 @@ namespace Reignite.Infrastructure.Services
                 OrderItems = orderItems
             };
 
-            await _orderRepository.AddAsync(order);
+            await _repository.AddAsync(order);
 
             // Reload with navigation properties
             return await GetByIdAsync(order.Id);
         }
 
-        private IQueryable<Order> ApplyFilter(IQueryable<Order> query, OrderQueryFilter filter)
+        public override async Task<OrderResponse> GetByIdAsync(int id)
+        {
+            var order = await _repository.AsQueryable()
+                .Include(o => o.User)
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Product)
+                .FirstOrDefaultAsync(o => o.Id == id);
+
+            if (order == null)
+                throw new KeyNotFoundException("Narudžba nije pronađena");
+
+            return MapToResponse(order);
+        }
+
+        public override async Task<PagedResult<OrderResponse>> GetPagedAsync(OrderQueryFilter filter)
+        {
+            var query = _repository.AsQueryable()
+                .Include(o => o.User)
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Product);
+
+            query = ApplyFilter(query, filter);
+
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
+                .Take(filter.PageSize)
+                .ToListAsync();
+
+            return new PagedResult<OrderResponse>
+            {
+                Items = items.Select(MapToResponse).ToList(),
+                TotalCount = totalCount,
+                PageNumber = filter.PageNumber
+            };
+        }
+
+        protected override IQueryable<Order> ApplyFilter(IQueryable<Order> query, OrderQueryFilter filter)
         {
             if (!string.IsNullOrEmpty(filter.Search))
             {
@@ -139,6 +134,15 @@ namespace Reignite.Infrastructure.Services
             }
 
             return query;
+        }
+
+        protected override async Task BeforeUpdateAsync(Order entity, UpdateOrderRequest dto)
+        {
+            // Validate status transition if needed
+            if (entity.Status == OrderStatus.Cancelled && dto.Status != OrderStatus.Cancelled)
+            {
+                throw new InvalidOperationException("Otkazane narudžbe ne mogu biti vraćene.");
+            }
         }
 
         private OrderResponse MapToResponse(Order order)

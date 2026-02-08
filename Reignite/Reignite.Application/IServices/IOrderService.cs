@@ -1,4 +1,3 @@
-using Reignite.Application.Common;
 using Reignite.Application.DTOs.Request;
 using Reignite.Application.DTOs.Response;
 using Reignite.Application.Filters;
@@ -6,10 +5,7 @@ using Reignite.Core.Entities;
 
 namespace Reignite.Application.IServices
 {
-    public interface IOrderService
+    public interface IOrderService : IService<Order, OrderResponse, CreateOrderRequest, UpdateOrderRequest, OrderQueryFilter, int>
     {
-        Task<PagedResult<OrderResponse>> GetPagedAsync(OrderQueryFilter filter);
-        Task<OrderResponse> GetByIdAsync(int id);
-        Task<OrderResponse> CreateTestOrderAsync(CreateOrderRequest request);
     }
 }
