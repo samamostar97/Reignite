@@ -79,7 +79,7 @@ namespace Reignite.Infrastructure.Services
 
         public override async Task<PagedResult<OrderResponse>> GetPagedAsync(OrderQueryFilter filter)
         {
-            var query = _repository.AsQueryable()
+            IQueryable<Order> query = _repository.AsQueryable()
                 .Include(o => o.User)
                 .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.Product);
