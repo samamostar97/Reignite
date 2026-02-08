@@ -10,12 +10,13 @@ import { ProjectReviewService } from '../../../core/services/project-review.serv
 import { AuthService } from '../../../core/services/auth.service';
 import { ProjectResponse, ProjectReviewResponse } from '../../../core/models/project.model';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
+import { EmberBackgroundComponent } from '../../../shared/components/ember-background/ember-background.component';
 import { getImageUrl, getInitials } from '../../../shared/utils/image.utils';
 
 @Component({
   selector: 'app-project-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, HeaderComponent],
+  imports: [CommonModule, RouterLink, FormsModule, HeaderComponent, EmberBackgroundComponent],
   templateUrl: './project-detail.component.html',
   styleUrl: './project-detail.component.scss'
 })

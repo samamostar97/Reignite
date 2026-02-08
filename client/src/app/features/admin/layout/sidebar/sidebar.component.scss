@@ -45,6 +45,7 @@ $smoke: #5a3a2a;
     .logo-subtitle,
     .nav-label,
     .badge,
+    .home-text,
     .logout-text {
       display: none;
     }
@@ -72,6 +73,12 @@ $smoke: #5a3a2a;
       .nav-icon {
         margin: 0;
       }
+    }
+
+    .home-link {
+      justify-content: center;
+      padding: 0.75rem;
+      margin: 0;
     }
 
     .logout-btn {
@@ -311,6 +318,40 @@ $smoke: #5a3a2a;
   letter-spacing: 0.05em;
   font-weight: 600;
   border: 1px solid rgba(255, 107, 53, 0.2);
+}
+
+.home-link {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  width: 100%;
+  padding: 0.875rem 0.75rem;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  margin-bottom: 0.25rem;
+
+  &:hover {
+    color: $ember;
+    background: rgba($ember, 0.1);
+
+    svg {
+      transform: translateX(2px) translateY(-2px);
+    }
+  }
+
+  svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    transition: transform 0.15s ease;
+  }
 }
 
 // Footer
