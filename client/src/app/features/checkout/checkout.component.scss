@@ -1,6 +1,9 @@
+$ember: #ff6b35;
+$flame: #f7931e;
+
 .checkout-page {
   min-height: 100vh;
-  background: #0D0A07;
+  background: radial-gradient(circle at center top, rgba(255, 248, 240, 0.98) 0%, rgba(255, 237, 213, 0.95) 20%, rgba(255, 224, 178, 0.92) 40%, rgba(251, 216, 165, 0.88) 60%, rgba(245, 208, 152, 0.85) 80%, rgba(240, 200, 140, 0.82) 100%);
   padding: 100px 24px 60px;
   position: relative;
   z-index: 1;
@@ -15,12 +18,14 @@
 .checkout-container {
   max-width: 800px;
   margin: 0 auto;
+  position: relative;
+  z-index: 2;
 }
 
 .checkout-title {
   font-family: 'Cinzel', serif;
   font-size: 2rem;
-  color: #FAF5F0;
+  color: #2c1810;
   margin-bottom: 32px;
 }
 
@@ -50,9 +55,9 @@
   justify-content: center;
   font-weight: 600;
   font-size: 0.9rem;
-  background: #231C15;
-  color: #7A6B59;
-  border: 2px solid #3D3328;
+  background: #faf8f5;
+  color: #8b4513;
+  border: 2px solid rgba(255, 107, 53, 0.2);
   transition: all 0.3s;
 
   svg {
@@ -61,58 +66,60 @@
   }
 
   .active & {
-    background: #F97316;
-    color: #FAF5F0;
-    border-color: #F97316;
+    background: $ember;
+    color: #fff;
+    border-color: $ember;
+    box-shadow: 0 2px 8px rgba($ember, 0.3);
   }
 
   .completed & {
-    background: #A3BE8C;
-    color: #FAF5F0;
-    border-color: #A3BE8C;
+    background: #059669;
+    color: #fff;
+    border-color: #059669;
   }
 }
 
 .step-label {
   font-size: 0.8rem;
-  color: #7A6B59;
+  color: #8b4513;
   white-space: nowrap;
 
   .active & {
-    color: #FAF5F0;
+    color: #2c1810;
     font-weight: 500;
   }
 
   .completed & {
-    color: #A3BE8C;
+    color: #059669;
   }
 }
 
 .step-connector {
   width: 60px;
   height: 2px;
-  background: #3D3328;
+  background: rgba(255, 107, 53, 0.15);
   margin: 0 8px;
   margin-bottom: 28px;
   transition: background 0.3s;
 
   &.completed {
-    background: #A3BE8C;
+    background: #059669;
   }
 }
 
 // Step content
 .step-content {
-  background: #1A1410;
+  background: white;
   border-radius: 12px;
   padding: 32px;
-  border: 1px solid rgba(249, 115, 22, 0.1);
+  border: 1px solid rgba(255, 107, 53, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
 }
 
 .step-title {
   font-family: 'Cinzel', serif;
   font-size: 1.25rem;
-  color: #FAF5F0;
+  color: #2c1810;
   margin-bottom: 24px;
 }
 
@@ -122,10 +129,10 @@
   align-items: center;
   gap: 12px;
   padding: 14px 18px;
-  background: rgba(191, 97, 106, 0.1);
-  border: 1px solid rgba(191, 97, 106, 0.3);
+  background: rgba(239, 68, 68, 0.06);
+  border: 1px solid rgba(239, 68, 68, 0.2);
   border-radius: 8px;
-  color: #BF616A;
+  color: #991b1b;
   margin-bottom: 24px;
   font-size: 0.9rem;
 
@@ -133,6 +140,7 @@
     width: 20px;
     height: 20px;
     flex-shrink: 0;
+    color: #ef4444;
   }
 }
 
@@ -149,8 +157,9 @@
   align-items: center;
   gap: 16px;
   padding: 12px;
-  background: #231C15;
+  background: #faf8f5;
   border-radius: 8px;
+  border: 1px solid rgba(255, 107, 53, 0.06);
 }
 
 .review-item-image {
@@ -169,7 +178,7 @@
   .img-placeholder {
     width: 100%;
     height: 100%;
-    background: #1A1410;
+    background: rgba(255, 107, 53, 0.05);
   }
 }
 
@@ -182,7 +191,7 @@
 }
 
 .review-item-name {
-  color: #FAF5F0;
+  color: #2c1810;
   font-size: 0.95rem;
   white-space: nowrap;
   overflow: hidden;
@@ -190,12 +199,12 @@
 }
 
 .review-item-qty {
-  color: #7A6B59;
+  color: #8b4513;
   font-size: 0.85rem;
 }
 
 .review-item-price {
-  color: #F97316;
+  color: $ember;
   font-weight: 600;
   white-space: nowrap;
 }
@@ -205,13 +214,13 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 0;
-  border-top: 1px solid rgba(249, 115, 22, 0.15);
+  border-top: 1px solid rgba(255, 107, 53, 0.1);
   font-size: 1.1rem;
   font-weight: 600;
-  color: #FAF5F0;
+  color: #2c1810;
 
   span:last-child {
-    color: #F97316;
+    color: $ember;
   }
 }
 
@@ -221,9 +230,9 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: 20px;
-  background: #231C15;
+  background: #faf8f5;
   border-radius: 8px;
-  border: 1px solid rgba(249, 115, 22, 0.15);
+  border: 1px solid rgba(255, 107, 53, 0.1);
   margin-bottom: 24px;
 }
 
@@ -234,7 +243,7 @@
 }
 
 .address-line {
-  color: #C4B5A3;
+  color: #5a3a2a;
   font-size: 0.95rem;
   margin: 0;
 }
@@ -245,9 +254,9 @@
   gap: 6px;
   padding: 8px 14px;
   background: transparent;
-  border: 1px solid rgba(249, 115, 22, 0.25);
+  border: 1px solid rgba(255, 107, 53, 0.2);
   border-radius: 6px;
-  color: #F97316;
+  color: $ember;
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s;
@@ -258,28 +267,30 @@
   }
 
   &:hover {
-    background: rgba(249, 115, 22, 0.05);
-    border-color: #F97316;
+    background: rgba($ember, 0.06);
+    border-color: $ember;
   }
 }
 
 .no-address {
   text-align: center;
   padding: 32px;
-  background: #231C15;
+  background: #faf8f5;
   border-radius: 8px;
+  border: 1px solid rgba(255, 107, 53, 0.06);
   margin-bottom: 24px;
 
   p {
-    color: #7A6B59;
+    color: #8b4513;
     margin-bottom: 16px;
   }
 }
 
 .address-form {
-  background: #231C15;
+  background: #faf8f5;
   border-radius: 8px;
   padding: 24px;
+  border: 1px solid rgba(255, 107, 53, 0.06);
   margin-bottom: 24px;
 }
 
@@ -288,28 +299,32 @@
 
   label {
     display: block;
-    color: #C4B5A3;
+    color: #5a3a2a;
     font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
     margin-bottom: 6px;
   }
 
   input {
     width: 100%;
     padding: 10px 14px;
-    background: #1A1410;
-    border: 1px solid rgba(249, 115, 22, 0.15);
+    background: white;
+    border: 1px solid rgba(255, 107, 53, 0.2);
     border-radius: 6px;
-    color: #FAF5F0;
+    color: #2c1810;
     font-size: 0.95rem;
-    transition: border-color 0.2s;
+    transition: all 0.2s;
 
     &::placeholder {
-      color: #7A6B59;
+      color: #a08070;
     }
 
     &:focus {
       outline: none;
-      border-color: #F97316;
+      border-color: $ember;
+      box-shadow: 0 0 0 3px rgba($ember, 0.1);
     }
   }
 }
@@ -330,7 +345,7 @@
 .loading-state {
   text-align: center;
   padding: 32px;
-  color: #7A6B59;
+  color: #8b4513;
 }
 
 // Payment
@@ -341,19 +356,19 @@
   .payment-icon {
     width: 64px;
     height: 64px;
-    color: #F97316;
+    color: $ember;
     margin-bottom: 16px;
   }
 
   h3 {
     font-family: 'Cinzel', serif;
-    color: #FAF5F0;
+    color: #2c1810;
     font-size: 1.15rem;
     margin-bottom: 8px;
   }
 
   p {
-    color: #7A6B59;
+    color: #8b4513;
     font-size: 0.9rem;
     max-width: 400px;
     margin: 0 auto 24px;
@@ -370,28 +385,28 @@
   display: flex;
   justify-content: space-between;
   padding: 8px 0;
-  color: #C4B5A3;
+  color: #5a3a2a;
   font-size: 0.95rem;
 
   .free {
-    color: #A3BE8C;
+    color: #059669;
     font-weight: 500;
   }
 
   &.total {
     font-weight: 700;
     font-size: 1.1rem;
-    color: #FAF5F0;
+    color: #2c1810;
 
     span:last-child {
-      color: #F97316;
+      color: $ember;
     }
   }
 }
 
 .summary-divider {
   height: 1px;
-  background: rgba(249, 115, 22, 0.15);
+  background: rgba(255, 107, 53, 0.12);
   margin: 8px 0;
 }
 
@@ -407,19 +422,19 @@
   svg {
     width: 80px;
     height: 80px;
-    color: #A3BE8C;
+    color: #059669;
   }
 }
 
 .success-title {
   font-family: 'Cinzel', serif;
   font-size: 1.75rem;
-  color: #FAF5F0;
+  color: #2c1810;
   margin-bottom: 12px;
 }
 
 .success-message {
-  color: #C4B5A3;
+  color: #5a3a2a;
   font-size: 1rem;
   max-width: 400px;
   margin: 0 auto 32px;
@@ -437,23 +452,25 @@
   justify-content: space-between;
   margin-top: 24px;
   padding-top: 20px;
-  border-top: 1px solid rgba(249, 115, 22, 0.1);
+  border-top: 1px solid rgba(255, 107, 53, 0.1);
 }
 
 .btn-primary {
   padding: 12px 28px;
-  background: linear-gradient(135deg, #F97316, #EF4444);
-  color: #FAF5F0;
+  background: linear-gradient(135deg, $ember, $flame);
+  color: #fff;
   border: none;
   border-radius: 8px;
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
   text-decoration: none;
-  transition: opacity 0.2s;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 8px rgba($ember, 0.3);
 
   &:hover:not(:disabled) {
-    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba($ember, 0.4);
   }
 
   &:disabled {
@@ -464,9 +481,9 @@
 
 .btn-secondary {
   padding: 12px 28px;
-  background: transparent;
-  border: 1px solid rgba(249, 115, 22, 0.25);
-  color: #C4B5A3;
+  background: white;
+  border: 1px solid rgba(255, 107, 53, 0.2);
+  color: #5a3a2a;
   border-radius: 8px;
   font-size: 0.95rem;
   cursor: pointer;
@@ -474,8 +491,8 @@
   transition: all 0.2s;
 
   &:hover {
-    border-color: #F97316;
-    color: #FAF5F0;
+    border-color: rgba(255, 107, 53, 0.4);
+    color: #2c1810;
   }
 }
 
