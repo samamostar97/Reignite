@@ -13,6 +13,14 @@
       <div class="notification__content">
         <h4 class="notification__title">{{ notification.title }}</h4>
         <p class="notification__message">{{ notification.message }}</p>
+        @if (notification.action) {
+          <button
+            class="notification__action"
+            (click)="handleAction(notification)"
+          >
+            {{ notification.action.label }}
+          </button>
+        }
       </div>
 
       @if (notification.dismissible) {

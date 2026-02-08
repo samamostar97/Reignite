@@ -19,6 +19,13 @@ export class NotificationComponent {
     this.notificationService.dismiss(id);
   }
 
+  protected handleAction(notification: Notification): void {
+    if (notification.action) {
+      notification.action.callback();
+      this.dismiss(notification.id);
+    }
+  }
+
   protected getIcon(type: Notification['type']): string {
     switch (type) {
       case 'success':

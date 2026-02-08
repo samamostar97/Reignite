@@ -19,7 +19,8 @@ export class NotificationService {
       title: config.title,
       message: config.message,
       duration: config.duration ?? 4000,
-      dismissible: config.dismissible ?? true
+      dismissible: config.dismissible ?? true,
+      action: config.action
     };
 
     this._notifications.update(notifications => [...notifications, notification]);
