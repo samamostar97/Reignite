@@ -99,11 +99,17 @@ export class CouponListComponent implements OnInit, OnDestroy {
 
     this.couponService.deleteCoupon(id).subscribe({
       next: () => {
-        this.notification.success('Kupon je uspješno obrisan.');
+        this.notification.success({
+          title: 'Uspješno obrisano',
+          message: 'Kupon je uspješno obrisan.'
+        });
         this.loadCoupons();
       },
       error: () => {
-        this.notification.error('Greška prilikom brisanja kupona.');
+        this.notification.error({
+          title: 'Greška',
+          message: 'Greška prilikom brisanja kupona.'
+        });
       }
     });
   }
