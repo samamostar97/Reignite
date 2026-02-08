@@ -31,8 +31,9 @@ $smoke: #5a3a2a;
 .page-title {
   font-size: 1.75rem;
   font-weight: 700;
-  color: $ash;
+  color: #FAF5F0;
   margin: 0;
+  font-family: var(--font-display, 'Cinzel', serif);
 }
 
 .btn-primary {
@@ -84,7 +85,7 @@ $smoke: #5a3a2a;
     transform: translateY(-50%);
     width: 18px;
     height: 18px;
-    color: rgba($ash, 0.4);
+    color: #7A6B59;
     pointer-events: none;
   }
 
@@ -93,15 +94,15 @@ $smoke: #5a3a2a;
     max-width: 400px;
     height: 44px;
     padding: 0 1rem 0 2.75rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 10px;
     font-size: 0.9rem;
-    color: $ash;
-    background: #fff;
+    color: #FAF5F0;
+    background: rgba(255, 255, 255, 0.04);
     transition: all 0.2s ease;
 
     &::placeholder {
-      color: rgba($ash, 0.4);
+      color: #7A6B59;
     }
 
     &:focus {
@@ -115,7 +116,7 @@ $smoke: #5a3a2a;
 .filter-buttons {
   display: flex;
   gap: 0.5rem;
-  background: rgba(0, 0, 0, 0.02);
+  background: rgba(255, 255, 255, 0.04);
   padding: 0.25rem;
   border-radius: 10px;
 }
@@ -125,14 +126,14 @@ $smoke: #5a3a2a;
   background: transparent;
   border: none;
   border-radius: 8px;
-  color: $smoke;
+  color: #C4B5A3;
   font-weight: 500;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s ease;
 
   &.active {
-    background: $ember;
+    background: linear-gradient(135deg, $ember, $flame);
     color: #fff;
     box-shadow: 0 2px 6px rgba($ember, 0.3);
   }
@@ -150,9 +151,9 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: center;
   padding: 5rem 2rem;
-  background: #fff;
+  background: #231C15;
   border-radius: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.04);
 
   .spinner {
     width: 44px;
@@ -164,7 +165,7 @@ $smoke: #5a3a2a;
   }
 
   p {
-    color: $smoke;
+    color: #C4B5A3;
     margin-top: 1.25rem;
     font-size: 0.95rem;
   }
@@ -181,9 +182,9 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: center;
   padding: 5rem 2rem;
-  background: #fff;
+  background: #231C15;
   border-radius: 16px;
-  border: 2px dashed rgba($ember, 0.2);
+  border: 2px dashed rgba(255, 255, 255, 0.1);
 
   .empty-icon {
     width: 80px;
@@ -204,13 +205,13 @@ $smoke: #5a3a2a;
 
   .empty-title {
     font-size: 1.25rem;
-    color: $ash;
+    color: #FAF5F0;
     margin: 0 0 0.5rem 0;
     font-weight: 600;
   }
 
   .empty-description {
-    color: $smoke;
+    color: #C4B5A3;
     margin: 0;
     text-align: center;
   }
@@ -218,11 +219,11 @@ $smoke: #5a3a2a;
 
 // Table container
 .table-container {
-  background: #fff;
+  background: #231C15;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .data-table {
@@ -235,13 +236,13 @@ $smoke: #5a3a2a;
   }
 
   th {
-    background: linear-gradient(to bottom, #faf9f8, #f5f4f2);
+    background: linear-gradient(to bottom, #2C2318, #231C15);
     font-weight: 600;
-    color: $ash;
+    color: #FAF5F0;
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     position: sticky;
     top: 0;
     z-index: 10;
@@ -252,11 +253,11 @@ $smoke: #5a3a2a;
   }
 
   tbody tr {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
     transition: background-color 0.15s ease;
 
     &:hover {
-      background: rgba($ember, 0.02);
+      background: rgba($ember, 0.04);
     }
 
     &:last-child {
@@ -265,11 +266,11 @@ $smoke: #5a3a2a;
   }
 
   td {
-    color: $smoke;
+    color: #C4B5A3;
     font-size: 0.9rem;
 
     &.font-medium {
-      color: $ash;
+      color: #FAF5F0;
       font-weight: 600;
     }
 
@@ -287,9 +288,9 @@ $smoke: #5a3a2a;
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 600;
-  background: linear-gradient(135deg, rgba(#10b981, 0.15) 0%, rgba(#10b981, 0.1) 100%);
-  color: #047857;
-  border: 1px solid rgba(#10b981, 0.2);
+  background: linear-gradient(135deg, rgba(#10b981, 0.2) 0%, rgba(#10b981, 0.12) 100%);
+  color: #34d399;
+  border: 1px solid rgba(#10b981, 0.25);
 }
 
 .badge-inactive {
@@ -299,9 +300,9 @@ $smoke: #5a3a2a;
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 600;
-  background: rgba(0, 0, 0, 0.04);
-  color: $smoke;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.06);
+  color: #C4B5A3;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .badge-expired {
@@ -311,9 +312,9 @@ $smoke: #5a3a2a;
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 600;
-  background: linear-gradient(135deg, rgba(#ef4444, 0.15) 0%, rgba(#ef4444, 0.1) 100%);
-  color: #dc2626;
-  border: 1px solid rgba(#ef4444, 0.2);
+  background: linear-gradient(135deg, rgba(#ef4444, 0.2) 0%, rgba(#ef4444, 0.12) 100%);
+  color: #f87171;
+  border: 1px solid rgba(#ef4444, 0.25);
 }
 
 .badge-maxed {
@@ -323,9 +324,9 @@ $smoke: #5a3a2a;
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 600;
-  background: linear-gradient(135deg, rgba(#f59e0b, 0.15) 0%, rgba(#f59e0b, 0.1) 100%);
-  color: #d97706;
-  border: 1px solid rgba(#f59e0b, 0.2);
+  background: linear-gradient(135deg, rgba(#f59e0b, 0.2) 0%, rgba(#f59e0b, 0.12) 100%);
+  color: #fbbf24;
+  border: 1px solid rgba(#f59e0b, 0.25);
 }
 
 // Action buttons
@@ -347,10 +348,10 @@ $smoke: #5a3a2a;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.06);
   border: 1px solid transparent;
   border-radius: 8px;
-  color: $smoke;
+  color: #C4B5A3;
   cursor: pointer;
   transition: all 0.2s ease;
   text-decoration: none;
@@ -382,23 +383,23 @@ $smoke: #5a3a2a;
   justify-content: center;
   gap: 1rem;
   padding: 1.25rem;
-  background: #fff;
-  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  background: #231C15;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 0 0 16px 16px;
 }
 
 .pagination-btn {
   padding: 0.75rem 1.25rem;
-  background: rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid transparent;
   border-radius: 10px;
-  color: $ash;
+  color: #C4B5A3;
   cursor: pointer;
   transition: all 0.2s ease;
   font-weight: 500;
 
   &:hover:not(:disabled) {
-    background: $ember;
+    background: linear-gradient(135deg, $ember 0%, $flame 100%);
     color: #fff;
     border-color: $ember;
   }
@@ -411,7 +412,7 @@ $smoke: #5a3a2a;
 
 .pagination-info {
   font-size: 0.9rem;
-  color: $smoke;
+  color: #C4B5A3;
   font-weight: 500;
 }
 

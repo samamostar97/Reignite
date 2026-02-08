@@ -21,7 +21,7 @@ $smoke: #5a3a2a;
 .page-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: $ash;
+  color: #FAF5F0;
   margin: 0.5rem 0 0 0;
 }
 
@@ -29,7 +29,7 @@ $smoke: #5a3a2a;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: $smoke;
+  color: #C4B5A3;
   text-decoration: none;
   font-size: 0.9rem;
   font-weight: 500;
@@ -53,9 +53,9 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: center;
   padding: 3rem 2rem;
-  background: #fff;
+  background: #231C15;
   border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.04);
 
   .spinner {
     width: 44px;
@@ -67,7 +67,7 @@ $smoke: #5a3a2a;
   }
 
   p {
-    color: $smoke;
+    color: #C4B5A3;
     margin-top: 1.25rem;
     font-size: 0.95rem;
   }
@@ -79,11 +79,11 @@ $smoke: #5a3a2a;
 
 // Form card
 .form-card {
-  background: #fff;
+  background: #231C15;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 // Two-column layout
@@ -125,8 +125,8 @@ $smoke: #5a3a2a;
   aspect-ratio: 1;
   border-radius: 50%;
   overflow: hidden;
-  background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%);
-  border: 3px solid rgba(0, 0, 0, 0.06);
+  background: linear-gradient(135deg, #1A1410 0%, #15110D 100%);
+  border: 3px solid rgba(255, 255, 255, 0.06);
 
   img {
     width: 100%;
@@ -140,7 +140,7 @@ $smoke: #5a3a2a;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #ccc;
+    color: #7A6B59;
 
     svg {
       width: 64px;
@@ -160,7 +160,7 @@ $smoke: #5a3a2a;
   display: block;
   font-size: 0.9rem;
   font-weight: 500;
-  color: $ash;
+  color: #C4B5A3;
   margin-bottom: 0.5rem;
 
   .required {
@@ -172,17 +172,17 @@ $smoke: #5a3a2a;
 .form-input {
   width: 100%;
   padding: 0.625rem 0.875rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   font-size: 0.95rem;
-  color: $ash;
+  color: #FAF5F0;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.04);
 
   &:focus {
     outline: none;
-    border-color: rgba($ember, 0.4);
-    box-shadow: 0 0 0 3px rgba($ember, 0.1);
+    border-color: rgba(#ff6b35, 0.4);
+    box-shadow: 0 0 0 3px rgba(#ff6b35, 0.1);
   }
 
   &.error {
@@ -194,7 +194,7 @@ $smoke: #5a3a2a;
   }
 
   &::placeholder {
-    color: rgba($ash, 0.4);
+    color: #7A6B59;
   }
 }
 
@@ -211,10 +211,10 @@ $smoke: #5a3a2a;
   gap: 0.75rem;
   padding: 1rem;
   margin: 0 1.5rem 1rem;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  background: rgba(#dc2626, 0.1);
+  border: 1px solid rgba(#dc2626, 0.25);
   border-radius: 10px;
-  color: #dc2626;
+  color: #ef4444;
 
   svg {
     width: 20px;
@@ -237,16 +237,16 @@ $smoke: #5a3a2a;
   text-align: center;
   cursor: pointer;
   transition: border-color 0.15s ease, background-color 0.15s ease;
-  background: rgba($ember, 0.02);
+  background: rgba($ember, 0.04);
 
   &:hover {
     border-color: $ember;
-    background: rgba($ember, 0.05);
+    background: rgba($ember, 0.08);
   }
 
   &.dragging {
     border-color: $ember;
-    background: rgba($ember, 0.08);
+    background: rgba($ember, 0.12);
   }
 
   .upload-icon {
@@ -258,7 +258,7 @@ $smoke: #5a3a2a;
 
   span {
     font-size: 0.8rem;
-    color: $smoke;
+    color: #C4B5A3;
   }
 }
 
@@ -304,7 +304,7 @@ $smoke: #5a3a2a;
   justify-content: center;
   gap: 0.5rem;
   padding: 0.75rem;
-  background: rgba($ember, 0.05);
+  background: rgba($ember, 0.08);
   border-radius: 8px;
 
   .progress-spinner {
@@ -318,7 +318,7 @@ $smoke: #5a3a2a;
 
   span {
     font-size: 0.8rem;
-    color: $smoke;
+    color: #C4B5A3;
   }
 }
 
@@ -328,18 +328,18 @@ $smoke: #5a3a2a;
   justify-content: flex-end;
   gap: 0.75rem;
   padding: 1rem 1.5rem;
-  background: linear-gradient(to bottom, #faf9f8, #f5f4f2);
-  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  background: linear-gradient(to bottom, #1A1410, #15110D);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .btn-secondary {
   display: inline-flex;
   align-items: center;
   padding: 0.75rem 1.25rem;
-  background: rgba(0, 0, 0, 0.04);
-  color: $smoke;
+  background: rgba(255, 255, 255, 0.06);
+  color: #C4B5A3;
   text-decoration: none;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
   font-weight: 500;
   font-size: 0.9rem;
@@ -347,7 +347,7 @@ $smoke: #5a3a2a;
   transition: background-color 0.15s ease;
 
   &:hover {
-    background: rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.1);
   }
 }
 
@@ -402,7 +402,7 @@ $smoke: #5a3a2a;
 .section-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: $ash;
+  color: #FAF5F0;
   margin: 0;
 }
 
@@ -437,13 +437,13 @@ $smoke: #5a3a2a;
   align-items: center;
   gap: 0.75rem;
   padding: 1rem;
-  color: $smoke;
+  color: #C4B5A3;
   font-size: 0.9rem;
 }
 
 .address-display {
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  background: #1A1410;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   padding: 1.5rem;
 }
@@ -454,7 +454,7 @@ $smoke: #5a3a2a;
   .info-row {
     display: flex;
     padding: 0.5rem 0;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 
     &:last-child {
       border-bottom: none;
@@ -463,12 +463,12 @@ $smoke: #5a3a2a;
 
   .info-label {
     font-weight: 600;
-    color: $smoke;
+    color: #C4B5A3;
     min-width: 150px;
   }
 
   .info-value {
-    color: $ash;
+    color: #FAF5F0;
     flex: 1;
   }
 }
@@ -477,7 +477,7 @@ $smoke: #5a3a2a;
   display: flex;
   gap: 0.75rem;
   padding-top: 1rem;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .btn-danger {
@@ -507,11 +507,11 @@ $smoke: #5a3a2a;
 .empty-state-small {
   text-align: center;
   padding: 2rem;
-  color: #9ca3af;
+  color: #7A6B59;
 
   svg {
     margin: 0 auto 0.75rem;
-    color: #d1d5db;
+    color: #5A4A3A;
   }
 
   p {
@@ -532,14 +532,14 @@ $smoke: #5a3a2a;
 }
 
 .wishlist-item {
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  background: #1A1410;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   overflow: hidden;
   transition: box-shadow 0.2s ease;
 
   &:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.06);
   }
 }
 
@@ -555,8 +555,8 @@ $smoke: #5a3a2a;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #e5e7eb;
-  color: #9ca3af;
+  background: #15110D;
+  color: #7A6B59;
 
   svg {
     width: 3rem;
@@ -571,7 +571,7 @@ $smoke: #5a3a2a;
 .product-name {
   font-size: 1rem;
   font-weight: 600;
-  color: $ash;
+  color: #FAF5F0;
   margin: 0 0 0.5rem;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -587,6 +587,6 @@ $smoke: #5a3a2a;
 
 .added-date {
   font-size: 0.875rem;
-  color: $smoke;
+  color: #C4B5A3;
   margin: 0;
 }
