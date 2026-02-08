@@ -11,7 +11,9 @@ import {
   UserAddressResponse,
   CreateUserAddressRequest,
   UpdateUserAddressRequest,
-  WishlistResponse
+  WishlistResponse,
+  UserHobbyResponse,
+  AddUserHobbyRequest
 } from '../models/user.model';
 
 @Injectable({
@@ -88,5 +90,18 @@ export class UserService {
   // User Wishlist (read-only)
   getUserWishlist(userId: number): Observable<WishlistResponse> {
     return this.http.get<WishlistResponse>(`${this.apiUrl}/${userId}/wishlist`);
+  }
+
+  // User Hobby management
+  getUserHobbies(userId: number): Observable<UserHobbyResponse[]> {
+    return this.http.get<UserHobbyResponse[]>(`${this.apiUrl}/${userId}/hobbies`);
+  }
+
+  addUserHobby(userId: number, data: AddUserHobbyRequest): Observable<UserHobbyResponse> {
+    return this.http.post<UserHobbyResponse>(`${this.apiUrl}/${userId}/hobbies`, data);
+  }
+
+  deleteUserHobby(userId: number, hobbyId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${userId}/hobbies/${hobbyId}`);
   }
 }
