@@ -1,17 +1,6 @@
 <div class="shop-page">
   <!-- Embers Background -->
-  <div class="embers-container">
-    @for (ember of embers; track ember.id) {
-      <div
-        class="ember"
-        [style.left.%]="ember.left"
-        [style.animation-delay.s]="ember.delay"
-        [style.animation-duration.s]="ember.duration"
-        [style.width.px]="ember.size"
-        [style.height.px]="ember.size">
-      </div>
-    }
-  </div>
+  <app-ember-background density="full"></app-ember-background>
 
   <!-- Header -->
   <app-header [visible]="true" [activePath]="'/shop'"></app-header>
