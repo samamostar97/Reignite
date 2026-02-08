@@ -466,7 +466,7 @@ $smoke: #5a3a2a;
 
     &.status-processing {
       background: rgba($flame, 0.12);
-      color: darken($flame, 10%);
+      color: #d97b06;
     }
 
     &.status-delivered {
@@ -608,7 +608,7 @@ $smoke: #5a3a2a;
     color: #fff;
 
     &:hover {
-      background: darken($ember, 8%);
+      background: #e85520;
     }
   }
 }

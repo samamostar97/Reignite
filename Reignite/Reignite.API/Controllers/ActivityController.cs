@@ -8,7 +8,7 @@ using Reignite.Application.IServices;
 namespace Reignite.API.Controllers
 {
     [ApiController]
-    [Route("api/activity")]
+    [Route("api/activities")]
     [Authorize(Roles = "Admin")]
     public class ActivityController : ControllerBase
     {

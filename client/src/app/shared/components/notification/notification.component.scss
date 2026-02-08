@@ -156,7 +156,7 @@ $info-secondary: #60a5fa;
     letter-spacing: 0.05em;
 
     &:hover {
-      background: darken($ember, 5%);
+      background: #f25e28;
       transform: translateY(-1px);
       box-shadow: 0 4px 8px rgba(255, 107, 53, 0.3);
     }
