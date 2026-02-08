@@ -35,12 +35,12 @@ $smoke: #5a3a2a;
 }
 
 .total-count {
-  color: $smoke;
+  color: #C4B5A3;
   margin: 0;
   font-size: 0.95rem;
 
   strong {
-    color: $ash;
+    color: #FAF5F0;
     font-weight: 700;
   }
 }
@@ -90,7 +90,7 @@ $smoke: #5a3a2a;
     transform: translateY(-50%);
     width: 18px;
     height: 18px;
-    color: rgba($ash, 0.4);
+    color: #7A6B59;
     pointer-events: none;
   }
 
@@ -98,15 +98,15 @@ $smoke: #5a3a2a;
     width: 280px;
     height: 44px;
     padding: 0 1rem 0 2.75rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 10px;
     font-size: 0.9rem;
-    color: $ash;
-    background: #fff;
+    color: #FAF5F0;
+    background: rgba(255, 255, 255, 0.04);
     transition: all 0.2s ease;
 
     &::placeholder {
-      color: rgba($ash, 0.4);
+      color: #7A6B59;
     }
 
     &:focus {
@@ -124,7 +124,7 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: center;
   padding: 5rem 2rem;
-  background: #fff;
+  background: #231C15;
   border-radius: 16px;
 
   .spinner {
@@ -137,7 +137,7 @@ $smoke: #5a3a2a;
   }
 
   p {
-    color: $smoke;
+    color: #C4B5A3;
     margin-top: 1.25rem;
     font-size: 0.95rem;
   }
@@ -154,9 +154,9 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: center;
   padding: 5rem 2rem;
-  background: #fff;
+  background: #231C15;
   border-radius: 16px;
-  border: 2px dashed rgba($ember, 0.2);
+  border: 2px dashed rgba(255, 255, 255, 0.1);
 
   .empty-icon {
     width: 80px;
@@ -177,13 +177,13 @@ $smoke: #5a3a2a;
 
   h3 {
     font-size: 1.25rem;
-    color: $ash;
+    color: #FAF5F0;
     margin: 0 0 0.5rem 0;
     font-weight: 600;
   }
 
   p {
-    color: $smoke;
+    color: #C4B5A3;
     margin: 0;
     text-align: center;
   }
@@ -191,11 +191,11 @@ $smoke: #5a3a2a;
 
 // Table container
 .table-container {
-  background: #fff;
+  background: #231C15;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .data-table {
@@ -208,20 +208,20 @@ $smoke: #5a3a2a;
   }
 
   th {
-    background: linear-gradient(to bottom, #faf9f8, #f5f4f2);
+    background: linear-gradient(to bottom, #2C2318, #231C15);
     font-weight: 600;
-    color: $ash;
+    color: #FAF5F0;
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     position: sticky;
     top: 0;
     z-index: 10;
   }
 
   tbody tr {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
     transition: background-color 0.15s ease;
 
     &:hover {
@@ -271,32 +271,32 @@ $smoke: #5a3a2a;
 
   .user-name {
     font-weight: 600;
-    color: $ash;
+    color: #FAF5F0;
     font-size: 0.95rem;
   }
 
   .user-username {
     font-size: 0.8rem;
-    color: $smoke;
+    color: #C4B5A3;
     opacity: 0.8;
   }
 }
 
 // Email cell
 .cell-email {
-  color: $ash;
+  color: #FAF5F0;
   font-size: 0.9rem;
 }
 
 // Phone cell
 .cell-phone {
-  color: $smoke;
+  color: #C4B5A3;
   font-size: 0.9rem;
 }
 
 // Date cell
 .cell-date {
-  color: $smoke;
+  color: #C4B5A3;
   font-size: 0.85rem;
   white-space: nowrap;
 }
@@ -313,7 +313,7 @@ $smoke: #5a3a2a;
     align-items: center;
     gap: 0.35rem;
     font-size: 0.85rem;
-    color: $smoke;
+    color: #C4B5A3;
 
     svg {
       width: 16px;
@@ -340,9 +340,9 @@ $smoke: #5a3a2a;
   }
 
   &.role-user {
-    background: rgba(0, 0, 0, 0.04);
-    color: $smoke;
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.04);
+    color: #C4B5A3;
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 }
 
@@ -368,10 +368,10 @@ $smoke: #5a3a2a;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid transparent;
   border-radius: 8px;
-  color: $smoke;
+  color: #C4B5A3;
   cursor: pointer;
   transition: all 0.2s ease;
   text-decoration: none;
@@ -401,8 +401,8 @@ $smoke: #5a3a2a;
   justify-content: center;
   gap: 1rem;
   padding: 1.25rem;
-  background: #fff;
-  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.04);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 0 0 16px 16px;
 }
 
@@ -412,10 +412,10 @@ $smoke: #5a3a2a;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid transparent;
   border-radius: 10px;
-  color: $ash;
+  color: #C4B5A3;
   cursor: pointer;
   transition: all 0.2s ease;
 
@@ -438,7 +438,7 @@ $smoke: #5a3a2a;
 
 .pagination-info {
   font-size: 0.9rem;
-  color: $smoke;
+  color: #C4B5A3;
   font-weight: 500;
 }
 

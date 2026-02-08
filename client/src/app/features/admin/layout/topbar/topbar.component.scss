@@ -5,7 +5,7 @@ $smoke: #5a3a2a;
 
 .topbar {
   height: 72px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -13,7 +13,7 @@ $smoke: #5a3a2a;
   position: sticky;
   top: 0;
   z-index: 50;
-  background: #fff;
+  background: #1A1410;
 }
 
 .topbar-left {
@@ -25,12 +25,11 @@ $smoke: #5a3a2a;
 .page-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: $ash;
+  color: #FAF5F0;
   margin: 0;
-  font-family: 'Georgia', serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   position: relative;
 
-  // Subtle underline accent
   &::after {
     content: '';
     position: absolute;
@@ -63,7 +62,7 @@ $smoke: #5a3a2a;
     transform: translateY(-50%);
     width: 18px;
     height: 18px;
-    color: rgba($ash, 0.4);
+    color: #7A6B59;
     transition: color 0.2s ease;
     pointer-events: none;
   }
@@ -72,21 +71,21 @@ $smoke: #5a3a2a;
     width: 100%;
     height: 44px;
     padding: 0 1rem 0 2.75rem;
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
     font-size: 0.9rem;
-    color: $ash;
-    background: rgba(0, 0, 0, 0.02);
+    color: #FAF5F0;
+    background: rgba(255, 255, 255, 0.04);
     transition: all 0.25s ease;
 
     &::placeholder {
-      color: rgba($ash, 0.4);
+      color: #7A6B59;
     }
 
     &:focus {
       outline: none;
       border-color: rgba($ember, 0.4);
-      background: #fff;
+      background: rgba(255, 255, 255, 0.06);
       box-shadow: 0 0 0 3px rgba($ember, 0.1);
 
       & + .search-icon,
@@ -102,10 +101,10 @@ $smoke: #5a3a2a;
     top: 50%;
     transform: translateY(-50%);
     padding: 0.2rem 0.5rem;
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.06);
     border-radius: 4px;
     font-size: 0.7rem;
-    color: rgba($ash, 0.5);
+    color: #7A6B59;
     font-family: monospace;
     pointer-events: none;
   }
@@ -130,7 +129,7 @@ $smoke: #5a3a2a;
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
-  color: rgba($ash, 0.6);
+  color: #7A6B59;
 
   svg {
     width: 20px;
@@ -138,11 +137,10 @@ $smoke: #5a3a2a;
   }
 
   &:hover {
-    background: rgba(0, 0, 0, 0.05);
-    color: $ash;
+    background: rgba(255, 255, 255, 0.06);
+    color: #C4B5A3;
   }
 
-  // Notification badge with count
   .notification-badge {
     position: absolute;
     top: 2px;
@@ -152,7 +150,7 @@ $smoke: #5a3a2a;
     padding: 0 5px;
     background: $ember;
     border-radius: 9px;
-    border: 2px solid #fff;
+    border: 2px solid #1A1410;
     font-size: 0.65rem;
     font-weight: 700;
     color: #fff;
@@ -167,7 +165,6 @@ $smoke: #5a3a2a;
   position: relative;
 }
 
-// Pulse animation for notification button
 .icon-btn.pulse-ring {
   animation: pulse-ring 1.5s ease-out infinite;
 
@@ -192,7 +189,6 @@ $smoke: #5a3a2a;
   100% { transform: scale(1.4); opacity: 0; }
 }
 
-// Floating callout tooltip
 .notification-callout {
   position: absolute;
   top: calc(100% + 12px);
@@ -249,9 +245,10 @@ $smoke: #5a3a2a;
   top: calc(100% + 8px);
   right: 0;
   width: 340px;
-  background: #fff;
+  background: #231C15;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   opacity: 0;
   visibility: hidden;
   transform: translateY(-8px);
@@ -271,14 +268,13 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  background: linear-gradient(to bottom, #faf9f8, #f5f4f2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 
   h3 {
     margin: 0;
     font-size: 0.95rem;
     font-weight: 600;
-    color: $ash;
+    color: #FAF5F0;
   }
 
   .view-all-link {
@@ -327,7 +323,7 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: center;
   padding: 2.5rem 1.5rem;
-  color: $smoke;
+  color: #7A6B59;
 
   svg {
     width: 40px;
@@ -347,13 +343,13 @@ $smoke: #5a3a2a;
   align-items: flex-start;
   gap: 0.875rem;
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   cursor: pointer;
   transition: background-color 0.15s ease;
   text-decoration: none;
 
   &:hover {
-    background: rgba($ember, 0.04);
+    background: rgba($ember, 0.06);
   }
 
   &:last-child {
@@ -393,12 +389,12 @@ $smoke: #5a3a2a;
 .notification-title {
   font-size: 0.85rem;
   font-weight: 600;
-  color: $ash;
+  color: #FAF5F0;
 }
 
 .notification-desc {
   font-size: 0.8rem;
-  color: $smoke;
+  color: #C4B5A3;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -406,13 +402,12 @@ $smoke: #5a3a2a;
 
 .notification-time {
   font-size: 0.7rem;
-  color: rgba($smoke, 0.7);
+  color: #7A6B59;
 }
 
 .notification-footer {
   padding: 0.75rem 1rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
-  background: rgba(0, 0, 0, 0.02);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .view-all-btn {
@@ -423,11 +418,11 @@ $smoke: #5a3a2a;
   width: 100%;
   padding: 0.75rem;
   background: transparent;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
   font-size: 0.85rem;
   font-weight: 500;
-  color: $ash;
+  color: #C4B5A3;
   cursor: pointer;
   transition: all 0.2s ease;
 
@@ -452,7 +447,7 @@ $smoke: #5a3a2a;
 .topbar-divider {
   width: 1px;
   height: 28px;
-  background: rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.08);
   margin: 0 0.5rem;
 }
 
@@ -474,7 +469,7 @@ $smoke: #5a3a2a;
   transition: all 0.2s ease;
 
   &:hover {
-    background: rgba(0, 0, 0, 0.04);
+    background: rgba(255, 255, 255, 0.06);
   }
 }
 
@@ -503,13 +498,13 @@ $smoke: #5a3a2a;
 .user-name {
   font-size: 0.9rem;
   font-weight: 600;
-  color: $ash;
+  color: #FAF5F0;
   line-height: 1.2;
 }
 
 .user-role {
   font-size: 0.7rem;
-  color: $smoke;
+  color: #7A6B59;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -517,7 +512,7 @@ $smoke: #5a3a2a;
 .dropdown-arrow {
   width: 16px;
   height: 16px;
-  color: rgba($ash, 0.4);
+  color: #7A6B59;
   transition: transform 0.2s ease;
 }
 
@@ -531,9 +526,10 @@ $smoke: #5a3a2a;
   top: calc(100% + 8px);
   right: 0;
   min-width: 200px;
-  background: #fff;
+  background: #231C15;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   padding: 0.5rem;
   opacity: 0;
   visibility: hidden;
@@ -558,7 +554,7 @@ $smoke: #5a3a2a;
   width: 100%;
   border-radius: 8px;
   font-size: 0.9rem;
-  color: $ash;
+  color: #C4B5A3;
   cursor: pointer;
   transition: all 0.15s ease;
   text-decoration: none;
@@ -566,11 +562,11 @@ $smoke: #5a3a2a;
   svg {
     width: 18px;
     height: 18px;
-    color: rgba($ash, 0.5);
+    color: #7A6B59;
   }
 
   &:hover {
-    background: rgba(0, 0, 0, 0.04);
+    background: rgba(255, 255, 255, 0.06);
 
     svg {
       color: $ember;
@@ -578,25 +574,25 @@ $smoke: #5a3a2a;
   }
 
   &.danger {
-    color: #dc3545;
+    color: #BF616A;
 
     svg {
-      color: #dc3545;
+      color: #BF616A;
     }
 
     &:hover {
-      background: rgba(#dc3545, 0.08);
+      background: rgba(#BF616A, 0.1);
     }
   }
 }
 
 .dropdown-divider {
   height: 1px;
-  background: rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.06);
   margin: 0.5rem 0;
 }
 
-// Mobile menu button (hidden by default)
+// Mobile menu button
 .mobile-menu-btn {
   display: none;
   width: 40px;
@@ -604,7 +600,7 @@ $smoke: #5a3a2a;
   border: none;
   background: transparent;
   border-radius: 10px;
-  color: $ash;
+  color: #C4B5A3;
   cursor: pointer;
   align-items: center;
   justify-content: center;
@@ -617,12 +613,12 @@ $smoke: #5a3a2a;
   }
 
   &:hover {
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.06);
     color: $ember;
   }
 }
 
-// Responsive adjustments
+// Responsive
 @media (max-width: 768px) {
   .topbar {
     padding: 0 1rem;

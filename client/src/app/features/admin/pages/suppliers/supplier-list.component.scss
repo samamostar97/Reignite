@@ -51,7 +51,7 @@ $smoke: #5a3a2a;
     transform: translateY(-50%);
     width: 18px;
     height: 18px;
-    color: rgba($ash, 0.4);
+    color: #7A6B59;
     pointer-events: none;
   }
 
@@ -59,32 +59,33 @@ $smoke: #5a3a2a;
     width: 240px;
     height: 44px;
     padding: 0 1rem 0 2.75rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 10px;
     font-size: 0.9rem;
-    color: $ash;
-    background: #fff;
+    color: #FAF5F0;
+    background: rgba(255, 255, 255, 0.04);
     transition: all 0.2s ease;
 
     &::placeholder {
-      color: rgba($ash, 0.4);
+      color: #7A6B59;
     }
 
     &:focus {
       outline: none;
       border-color: rgba($ember, 0.4);
+      background: rgba(255, 255, 255, 0.06);
       box-shadow: 0 0 0 3px rgba($ember, 0.1);
     }
   }
 }
 
 .total-count {
-  color: $smoke;
+  color: #C4B5A3;
   margin: 0;
   font-size: 0.95rem;
 
   strong {
-    color: $ash;
+    color: #FAF5F0;
     font-weight: 700;
   }
 }
@@ -123,16 +124,16 @@ $smoke: #5a3a2a;
 
 .btn-secondary {
   padding: 0.75rem 1.25rem;
-  background: rgba(0, 0, 0, 0.04);
-  color: $smoke;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.06);
+  color: #C4B5A3;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    background: rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.1);
   }
 }
 
@@ -142,14 +143,14 @@ $smoke: #5a3a2a;
   align-items: center;
   gap: 0.75rem;
   padding: 1rem 1.25rem;
-  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-  border: 1px solid #fecaca;
+  background: linear-gradient(135deg, #3b1111 0%, #4a1515 100%);
+  border: 1px solid #7f1d1d;
   border-left: 4px solid #ef4444;
   border-radius: 10px;
   margin-bottom: 1.5rem;
   animation: shake 0.4s ease-out;
 
-  svg {
+  > svg {
     width: 22px;
     height: 22px;
     color: #ef4444;
@@ -158,7 +159,7 @@ $smoke: #5a3a2a;
 
   span {
     flex: 1;
-    color: #991b1b;
+    color: #fca5a5;
     font-weight: 500;
     font-size: 0.95rem;
     line-height: 1.4;
@@ -169,12 +170,17 @@ $smoke: #5a3a2a;
     border: none;
     padding: 0.25rem;
     cursor: pointer;
-    color: #991b1b;
+    color: #fca5a5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
     opacity: 0.6;
-    transition: opacity 0.2s;
+    transition: all 0.2s ease;
 
     &:hover {
       opacity: 1;
+      background: rgba(239, 68, 68, 0.15);
     }
 
     svg {
@@ -194,21 +200,22 @@ $smoke: #5a3a2a;
 
 // Add form
 .add-form {
-  background: #fff;
+  background: #231C15;
   padding: 1.5rem;
   border-radius: 14px;
   margin-bottom: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.04);
   animation: slideDown 0.2s ease-out;
 
   .form-input {
     width: 100%;
     padding: 0.875rem 1rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     font-size: 1rem;
-    color: $ash;
+    color: #FAF5F0;
+    background: #1A1410;
     margin-bottom: 1rem;
     transition: all 0.2s ease;
 
@@ -219,7 +226,7 @@ $smoke: #5a3a2a;
     }
 
     &::placeholder {
-      color: rgba($ash, 0.4);
+      color: #7A6B59;
     }
   }
 
@@ -248,9 +255,9 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: center;
   padding: 5rem 2rem;
-  background: #fff;
+  background: #231C15;
   border-radius: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.04);
 
   .spinner {
     width: 44px;
@@ -262,7 +269,7 @@ $smoke: #5a3a2a;
   }
 
   p {
-    color: $smoke;
+    color: #C4B5A3;
     margin-top: 1.25rem;
     font-size: 0.95rem;
   }
@@ -286,7 +293,7 @@ $smoke: #5a3a2a;
 
   h3 {
     font-size: 1.25rem;
-    color: $ash;
+    color: #FAF5F0;
     margin: 0 0 0.5rem 0;
     font-weight: 600;
   }
@@ -298,11 +305,11 @@ $smoke: #5a3a2a;
 
 // Suppliers list
 .suppliers-list {
-  background: #fff;
+  background: #231C15;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .supplier-item {
@@ -310,7 +317,7 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   transition: background-color 0.15s ease;
 
   &:last-child {
@@ -342,8 +349,8 @@ $smoke: #5a3a2a;
       border: 2px solid $ember;
       border-radius: 8px;
       font-size: 0.95rem;
-      color: $ash;
-      background: #fff;
+      color: #FAF5F0;
+      background: #1A1410;
 
       &:focus {
         outline: none;
@@ -380,7 +387,7 @@ $smoke: #5a3a2a;
 
 .supplier-name {
   font-weight: 600;
-  color: $ash;
+  color: #FAF5F0;
   font-size: 0.95rem;
 }
 
@@ -389,7 +396,7 @@ $smoke: #5a3a2a;
   align-items: center;
   gap: 0.35rem;
   font-size: 0.8rem;
-  color: $smoke;
+  color: #C4B5A3;
   text-decoration: none;
   transition: color 0.2s;
   max-width: 300px;
@@ -421,10 +428,10 @@ $smoke: #5a3a2a;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid transparent;
   border-radius: 8px;
-  color: $smoke;
+  color: #C4B5A3;
   cursor: pointer;
   transition: all 0.2s ease;
 
@@ -456,8 +463,8 @@ $smoke: #5a3a2a;
     cursor: not-allowed;
 
     &:hover {
-      background: rgba(0, 0, 0, 0.04);
-      color: $smoke;
+      background: rgba(255, 255, 255, 0.04);
+      color: #C4B5A3;
       border-color: transparent;
     }
   }
@@ -475,8 +482,8 @@ $smoke: #5a3a2a;
   justify-content: center;
   gap: 1rem;
   padding: 1.25rem;
-  background: #fff;
-  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  background: #231C15;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 0 0 16px 16px;
 }
 
@@ -486,10 +493,10 @@ $smoke: #5a3a2a;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid transparent;
   border-radius: 10px;
-  color: $ash;
+  color: #C4B5A3;
   cursor: pointer;
   transition: all 0.2s ease;
 
@@ -512,7 +519,7 @@ $smoke: #5a3a2a;
 
 .pagination-info {
   font-size: 0.9rem;
-  color: $smoke;
+  color: #C4B5A3;
   font-weight: 500;
 }
 

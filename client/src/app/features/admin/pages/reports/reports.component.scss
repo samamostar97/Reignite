@@ -25,12 +25,12 @@ $smoke: #5a3a2a;
   h1 {
     font-size: 1.75rem;
     font-weight: 700;
-    color: $ash;
+    color: #FAF5F0;
     margin: 0 0 0.5rem 0;
   }
 
   .subtitle {
-    color: $smoke;
+    color: #C4B5A3;
     margin: 0;
     font-size: 0.95rem;
   }
@@ -43,7 +43,7 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: center;
   padding: 5rem 2rem;
-  background: #fff;
+  background: #231C15;
   border-radius: 16px;
 
   .spinner {
@@ -56,7 +56,7 @@ $smoke: #5a3a2a;
   }
 
   p {
-    color: $smoke;
+    color: #C4B5A3;
     margin-top: 1.25rem;
     font-size: 0.95rem;
   }
@@ -83,19 +83,19 @@ $smoke: #5a3a2a;
 }
 
 .summary-card {
-  background: #fff;
+  background: #231C15;
   border-radius: 16px;
   padding: 1.5rem;
   display: flex;
   align-items: flex-start;
   gap: 1rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.04);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.08);
   }
 
   .card-icon {
@@ -141,7 +141,7 @@ $smoke: #5a3a2a;
 
   .card-label {
     font-size: 0.8rem;
-    color: $smoke;
+    color: #C4B5A3;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     font-weight: 500;
@@ -150,7 +150,7 @@ $smoke: #5a3a2a;
   .card-value {
     font-size: 1.5rem;
     font-weight: 700;
-    color: $ash;
+    color: #FAF5F0;
   }
 
   .card-change, .card-sub {
@@ -167,7 +167,7 @@ $smoke: #5a3a2a;
   }
 
   .card-sub {
-    color: $smoke;
+    color: #C4B5A3;
   }
 }
 
@@ -178,19 +178,19 @@ $smoke: #5a3a2a;
   h2 {
     font-size: 1.1rem;
     font-weight: 600;
-    color: $ash;
+    color: #FAF5F0;
     margin: 0;
   }
 }
 
 // Chart Section
 .chart-section {
-  background: #fff;
+  background: #231C15;
   border-radius: 16px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .chart-container {
@@ -203,14 +203,14 @@ $smoke: #5a3a2a;
   height: auto;
 
   .grid-line {
-    stroke: rgba(0, 0, 0, 0.06);
+    stroke: rgba(255, 255, 255, 0.06);
     stroke-width: 1;
   }
 
   .axis-label {
     font-size: 10px;
-    fill: $smoke;
-    font-family: inherit;
+    fill: #C4B5A3;
+    font-family: var(--font-display, 'Cinzel', serif);
 
     &.x-label {
       font-size: 9px;
@@ -238,7 +238,7 @@ $smoke: #5a3a2a;
 
   .chart-point {
     fill: $ember;
-    stroke: #fff;
+    stroke: #231C15;
     stroke-width: 2;
 
     &.user-point {
@@ -268,10 +268,10 @@ $smoke: #5a3a2a;
 
     .stat {
       font-size: 0.85rem;
-      color: $smoke;
+      color: #C4B5A3;
 
       strong {
-        color: $ash;
+        color: #FAF5F0;
         font-weight: 600;
       }
     }
@@ -283,12 +283,12 @@ $smoke: #5a3a2a;
 
       &.positive {
         background: rgba(#10b981, 0.12);
-        color: #059669;
+        color: #34d399;
       }
 
       &.negative {
         background: rgba(#ef4444, 0.12);
-        color: #dc2626;
+        color: #f87171;
       }
     }
   }
@@ -308,11 +308,11 @@ $smoke: #5a3a2a;
 
 // Data Section
 .data-section {
-  background: #fff;
+  background: #231C15;
   border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .data-table-container {
@@ -331,14 +331,14 @@ $smoke: #5a3a2a;
   th {
     font-size: 0.7rem;
     font-weight: 600;
-    color: $smoke;
+    color: #C4B5A3;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   }
 
   tbody tr {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 
     &:last-child {
       border-bottom: none;
@@ -367,7 +367,7 @@ $smoke: #5a3a2a;
     width: 40px;
     height: 40px;
     border-radius: 8px;
-    background: rgba(0, 0, 0, 0.04);
+    background: rgba(255, 255, 255, 0.04);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -375,7 +375,7 @@ $smoke: #5a3a2a;
     svg {
       width: 20px;
       height: 20px;
-      color: #ccc;
+      color: #C4B5A3;
     }
   }
 
@@ -387,19 +387,19 @@ $smoke: #5a3a2a;
 
   .product-name {
     font-weight: 500;
-    color: $ash;
+    color: #FAF5F0;
     font-size: 0.9rem;
   }
 
   .product-category {
     font-size: 0.75rem;
-    color: $smoke;
+    color: #C4B5A3;
   }
 }
 
 .quantity-cell {
   font-weight: 600;
-  color: $ash;
+  color: #FAF5F0;
 }
 
 .revenue-cell {
@@ -441,19 +441,19 @@ $smoke: #5a3a2a;
 
   .customer-name {
     font-weight: 500;
-    color: $ash;
+    color: #FAF5F0;
     font-size: 0.9rem;
   }
 
   .order-date {
     font-size: 0.75rem;
-    color: $smoke;
+    color: #C4B5A3;
   }
 }
 
 .amount-cell {
   font-weight: 600;
-  color: $ash;
+  color: #FAF5F0;
 }
 
 .status-cell {
@@ -466,17 +466,17 @@ $smoke: #5a3a2a;
 
     &.status-processing {
       background: rgba($flame, 0.12);
-      color: #d97b06;
+      color: #fbbf24;
     }
 
     &.status-delivered {
       background: rgba(#10b981, 0.12);
-      color: #059669;
+      color: #34d399;
     }
 
     &.status-cancelled {
       background: rgba(#ef4444, 0.12);
-      color: #dc2626;
+      color: #f87171;
     }
   }
 }
@@ -497,11 +497,11 @@ $smoke: #5a3a2a;
 }
 
 .rating-card {
-  background: #fff;
+  background: #231C15;
   border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.04);
 
   .rating-header {
     display: flex;
@@ -512,7 +512,7 @@ $smoke: #5a3a2a;
     h3 {
       font-size: 1rem;
       font-weight: 600;
-      color: $ash;
+      color: #FAF5F0;
       margin: 0;
     }
   }
@@ -527,7 +527,7 @@ $smoke: #5a3a2a;
   .rating-value {
     font-size: 2rem;
     font-weight: 700;
-    color: $ash;
+    color: #FAF5F0;
     line-height: 1;
   }
 
@@ -543,7 +543,7 @@ $smoke: #5a3a2a;
 
   .rating-count {
     font-size: 0.8rem;
-    color: $smoke;
+    color: #C4B5A3;
   }
 }
 
@@ -562,14 +562,14 @@ $smoke: #5a3a2a;
     width: 20px;
     font-size: 0.85rem;
     font-weight: 500;
-    color: $smoke;
+    color: #C4B5A3;
     text-align: right;
   }
 
   .bar-container {
     flex: 1;
     height: 8px;
-    background: rgba(0, 0, 0, 0.06);
+    background: rgba(255, 255, 255, 0.06);
     border-radius: 4px;
     overflow: hidden;
   }
@@ -588,7 +588,7 @@ $smoke: #5a3a2a;
   .bar-count {
     width: 30px;
     font-size: 0.8rem;
-    color: $smoke;
+    color: #C4B5A3;
     text-align: left;
   }
 }
