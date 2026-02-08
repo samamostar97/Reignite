@@ -16,11 +16,13 @@ namespace Reignite.API.Controllers
     {
         private readonly IUserService _userService;
         private readonly IOrderService _orderService;
+        private readonly IWishlistService _wishlistService;
 
-        public ProfileController(IUserService userService, IOrderService orderService)
+        public ProfileController(IUserService userService, IOrderService orderService, IWishlistService wishlistService)
         {
             _userService = userService;
             _orderService = orderService;
+            _wishlistService = wishlistService;
         }
 
         private int GetCurrentUserId() =>
@@ -171,6 +173,33 @@ namespace Reignite.API.Controllers
         {
             var userId = GetCurrentUserId();
             await _userService.DeleteUserHobbyAsync(userId, hobbyId);
+            return NoContent();
+        }
+
+        // GET api/profile/wishlist
+        [HttpGet("wishlist")]
+        public async Task<ActionResult<WishlistResponse>> GetWishlist()
+        {
+            var userId = GetCurrentUserId();
+            var wishlist = await _wishlistService.GetUserWishlistAsync(userId);
+            return Ok(wishlist ?? new WishlistResponse { UserId = userId, Items = new List<WishlistItemResponse>() });
+        }
+
+        // POST api/profile/wishlist/{productId}
+        [HttpPost("wishlist/{productId}")]
+        public async Task<ActionResult<WishlistItemResponse>> AddToWishlist(int productId)
+        {
+            var userId = GetCurrentUserId();
+            var item = await _wishlistService.AddItemAsync(userId, productId);
+            return Created($"/api/profile/wishlist", item);
+        }
+
+        // DELETE api/profile/wishlist/{productId}
+        [HttpDelete("wishlist/{productId}")]
+        public async Task<ActionResult> RemoveFromWishlist(int productId)
+        {
+            var userId = GetCurrentUserId();
+            await _wishlistService.RemoveItemAsync(userId, productId);
             return NoContent();
         }
     }
