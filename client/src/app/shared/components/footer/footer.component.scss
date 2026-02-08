@@ -1,0 +1,43 @@
+.main-footer {
+  @apply bg-gray-900 text-gray-300 py-12 mt-auto;
+}
+
+.footer-content {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  @apply grid grid-cols-1 md:grid-cols-3 gap-8;
+}
+
+.footer-brand {
+  @apply col-span-1 md:col-span-1;
+}
+
+.footer-logo {
+  @apply text-2xl font-bold text-white hover:text-orange-500 transition-colors duration-200;
+  @apply inline-block mb-3;
+}
+
+.footer-tagline {
+  @apply text-sm text-gray-400;
+}
+
+.footer-nav {
+  @apply col-span-1 md:col-span-2;
+  @apply grid grid-cols-2 gap-8;
+}
+
+.footer-nav-section {
+  @apply space-y-4;
+}
+
+.footer-nav-title {
+  @apply text-sm font-semibold text-white uppercase tracking-wider;
+}
+
+.footer-nav-links {
+  @apply space-y-2;
+}
+
+.footer-link {
+  @apply text-gray-400 hover:text-orange-500 transition-colors duration-200;
+  @apply inline-block text-sm;
+}

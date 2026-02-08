@@ -9,12 +9,13 @@ import { HobbyService } from '../../core/services/hobby.service';
 import { ProjectResponse } from '../../core/models/project.model';
 import { HobbyResponse } from '../../core/models/hobby.model';
 import { HeaderComponent } from '../../shared/components/header/header.component';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { getImageUrl } from '../../shared/utils/image.utils';
 
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [CommonModule, RouterLink, HeaderComponent],
+  imports: [CommonModule, RouterLink, HeaderComponent, FooterComponent],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.scss'
 })
