@@ -1,0 +1,189 @@
+<app-header [activePath]="'/checkout'" />
+<app-ember-background density="sparse" [maxOpacity]="0.3" />
+
+<main class="checkout-page">
+  <div class="checkout-container">
+    <h1 class="checkout-title">Narudžba</h1>
+
+    <!-- Step indicator -->
+    <div class="steps-bar">
+      @for (step of steps; track step.key; let i = $index) {
+        <div class="step" [class.active]="isStepActive(step.key)" [class.completed]="isStepCompleted(step.key)">
+          <div class="step-number">
+            @if (isStepCompleted(step.key)) {
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+              </svg>
+            } @else {
+              {{ i + 1 }}
+            }
+          </div>
+          <span class="step-label">{{ step.label }}</span>
+        </div>
+        @if (i < steps.length - 1) {
+          <div class="step-connector" [class.completed]="isStepCompleted(steps[i + 1].key)"></div>
+        }
+      }
+    </div>
+
+    @if (error()) {
+      <div class="error-banner">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+        </svg>
+        {{ error() }}
+      </div>
+    }
+
+    <!-- Step 1: Review -->
+    @if (currentStep() === 'review') {
+      <div class="step-content">
+        <h2 class="step-title">Pregled Korpe</h2>
+        <div class="review-items">
+          @for (item of cartService.items(); track item.productId) {
+            <div class="review-item">
+              <div class="review-item-image">
+                @if (getImageUrl(item.productImageUrl)) {
+                  <img [src]="getImageUrl(item.productImageUrl)" [alt]="item.productName" />
+                } @else {
+                  <div class="img-placeholder"></div>
+                }
+              </div>
+              <div class="review-item-info">
+                <span class="review-item-name">{{ item.productName }}</span>
+                <span class="review-item-qty">Količina: {{ item.quantity }}</span>
+              </div>
+              <span class="review-item-price">{{ formatPrice(item.unitPrice * item.quantity) }} KM</span>
+            </div>
+          }
+        </div>
+        <div class="review-total">
+          <span>Ukupno:</span>
+          <span>{{ formatPrice(cartService.total()) }} KM</span>
+        </div>
+        <div class="step-actions">
+          <a routerLink="/cart" class="btn-secondary">Nazad na Korpu</a>
+          <button class="btn-primary" (click)="nextStep()">Nastavi</button>
+        </div>
+      </div>
+    }
+
+    <!-- Step 2: Address -->
+    @if (currentStep() === 'address') {
+      <div class="step-content">
+        <h2 class="step-title">Adresa za Dostavu</h2>
+
+        @if (isLoadingAddress()) {
+          <div class="loading-state">Učitavanje adrese...</div>
+        } @else if (isEditingAddress()) {
+          <div class="address-form">
+            <div class="form-group">
+              <label for="street">Ulica i broj</label>
+              <input id="street" type="text" [(ngModel)]="addressForm.street" placeholder="npr. Maršala Tita 1" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="city">Grad</label>
+                <input id="city" type="text" [(ngModel)]="addressForm.city" placeholder="npr. Sarajevo" />
+              </div>
+              <div class="form-group">
+                <label for="postalCode">Poštanski broj</label>
+                <input id="postalCode" type="text" [(ngModel)]="addressForm.postalCode" placeholder="npr. 71000" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="country">Država</label>
+              <input id="country" type="text" [(ngModel)]="addressForm.country" />
+            </div>
+            <div class="form-actions">
+              <button class="btn-secondary" (click)="cancelEditAddress()">Otkaži</button>
+              <button class="btn-primary" (click)="saveAddress()" [disabled]="!addressForm.street || !addressForm.city || !addressForm.postalCode">Sačuvaj</button>
+            </div>
+          </div>
+        } @else if (address()) {
+          <div class="address-card">
+            <div class="address-info">
+              <p class="address-line">{{ address()!.street }}</p>
+              <p class="address-line">{{ address()!.postalCode }} {{ address()!.city }}</p>
+              <p class="address-line">{{ address()!.country }}</p>
+            </div>
+            <button class="btn-edit" (click)="startEditAddress()">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+              </svg>
+              Uredi
+            </button>
+          </div>
+        } @else {
+          <div class="no-address">
+            <p>Nemate dodatu adresu za dostavu.</p>
+            <button class="btn-primary" (click)="startEditAddress()">Dodaj Adresu</button>
+          </div>
+        }
+
+        <div class="step-actions">
+          <button class="btn-secondary" (click)="prevStep()">Nazad</button>
+          <button class="btn-primary" (click)="nextStep()" [disabled]="!address()">Nastavi</button>
+        </div>
+      </div>
+    }
+
+    <!-- Step 3: Payment -->
+    @if (currentStep() === 'payment') {
+      <div class="step-content">
+        <h2 class="step-title">Plaćanje</h2>
+        <div class="payment-placeholder">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="payment-icon">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
+          </svg>
+          <h3>Plaćanje pouzećem</h3>
+          <p>Plaćanje se vrši prilikom preuzimanja narudžbe. Trenutno ne podržavamo online plaćanje.</p>
+
+          <div class="order-summary-final">
+            <div class="summary-line">
+              <span>Proizvodi ({{ cartService.count() }})</span>
+              <span>{{ formatPrice(cartService.total()) }} KM</span>
+            </div>
+            <div class="summary-line">
+              <span>Dostava</span>
+              <span class="free">Besplatna</span>
+            </div>
+            <div class="summary-divider"></div>
+            <div class="summary-line total">
+              <span>Ukupno za platiti</span>
+              <span>{{ formatPrice(cartService.total()) }} KM</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-actions">
+          <button class="btn-secondary" (click)="prevStep()">Nazad</button>
+          <button class="btn-primary btn-order" (click)="placeOrder()" [disabled]="isSubmitting()">
+            @if (isSubmitting()) {
+              Kreiranje narudžbe...
+            } @else {
+              Potvrdi Narudžbu
+            }
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Step 4: Confirmation -->
+    @if (currentStep() === 'confirmation') {
+      <div class="step-content confirmation">
+        <div class="success-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+        </div>
+        <h2 class="success-title">Narudžba Uspješna!</h2>
+        <p class="success-message">Vaša narudžba #{{ orderId() }} je uspješno kreirana. Možete pratiti status u vašem računu.</p>
+        <div class="confirmation-actions">
+          <a routerLink="/account" class="btn-primary">Moje Narudžbe</a>
+          <a routerLink="/shop" class="btn-secondary">Nastavi Kupovinu</a>
+        </div>
+      </div>
+    }
+  </div>
+</main>

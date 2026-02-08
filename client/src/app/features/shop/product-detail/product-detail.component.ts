@@ -8,6 +8,7 @@ import { ProductService } from '../../../core/services/product.service';
 import { ProductReviewService } from '../../../core/services/product-review.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { WishlistStateService } from '../../../core/services/wishlist.service';
+import { CartService } from '../../../core/services/cart.service';
 import { ProductResponse } from '../../../core/models/product.model';
 import { ProductReviewResponse } from '../../../core/models/product-review.model';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
@@ -27,6 +28,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   private readonly reviewService = inject(ProductReviewService);
   private readonly authService = inject(AuthService);
   protected readonly wishlistService = inject(WishlistStateService);
+  protected readonly cartService = inject(CartService);
   private readonly sanitizer = inject(DomSanitizer);
   private readonly destroy$ = new Subject<void>();
 
@@ -155,5 +157,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
   protected formatPrice(price: number): string {
     return price.toFixed(2);
+  }
+
+  protected addToCart(): void {
+    const p = this.product();
+    if (!p) return;
+    this.cartService.addItem(p);
   }
 }

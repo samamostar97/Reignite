@@ -4,6 +4,7 @@ import { RouterLink, Router, NavigationEnd } from '@angular/router';
 import { Subject, filter, takeUntil } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 import { WishlistStateService } from '../../../core/services/wishlist.service';
+import { CartService } from '../../../core/services/cart.service';
 import { getInitials } from '../../utils/image.utils';
 
 @Component({
@@ -16,6 +17,7 @@ import { getInitials } from '../../utils/image.utils';
 export class HeaderComponent implements OnInit, OnDestroy {
   private readonly authService = inject(AuthService);
   protected readonly wishlistService = inject(WishlistStateService);
+  protected readonly cartService = inject(CartService);
   private readonly router = inject(Router);
   private readonly destroy$ = new Subject<void>();
 

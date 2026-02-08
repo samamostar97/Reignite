@@ -8,6 +8,7 @@ import { ProductService } from '../../core/services/product.service';
 import { CategoryService } from '../../core/services/category.service';
 import { AuthService } from '../../core/services/auth.service';
 import { WishlistStateService } from '../../core/services/wishlist.service';
+import { CartService } from '../../core/services/cart.service';
 import { ProductResponse } from '../../core/models/product.model';
 import { ProductCategoryResponse } from '../../core/models/category.model';
 import { HeaderComponent } from '../../shared/components/header/header.component';
@@ -27,6 +28,7 @@ export class ShopComponent implements OnInit, OnDestroy {
   private readonly sanitizer = inject(DomSanitizer);
   protected readonly authService = inject(AuthService);
   protected readonly wishlistService = inject(WishlistStateService);
+  protected readonly cartService = inject(CartService);
   private readonly destroy$ = new Subject<void>();
   private readonly searchSubject = new Subject<string>();
 
@@ -148,5 +150,11 @@ export class ShopComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     if (!this.authService.isAuthenticated()) return;
     this.wishlistService.toggle(productId);
+  }
+
+  protected addToCart(event: Event, product: ProductResponse): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.cartService.addItem(product);
   }
 }

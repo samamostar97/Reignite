@@ -50,3 +50,7 @@ export interface CreateOrderRequest {
 export interface UpdateOrderRequest {
   status: OrderStatus;
 }
+
+export interface CheckoutRequest {
+  items: CreateOrderItemRequest[];
+}

@@ -202,5 +202,19 @@ namespace Reignite.API.Controllers
             await _wishlistService.RemoveItemAsync(userId, productId);
             return NoContent();
         }
+
+        // POST api/profile/checkout
+        [HttpPost("checkout")]
+        public async Task<ActionResult<OrderResponse>> Checkout([FromBody] CheckoutRequest request)
+        {
+            var userId = GetCurrentUserId();
+            var createOrderRequest = new CreateOrderRequest
+            {
+                UserId = userId,
+                Items = request.Items
+            };
+            var order = await _orderService.CreateAsync(createOrderRequest);
+            return Created($"/api/profile/orders", order);
+        }
     }
 }
