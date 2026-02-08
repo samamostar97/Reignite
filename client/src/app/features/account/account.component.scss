@@ -2,9 +2,9 @@ $ember: #ff6b35;
 $flame: #f7931e;
 
 .account-page {
-  min-height: calc(100vh - 80px);
+  min-height: 100vh;
   background: #0D0A07;
-  padding: 2rem 1rem;
+  padding: 100px 1.5rem 60px;
   animation: pageIn 0.3s ease-out;
 }
 
@@ -132,7 +132,7 @@ $flame: #f7931e;
 // Responsive
 @media (max-width: 768px) {
   .account-page {
-    padding: 1rem 0.75rem;
+    padding: 90px 0.75rem 40px;
   }
 
   .account-container {
@@ -151,7 +151,7 @@ $flame: #f7931e;
 
 @media (max-width: 480px) {
   .account-page {
-    padding: 0.75rem 0.5rem;
+    padding: 80px 0.5rem 32px;
   }
 
   .mobile-tab {
