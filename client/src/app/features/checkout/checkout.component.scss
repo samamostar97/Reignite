@@ -524,3 +524,71 @@
     flex-direction: column;
   }
 }
+
+@media (max-width: 480px) {
+  .checkout-page {
+    padding: 80px 10px 32px;
+  }
+
+  .checkout-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+
+  .step-content {
+    padding: 16px;
+  }
+
+  .step-title {
+    font-size: 1.05rem;
+    margin-bottom: 16px;
+  }
+
+  .step-connector {
+    width: 20px;
+  }
+
+  .step-label {
+    font-size: 0.65rem;
+  }
+
+  .step-number {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+
+    svg { width: 16px; height: 16px; }
+  }
+
+  .review-item {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .review-item-image {
+    width: 44px;
+    height: 44px;
+  }
+
+  .review-item-name {
+    font-size: 0.85rem;
+  }
+
+  .address-card {
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .btn-edit {
+    align-self: flex-start;
+  }
+
+  .success-title {
+    font-size: 1.35rem;
+  }
+
+  .success-message {
+    font-size: 0.9rem;
+  }
+}

@@ -37,3 +37,9 @@ $sidebar-collapsed-width: 80px;
     padding: 1rem;
   }
 }
+
+@media (max-width: 480px) {
+  .content-area {
+    padding: 0.75rem;
+  }
+}
