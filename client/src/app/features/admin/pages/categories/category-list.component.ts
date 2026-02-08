@@ -6,6 +6,7 @@ import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { CategoryService } from '../../../../core/services/category.service';
 import { ProductCategoryResponse } from '../../../../core/models/category.model';
 import { ConfirmDialogService } from '../../../../shared/services/confirm-dialog.service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-category-list',
@@ -17,8 +18,10 @@ import { ConfirmDialogService } from '../../../../shared/services/confirm-dialog
 export class CategoryListComponent implements OnInit, OnDestroy {
   private readonly categoryService = inject(CategoryService);
   private readonly confirmDialog = inject(ConfirmDialogService);
+  private readonly notificationService = inject(NotificationService);
   private readonly destroy$ = new Subject<void>();
   private readonly searchSubject = new Subject<string>();
+  private readonly pendingDeletes = new Map<number, ReturnType<typeof setTimeout>>();
 
   protected readonly categories = signal<ProductCategoryResponse[]>([]);
   protected readonly isLoading = signal(true);
@@ -153,26 +156,58 @@ export class CategoryListComponent implements OnInit, OnDestroy {
     });
   }
 
-  protected async deleteCategory(category: ProductCategoryResponse) {
-    const confirmed = await this.confirmDialog.open({
-      title: 'Obriši kategoriju',
-      message: `Da li ste sigurni da želite obrisati kategoriju "${category.name}"?`,
-      confirmText: 'Obriši',
-      cancelText: 'Otkaži',
-      confirmButtonClass: 'danger'
+  protected deleteCategory(category: ProductCategoryResponse) {
+    // Show notification with undo action
+    this.notificationService.warning({
+      title: 'Kategorija obrisana',
+      message: `Kategorija "${category.name}" će biti obrisana za 5 sekundi.`,
+      duration: 5000,
+      action: {
+        label: 'Poništi',
+        callback: () => this.undoDelete(category.id)
+      }
     });
 
-    if (confirmed) {
-      this.confirmDialog.setLoading(true);
-      this.categoryService.deleteCategory(category.id).pipe(takeUntil(this.destroy$)).subscribe({
-        next: () => {
-          this.confirmDialog.close();
-          this.loadCategories();
-        },
-        error: (err) => {
-          this.confirmDialog.setError(err.error?.error || 'Greška pri brisanju kategorije.');
-        }
+    // Schedule deletion after 5 seconds
+    const timeoutId = setTimeout(() => {
+      this.executeDelete(category.id);
+    }, 5000);
+
+    this.pendingDeletes.set(category.id, timeoutId);
+  }
+
+  private undoDelete(categoryId: number): void {
+    const timeoutId = this.pendingDeletes.get(categoryId);
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      this.pendingDeletes.delete(categoryId);
+      this.notificationService.info({
+        title: 'Brisanje poništeno',
+        message: 'Kategorija nije obrisana.',
+        duration: 3000
       });
     }
+  }
+
+  private executeDelete(categoryId: number): void {
+    this.categoryService.deleteCategory(categoryId).pipe(takeUntil(this.destroy$)).subscribe({
+      next: () => {
+        this.pendingDeletes.delete(categoryId);
+        this.loadCategories();
+        this.notificationService.success({
+          title: 'Uspješno obrisano',
+          message: 'Kategorija je trajno obrisana.',
+          duration: 3000
+        });
+      },
+      error: (err) => {
+        this.pendingDeletes.delete(categoryId);
+        this.notificationService.error({
+          title: 'Greška',
+          message: err.error?.error || 'Greška pri brisanju kategorije.',
+          duration: 5000
+        });
+      }
+    });
   }
 }
