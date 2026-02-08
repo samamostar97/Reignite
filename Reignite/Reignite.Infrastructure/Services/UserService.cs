@@ -292,7 +292,7 @@ namespace Reignite.Infrastructure.Services
                 .AnyAsync(uh => uh.UserId == userId && uh.HobbyId == request.HobbyId);
 
             if (exists)
-                throw new ValidationException("Korisnik već ima ovaj hobi.");
+                throw new ConflictException("Korisnik već ima ovaj hobi.");
 
             var userHobby = new UserHobby
             {
