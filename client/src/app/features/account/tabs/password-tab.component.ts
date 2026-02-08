@@ -1,42 +1,64 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ProfileService } from '../../../core/services/profile.service';
+import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
   selector: 'app-password-tab',
   standalone: true,
-  template: `
-    <div class="tab-panel">
-      <h3 class="tab-title">Lozinka</h3>
-      <p class="tab-description">Promijenite svoju lozinku.</p>
-      <div class="placeholder">
-        <p>Učitavanje...</p>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .tab-panel {
-      background: #1A1410;
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      padding: 2rem;
-    }
-    .tab-title {
-      font-family: 'Cinzel', serif;
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: #FAF5F0;
-      margin: 0 0 0.25rem 0;
-    }
-    .tab-description {
-      color: #7A6B59;
-      font-size: 0.9rem;
-      margin: 0 0 2rem 0;
-    }
-    .placeholder {
-      text-align: center;
-      padding: 3rem;
-      color: #7A6B59;
-    }
-  `],
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './password-tab.component.html',
+  styleUrl: './password-tab.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PasswordTabComponent {}
+export class PasswordTabComponent {
+  private readonly fb = inject(FormBuilder);
+  private readonly profileService = inject(ProfileService);
+  private readonly notificationService = inject(NotificationService);
+
+  protected readonly isSaving = signal(false);
+  protected readonly errorMessage = signal<string | null>(null);
+
+  protected readonly form: FormGroup = this.fb.group({
+    currentPassword: ['', [Validators.required]],
+    newPassword: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
+    confirmPassword: ['', [Validators.required]]
+  });
+
+  protected onSubmit() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const { newPassword, confirmPassword } = this.form.value;
+    if (newPassword !== confirmPassword) {
+      this.errorMessage.set('Lozinke se ne poklapaju.');
+      return;
+    }
+
+    this.isSaving.set(true);
+    this.errorMessage.set(null);
+
+    this.profileService.changePassword(this.form.value).subscribe({
+      next: () => {
+        this.isSaving.set(false);
+        this.form.reset();
+        this.notificationService.success({
+          title: 'Uspjeh',
+          message: 'Lozinka je uspješno promijenjena.'
+        });
+      },
+      error: (err) => {
+        this.isSaving.set(false);
+        this.errorMessage.set(err.error || 'Greška pri promjeni lozinke.');
+      }
+    });
+  }
+
+  protected hasError(field: string, error: string): boolean {
+    const control = this.form.get(field);
+    return control ? control.hasError(error) && control.touched : false;
+  }
+}

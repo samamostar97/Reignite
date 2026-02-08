@@ -1,0 +1,87 @@
+<div class="tab-panel">
+  <h3 class="tab-title">Narudžbe</h3>
+  <p class="tab-description">Pregled historije vaših narudžbi.</p>
+
+  @if (isLoading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Učitavanje narudžbi...</p>
+    </div>
+  } @else if (orders().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+        </svg>
+      </div>
+      <h4>Nemate narudžbi</h4>
+      <p>Kada naručite proizvode, ovdje ćete vidjeti historiju.</p>
+    </div>
+  } @else {
+    <div class="orders-list">
+      @for (order of orders(); track order.id) {
+        <div class="order-card" [class.expanded]="expandedOrderId() === order.id">
+          <button class="order-header" (click)="toggleOrder(order.id)">
+            <div class="order-info">
+              <span class="order-id">#{{ order.id }}</span>
+              <span class="order-date">{{ order.purchaseDate | date:'dd.MM.yyyy.' }}</span>
+            </div>
+            <div class="order-meta">
+              <span class="order-status" [ngClass]="getStatusClass(order.status)">{{ order.statusName }}</span>
+              <span class="order-total">{{ order.totalAmount | number:'1.2-2' }} KM</span>
+              <svg class="chevron" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+              </svg>
+            </div>
+          </button>
+
+          @if (expandedOrderId() === order.id) {
+            <div class="order-items">
+              @for (item of order.items; track item.id) {
+                <div class="order-item">
+                  <div class="item-image">
+                    @if (getProductImage(item.productImageUrl)) {
+                      <img [src]="getProductImage(item.productImageUrl)" [alt]="item.productName" />
+                    } @else {
+                      <div class="no-image">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0 0 22.5 18.75V5.25A2.25 2.25 0 0 0 20.25 3H3.75A2.25 2.25 0 0 0 1.5 5.25v13.5A2.25 2.25 0 0 0 3.75 21Z" />
+                        </svg>
+                      </div>
+                    }
+                  </div>
+                  <div class="item-details">
+                    <span class="item-name">{{ item.productName }}</span>
+                    <span class="item-qty">{{ item.quantity }}x {{ item.unitPrice | number:'1.2-2' }} KM</span>
+                  </div>
+                  <span class="item-total">{{ item.totalPrice | number:'1.2-2' }} KM</span>
+                </div>
+              }
+              <div class="order-summary-row">
+                <span>Ukupno ({{ order.itemCount }} stavki)</span>
+                <strong>{{ order.totalAmount | number:'1.2-2' }} KM</strong>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Pagination -->
+    @if (totalPages > 1) {
+      <div class="pagination">
+        <button class="pagination-btn" (click)="prevPage()" [disabled]="currentPage() === 1">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+          </svg>
+        </button>
+        <span class="pagination-info">{{ currentPage() }} / {{ totalPages }}</span>
+        <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage() >= totalPages">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+          </svg>
+        </button>
+      </div>
+    }
+  }
+</div>
