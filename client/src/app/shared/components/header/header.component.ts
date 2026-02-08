@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, Router, NavigationEnd } from '@angular/router';
 import { Subject, filter, takeUntil } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
+import { WishlistStateService } from '../../../core/services/wishlist.service';
 import { getInitials } from '../../utils/image.utils';
 
 @Component({
@@ -14,6 +15,7 @@ import { getInitials } from '../../utils/image.utils';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   private readonly authService = inject(AuthService);
+  protected readonly wishlistService = inject(WishlistStateService);
   private readonly router = inject(Router);
   private readonly destroy$ = new Subject<void>();
 
@@ -27,6 +29,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   protected readonly mobileMenuOpen = signal(false);
 
   ngOnInit(): void {
+    this.wishlistService.loadWishlist();
     // Close mobile menu on route navigation
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),

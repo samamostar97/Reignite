@@ -7,6 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 import { ProductService } from '../../../core/services/product.service';
 import { ProductReviewService } from '../../../core/services/product-review.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { WishlistStateService } from '../../../core/services/wishlist.service';
 import { ProductResponse } from '../../../core/models/product.model';
 import { ProductReviewResponse } from '../../../core/models/product-review.model';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
@@ -25,6 +26,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   private readonly productService = inject(ProductService);
   private readonly reviewService = inject(ProductReviewService);
   private readonly authService = inject(AuthService);
+  protected readonly wishlistService = inject(WishlistStateService);
   private readonly sanitizer = inject(DomSanitizer);
   private readonly destroy$ = new Subject<void>();
 
@@ -42,6 +44,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   protected readonly error = signal<string | null>(null);
 
   ngOnInit() {
+    this.wishlistService.loadWishlist();
     this.route.paramMap
       .pipe(takeUntil(this.destroy$))
       .subscribe(params => {
