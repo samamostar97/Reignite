@@ -6,6 +6,8 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { ProductService } from '../../core/services/product.service';
 import { CategoryService } from '../../core/services/category.service';
+import { AuthService } from '../../core/services/auth.service';
+import { WishlistStateService } from '../../core/services/wishlist.service';
 import { ProductResponse } from '../../core/models/product.model';
 import { ProductCategoryResponse } from '../../core/models/category.model';
 import { HeaderComponent } from '../../shared/components/header/header.component';
@@ -23,6 +25,8 @@ export class ShopComponent implements OnInit, OnDestroy {
   private readonly productService = inject(ProductService);
   private readonly categoryService = inject(CategoryService);
   private readonly sanitizer = inject(DomSanitizer);
+  protected readonly authService = inject(AuthService);
+  protected readonly wishlistService = inject(WishlistStateService);
   private readonly destroy$ = new Subject<void>();
   private readonly searchSubject = new Subject<string>();
 
@@ -61,6 +65,7 @@ export class ShopComponent implements OnInit, OnDestroy {
 
     this.loadCategories();
     this.loadProducts();
+    this.wishlistService.loadWishlist();
   }
 
   ngOnDestroy() {
@@ -136,5 +141,12 @@ export class ShopComponent implements OnInit, OnDestroy {
 
   protected formatPrice(price: number): string {
     return price.toFixed(2);
+  }
+
+  protected toggleWishlist(event: Event, productId: number): void {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!this.authService.isAuthenticated()) return;
+    this.wishlistService.toggle(productId);
   }
 }
