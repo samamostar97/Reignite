@@ -1,42 +1,78 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ProfileService } from '../../../core/services/profile.service';
+import { OrderResponse, OrderStatus } from '../../../core/models/order.model';
+import { getImageUrl } from '../../../shared/utils/image.utils';
 
 @Component({
   selector: 'app-orders-tab',
   standalone: true,
-  template: `
-    <div class="tab-panel">
-      <h3 class="tab-title">Narudžbe</h3>
-      <p class="tab-description">Pregled historije narudžbi.</p>
-      <div class="placeholder">
-        <p>Učitavanje...</p>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .tab-panel {
-      background: #1A1410;
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      padding: 2rem;
-    }
-    .tab-title {
-      font-family: 'Cinzel', serif;
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: #FAF5F0;
-      margin: 0 0 0.25rem 0;
-    }
-    .tab-description {
-      color: #7A6B59;
-      font-size: 0.9rem;
-      margin: 0 0 2rem 0;
-    }
-    .placeholder {
-      text-align: center;
-      padding: 3rem;
-      color: #7A6B59;
-    }
-  `],
+  imports: [CommonModule],
+  templateUrl: './orders-tab.component.html',
+  styleUrl: './orders-tab.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrdersTabComponent {}
+export class OrdersTabComponent implements OnInit {
+  private readonly profileService = inject(ProfileService);
+
+  protected readonly isLoading = signal(true);
+  protected readonly orders = signal<OrderResponse[]>([]);
+  protected readonly totalCount = signal(0);
+  protected readonly currentPage = signal(1);
+  protected readonly pageSize = 5;
+  protected readonly expandedOrderId = signal<number | null>(null);
+
+  ngOnInit() {
+    this.loadOrders();
+  }
+
+  private loadOrders() {
+    this.isLoading.set(true);
+    this.profileService.getOrders(this.currentPage(), this.pageSize).subscribe({
+      next: (result) => {
+        this.orders.set(result.items);
+        this.totalCount.set(result.totalCount);
+        this.isLoading.set(false);
+      },
+      error: () => {
+        this.isLoading.set(false);
+      }
+    });
+  }
+
+  protected toggleOrder(orderId: number) {
+    this.expandedOrderId.set(this.expandedOrderId() === orderId ? null : orderId);
+  }
+
+  protected nextPage() {
+    if (this.currentPage() * this.pageSize < this.totalCount()) {
+      this.currentPage.set(this.currentPage() + 1);
+      this.loadOrders();
+    }
+  }
+
+  protected prevPage() {
+    if (this.currentPage() > 1) {
+      this.currentPage.set(this.currentPage() - 1);
+      this.loadOrders();
+    }
+  }
+
+  protected get totalPages(): number {
+    return Math.ceil(this.totalCount() / this.pageSize);
+  }
+
+  protected getStatusClass(status: OrderStatus): string {
+    switch (status) {
+      case OrderStatus.Processing: return 'status-processing';
+      case OrderStatus.OnDelivery: return 'status-delivery';
+      case OrderStatus.Delivered: return 'status-delivered';
+      case OrderStatus.Cancelled: return 'status-cancelled';
+      default: return '';
+    }
+  }
+
+  protected getProductImage(url?: string): string {
+    return url ? getImageUrl(url) : '';
+  }
+}
