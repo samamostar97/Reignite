@@ -9,7 +9,9 @@ namespace Reignite.Core.Enums
     public enum OrderStatus
     {
         Processing = 0,
-        OnDelivery = 1
+        OnDelivery = 1,
+        Delivered = 2,
+        Cancelled = 3
     }
 }
 

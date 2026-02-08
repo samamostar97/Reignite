@@ -98,11 +98,69 @@ export class OrderListComponent implements OnInit, OnDestroy {
   }
 
   protected getStatusClass(status: OrderStatus): string {
-    return status === OrderStatus.Processing ? 'status-processing' : 'status-delivery';
+    switch (status) {
+      case OrderStatus.Processing:
+        return 'status-processing';
+      case OrderStatus.OnDelivery:
+        return 'status-delivery';
+      case OrderStatus.Delivered:
+        return 'status-delivered';
+      case OrderStatus.Cancelled:
+        return 'status-cancelled';
+      default:
+        return '';
+    }
   }
 
   protected getStatusName(status: OrderStatus): string {
-    return status === OrderStatus.Processing ? 'U obradi' : 'Dostava';
+    switch (status) {
+      case OrderStatus.Processing:
+        return 'U obradi';
+      case OrderStatus.OnDelivery:
+        return 'Dostava';
+      case OrderStatus.Delivered:
+        return 'Dostavljeno';
+      case OrderStatus.Cancelled:
+        return 'Otkazano';
+      default:
+        return 'Nepoznato';
+    }
+  }
+
+  protected updateOrderStatus(orderId: number, newStatus: OrderStatus): void {
+    this.orderService.updateOrder(orderId, { status: newStatus }).subscribe({
+      next: (updatedOrder) => {
+        // Update the order in the list
+        const orders = this.orders();
+        const index = orders.findIndex(o => o.id === orderId);
+        if (index !== -1) {
+          orders[index] = updatedOrder;
+          this.orders.set([...orders]);
+        }
+        // Update detail view if open
+        if (this.orderDetail()?.id === orderId) {
+          this.orderDetail.set(updatedOrder);
+        }
+      },
+      error: (error) => {
+        console.error('Greška prilikom ažuriranja statusa:', error);
+      }
+    });
+  }
+
+  protected getAvailableStatuses(currentStatus: OrderStatus): OrderStatus[] {
+    switch (currentStatus) {
+      case OrderStatus.Processing:
+        return [OrderStatus.OnDelivery, OrderStatus.Cancelled];
+      case OrderStatus.OnDelivery:
+        return [OrderStatus.Delivered, OrderStatus.Cancelled];
+      case OrderStatus.Delivered:
+        return []; // Delivered orders cannot change status
+      case OrderStatus.Cancelled:
+        return []; // Cancelled orders cannot change status
+      default:
+        return [];
+    }
   }
 
   protected formatDate(dateString: string): string {
