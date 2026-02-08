@@ -22,5 +22,9 @@ namespace Reignite.Application.IServices
         Task<List<UserHobbyResponse>> GetUserHobbiesAsync(int userId);
         Task<UserHobbyResponse> AddUserHobbyAsync(int userId, AddUserHobbyRequest request);
         Task DeleteUserHobbyAsync(int userId, int hobbyId);
+
+        // Password management
+        Task<bool> VerifyPasswordAsync(int userId, string password);
+        Task ChangePasswordAsync(int userId, string newPassword);
     }
 }
