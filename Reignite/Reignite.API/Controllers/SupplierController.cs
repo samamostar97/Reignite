@@ -10,7 +10,7 @@ using Reignite.Core.Entities;
 namespace Reignite.API.Controllers
 {
     [ApiController]
-    [Route("api/supplier")]
+    [Route("api/suppliers")]
     [Authorize(Roles = "Admin")]
     public class SupplierController : BaseController<Supplier, SupplierResponse, CreateSupplierRequest, UpdateSupplierRequest, SupplierQueryFilter, int>
     {

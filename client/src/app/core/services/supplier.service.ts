@@ -15,7 +15,7 @@ import {
 })
 export class SupplierService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}/supplier`;
+  private readonly apiUrl = `${environment.apiUrl}/suppliers`;
 
   getSuppliers(filter?: SupplierQueryFilter): Observable<PagedResult<SupplierResponse>> {
     let params = new HttpParams();

@@ -10,7 +10,7 @@ using Reignite.Core.Entities;
 namespace Reignite.API.Controllers
 {
     [ApiController]
-    [Route("api/productcategory")]
+    [Route("api/product-categories")]
     [Authorize(Roles ="Admin")]
     public class ProductCategoryController : BaseController<ProductCategory, ProductCategoryResponse, CreateProductCategoryRequest, UpdateProductCategoryRequest, ProductCategoryQueryFilter, int>
     {

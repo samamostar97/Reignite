@@ -10,7 +10,7 @@ import { ProjectResponse, ProjectQueryFilter, CreateProjectRequest } from '../mo
 })
 export class ProjectService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}/project`;
+  private readonly apiUrl = `${environment.apiUrl}/projects`;
 
   getProjects(filter?: ProjectQueryFilter): Observable<PagedResult<ProjectResponse>> {
     let params = new HttpParams();

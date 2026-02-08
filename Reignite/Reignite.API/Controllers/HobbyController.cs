@@ -10,7 +10,7 @@ using Reignite.Core.Entities;
 namespace Reignite.API.Controllers
 {
     [ApiController]
-    [Route("api/hobby")]
+    [Route("api/hobbies")]
     [Authorize(Roles = "Admin")]
     public class HobbyController : BaseController<Hobby, HobbyResponse, CreateHobbyRequest, UpdateHobbyRequest, HobbyQueryFilter, int>
     {
