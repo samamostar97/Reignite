@@ -7,7 +7,10 @@ import {
   UserResponse,
   UserQueryFilter,
   CreateUserRequest,
-  UpdateUserRequest
+  UpdateUserRequest,
+  UserAddressResponse,
+  CreateUserAddressRequest,
+  UpdateUserAddressRequest
 } from '../models/user.model';
 
 @Injectable({
@@ -62,5 +65,22 @@ export class UserService {
 
   deleteUserImage(id: number): Observable<void> {
     return this.http.delete<void>(`${environment.apiUrl}/uploads/users/${id}`);
+  }
+
+  // User Address methods
+  getUserAddress(userId: number): Observable<UserAddressResponse> {
+    return this.http.get<UserAddressResponse>(`${this.apiUrl}/${userId}/address`);
+  }
+
+  createUserAddress(userId: number, data: CreateUserAddressRequest): Observable<UserAddressResponse> {
+    return this.http.post<UserAddressResponse>(`${this.apiUrl}/${userId}/address`, data);
+  }
+
+  updateUserAddress(userId: number, data: UpdateUserAddressRequest): Observable<UserAddressResponse> {
+    return this.http.put<UserAddressResponse>(`${this.apiUrl}/${userId}/address`, data);
+  }
+
+  deleteUserAddress(userId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${userId}/address`);
   }
 }

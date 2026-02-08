@@ -41,3 +41,28 @@ export interface UpdateUserRequest {
   phoneNumber?: string;
   profileImageUrl?: string;
 }
+
+export interface UserAddressResponse {
+  id: number;
+  userId: number;
+  addressLine: string;
+  city: string;
+  postalCode: string;
+  country: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface CreateUserAddressRequest {
+  addressLine: string;
+  city: string;
+  postalCode: string;
+  country: string;
+}
+
+export interface UpdateUserAddressRequest {
+  addressLine: string;
+  city: string;
+  postalCode: string;
+  country: string;
+}

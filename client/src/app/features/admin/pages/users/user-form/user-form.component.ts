@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { UserService } from '../../../../../core/services/user.service';
 import { NotificationService } from '../../../../../core/services/notification.service';
+import { UserAddressResponse } from '../../../../../core/models/user.model';
 import { getImageUrl } from '../../../../../shared/utils/image.utils';
 import { environment } from '../../../../../../environments/environment';
 
@@ -34,6 +35,12 @@ export class UserFormComponent implements OnInit {
   protected readonly pendingImagePreview = signal<string | null>(null);
   protected readonly errorMessage = signal<string | null>(null);
 
+  // Address-related signals
+  protected readonly userAddress = signal<UserAddressResponse | null>(null);
+  protected readonly isLoadingAddress = signal(false);
+  protected readonly isSavingAddress = signal(false);
+  protected readonly showAddressForm = signal(false);
+
   // Phone pattern: +387 6X XXX XXX or 06X XXX XXX formats
   private readonly phonePattern = /^(\+387|0)\s?6[0-9]\s?[0-9]{3}\s?[0-9]{3,4}$/;
 
@@ -44,6 +51,13 @@ export class UserFormComponent implements OnInit {
     email: ['', [Validators.required, Validators.email]],
     phoneNumber: ['', [Validators.required, Validators.pattern(this.phonePattern)]],
     password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]]
+  });
+
+  protected readonly addressForm: FormGroup = this.fb.group({
+    addressLine: ['', [Validators.required, Validators.maxLength(200)]],
+    city: ['', [Validators.required, Validators.maxLength(100)]],
+    postalCode: ['', [Validators.required, Validators.maxLength(20)]],
+    country: ['', [Validators.required, Validators.maxLength(100)]]
   });
 
   ngOnInit() {
@@ -73,10 +87,33 @@ export class UserFormComponent implements OnInit {
           this.currentImageUrl.set(getImageUrl(user.profileImageUrl));
         }
         this.isLoading.set(false);
+        // Load address after user data
+        this.loadUserAddress(id);
       },
       error: () => {
         this.isLoading.set(false);
         this.router.navigate(['/admin/users']);
+      }
+    });
+  }
+
+  private loadUserAddress(userId: number) {
+    this.isLoadingAddress.set(true);
+    this.userService.getUserAddress(userId).subscribe({
+      next: (address) => {
+        this.userAddress.set(address);
+        this.addressForm.patchValue({
+          addressLine: address.addressLine,
+          city: address.city,
+          postalCode: address.postalCode,
+          country: address.country
+        });
+        this.isLoadingAddress.set(false);
+      },
+      error: () => {
+        // Address doesn't exist yet - that's OK
+        this.userAddress.set(null);
+        this.isLoadingAddress.set(false);
       }
     });
   }
@@ -218,5 +255,76 @@ export class UserFormComponent implements OnInit {
       this.pendingImage.set(null);
       this.pendingImagePreview.set(null);
     }
+  }
+
+  // Address methods
+  protected toggleAddressForm(): void {
+    this.showAddressForm.set(!this.showAddressForm());
+  }
+
+  protected saveAddress(): void {
+    if (this.addressForm.invalid) {
+      this.addressForm.markAllAsTouched();
+      return;
+    }
+
+    const userId = this.userId();
+    if (!userId) return;
+
+    this.isSavingAddress.set(true);
+    const addressData = this.addressForm.value;
+
+    const operation = this.userAddress()
+      ? this.userService.updateUserAddress(userId, addressData)
+      : this.userService.createUserAddress(userId, addressData);
+
+    operation.subscribe({
+      next: (address) => {
+        this.userAddress.set(address);
+        this.showAddressForm.set(false);
+        this.isSavingAddress.set(false);
+        this.notificationService.success({
+          title: 'Uspjeh',
+          message: this.userAddress() ? 'Adresa je ažurirana.' : 'Adresa je kreirana.'
+        });
+      },
+      error: (err) => {
+        this.isSavingAddress.set(false);
+        this.notificationService.error({
+          title: 'Greška',
+          message: err.error?.error || 'Greška pri spremanju adrese.'
+        });
+      }
+    });
+  }
+
+  protected deleteAddress(): void {
+    const userId = this.userId();
+    if (!userId || !this.userAddress()) return;
+
+    if (!confirm('Da li ste sigurni da želite obrisati adresu?')) return;
+
+    this.userService.deleteUserAddress(userId).subscribe({
+      next: () => {
+        this.userAddress.set(null);
+        this.addressForm.reset();
+        this.showAddressForm.set(false);
+        this.notificationService.success({
+          title: 'Uspjeh',
+          message: 'Adresa je obrisana.'
+        });
+      },
+      error: (err) => {
+        this.notificationService.error({
+          title: 'Greška',
+          message: err.error?.error || 'Greška pri brisanju adrese.'
+        });
+      }
+    });
+  }
+
+  protected hasAddressError(field: string, error: string): boolean {
+    const control = this.addressForm.get(field);
+    return control ? control.hasError(error) && control.touched : false;
   }
 }
