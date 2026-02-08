@@ -9,6 +9,12 @@
     rgba(240, 200, 140, 0.82) 100%);
   position: relative;
   overflow: hidden;
+  animation: pageIn 0.3s ease-out;
+}
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 // Hero Section
@@ -31,7 +37,7 @@
   letter-spacing: 0.15em;
   color: #2c1810;
   margin: 0 0 1rem 0;
-  font-family: 'Georgia', serif;
+  font-family: var(--font-display, 'Cinzel', serif);
 }
 
 .page-subtitle {
@@ -333,8 +339,8 @@
   top: 0.75rem;
   right: 0.75rem;
   z-index: 2;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -470,7 +476,7 @@
   font-size: 1.3rem;
   font-weight: 700;
   color: #ff6b35;
-  font-family: 'Georgia', serif;
+  font-family: var(--font-display, 'Cinzel', serif);
 
   @media (max-width: 640px) {
     font-size: 1.15rem;

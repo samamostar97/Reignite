@@ -40,7 +40,7 @@ $smoke: #5a3a2a;
   font-weight: 300;
   letter-spacing: 0.2em;
   color: $ash;
-  font-family: 'Georgia', serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   text-transform: uppercase;
   text-decoration: none;
   transition: color 0.3s ease;
