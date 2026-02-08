@@ -17,5 +17,10 @@ namespace Reignite.Application.IServices
         Task<UserAddressResponse> CreateUserAddressAsync(int userId, CreateUserAddressRequest request);
         Task<UserAddressResponse> UpdateUserAddressAsync(int userId, UpdateUserAddressRequest request);
         Task DeleteUserAddressAsync(int userId);
+
+        // User Hobby management
+        Task<List<UserHobbyResponse>> GetUserHobbiesAsync(int userId);
+        Task<UserHobbyResponse> AddUserHobbyAsync(int userId, AddUserHobbyRequest request);
+        Task DeleteUserHobbyAsync(int userId, int hobbyId);
     }
 }

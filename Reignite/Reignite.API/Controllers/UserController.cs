@@ -96,5 +96,27 @@ namespace Reignite.API.Controllers
 
             return Ok(wishlist);
         }
+
+        // User Hobby Management
+        [HttpGet("{userId}/hobbies")]
+        public async Task<ActionResult<List<UserHobbyResponse>>> GetUserHobbies(int userId)
+        {
+            var hobbies = await _userService.GetUserHobbiesAsync(userId);
+            return Ok(hobbies);
+        }
+
+        [HttpPost("{userId}/hobbies")]
+        public async Task<ActionResult<UserHobbyResponse>> AddUserHobby(int userId, [FromBody] AddUserHobbyRequest request)
+        {
+            var hobby = await _userService.AddUserHobbyAsync(userId, request);
+            return CreatedAtAction(nameof(GetUserHobbies), new { userId }, hobby);
+        }
+
+        [HttpDelete("{userId}/hobbies/{hobbyId}")]
+        public async Task<ActionResult> DeleteUserHobby(int userId, int hobbyId)
+        {
+            await _userService.DeleteUserHobbyAsync(userId, hobbyId);
+            return NoContent();
+        }
     }
 }
