@@ -6,23 +6,17 @@ import { CategoryService } from '../../../../core/services/category.service';
 import { ProjectService } from '../../../../core/services/project.service';
 import { UserService } from '../../../../core/services/user.service';
 import { ActivityService } from '../../../../core/services/activity.service';
-import { OrderService } from '../../../../core/services/order.service';
-import { OrderNotificationService } from '../../../../core/services/order-notification.service';
+import { ReportService } from '../../../../core/services/report.service';
 import { ActivityResponse, ActivityType } from '../../../../core/models/activity.model';
-import { CreateOrderRequest } from '../../../../core/models/order.model';
-import { CreateProjectRequest } from '../../../../core/models/project.model';
+import {
+  DashboardReportResponse,
+  SalesChartDataPoint,
+  TopProductResponse,
+  RecentOrderResponse,
+  RatingOverviewResponse,
+  UserGrowthDataPoint
+} from '../../../../core/models/report.model';
 import { getImageUrl, getInitials } from '../../../../shared/utils/image.utils';
-
-interface StatCard {
-  label: string;
-  value: string | number;
-  icon: string;
-  route: string;
-  color: string;
-  secondaryColor: string;
-  rgb: string;
-  loading?: boolean;
-}
 
 @Component({
   selector: 'app-dashboard',
@@ -38,85 +32,74 @@ export class DashboardComponent implements OnInit {
   private readonly projectService = inject(ProjectService);
   private readonly userService = inject(UserService);
   private readonly activityService = inject(ActivityService);
-  private readonly orderService = inject(OrderService);
-  private readonly orderNotificationService = inject(OrderNotificationService);
+  private readonly reportService = inject(ReportService);
 
   protected readonly ActivityType = ActivityType;
+
+  // Report data
+  protected readonly report = signal<DashboardReportResponse | null>(null);
+  protected readonly isLoadingReport = signal(true);
+
+  // Stat counts (from individual services)
+  protected readonly productCount = signal<number | null>(null);
+  protected readonly categoryCount = signal<number | null>(null);
+  protected readonly projectCount = signal<number | null>(null);
+  protected readonly userCount = signal<number | null>(null);
+
+  // Activity
   protected readonly activities = signal<ActivityResponse[]>([]);
   protected readonly isLoadingActivity = signal(true);
   protected readonly selectedActivityType = signal<ActivityType | null>(null);
 
-  // Dev tools state
-  protected readonly isCreatingOrder = signal(false);
-  protected readonly isCreatingProject = signal(false);
-  protected readonly devMessage = signal<{ type: 'success' | 'error'; text: string } | null>(null);
-  protected readonly showLoadingOverlay = signal(false);
-
-  // Valid IDs from seed data (to avoid FK violations)
-  private readonly VALID_USER_IDS = [2, 3, 4]; // Skip admin (1)
-  private readonly VALID_PRODUCT_IDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-  private readonly VALID_HOBBY_IDS = [1, 2, 3, 4, 5, 6];
-  private readonly PROJECT_TITLES = [
-    'Drvena kutija za nakit', 'Kožna torbica', 'Keramička vaza',
-    'Ručno rezbarena figura', 'Metalna skulptura', 'Drvena polica',
-    'Kožni remen', 'Keramička zdjela', 'Drveni okvir za sliku'
-  ];
-
-  protected readonly stats = signal<StatCard[]>([
-    {
-      label: 'Proizvodi',
-      value: '...',
-      icon: 'cube',
-      route: '/admin/products',
-      color: '#ff6b35',
-      secondaryColor: '#f7931e',
-      rgb: '255, 107, 53',
-      loading: true
-    },
-    {
-      label: 'Kategorije',
-      value: '...',
-      icon: 'tag',
-      route: '/admin/categories',
-      color: '#f7931e',
-      secondaryColor: '#ff6b35',
-      rgb: '247, 147, 30',
-      loading: true
-    },
-    {
-      label: 'Projekti',
-      value: '...',
-      icon: 'photo',
-      route: '/admin/projects',
-      color: '#6366f1',
-      secondaryColor: '#8b5cf6',
-      rgb: '99, 102, 241',
-      loading: true
-    },
-    {
-      label: 'Korisnici',
-      value: '...',
-      icon: 'users',
-      route: '/admin/users',
-      color: '#5a3a2a',
-      secondaryColor: '#2c1810',
-      rgb: '90, 58, 42',
-      loading: true
-    },
-  ]);
+  // Chart dimensions
+  protected readonly chartWidth = 720;
+  protected readonly chartHeight = 240;
+  protected readonly chartPadding = 40;
 
   ngOnInit() {
+    this.loadReport();
     this.loadStats();
     this.loadActivity();
-    // Preload products for faster navigation to products page
     this.productService.preloadProducts();
+  }
+
+  private loadReport() {
+    this.isLoadingReport.set(true);
+    this.reportService.getDashboardReport().subscribe({
+      next: (data) => {
+        this.report.set(data);
+        this.isLoadingReport.set(false);
+      },
+      error: () => {
+        this.isLoadingReport.set(false);
+      }
+    });
+  }
+
+  private loadStats() {
+    this.productService.getProducts({ pageSize: 1 }).subscribe({
+      next: (result) => this.productCount.set(result.totalCount),
+      error: () => this.productCount.set(0)
+    });
+    this.categoryService.getCategories({ pageSize: 1 }).subscribe({
+      next: (result) => this.categoryCount.set(result.totalCount),
+      error: () => this.categoryCount.set(0)
+    });
+    this.projectService.getProjects({ pageSize: 1 }).subscribe({
+      next: (result) => this.projectCount.set(result.totalCount),
+      error: () => this.projectCount.set(0)
+    });
+    this.userService.getUsers({ pageSize: 1 }).subscribe({
+      next: (result) => this.userCount.set(result.totalCount),
+      error: () => this.userCount.set(0)
+    });
   }
 
   private loadActivity() {
     this.isLoadingActivity.set(true);
     const filter: { pageNumber: number; pageSize: number; type?: ActivityType } = {
       pageNumber: 1,
-      pageSize: 8
+      pageSize: 6
     };
     const selectedType = this.selectedActivityType();
     if (selectedType !== null) {
@@ -146,6 +129,28 @@ export class DashboardComponent implements OnInit {
     return getInitials(parts[0] || '', parts[1] || '');
   }
 
+  protected formatCurrency(value: number): string {
+    return new Intl.NumberFormat('bs-BA', {
+      style: 'currency',
+      currency: 'BAM',
+      minimumFractionDigits: 2
+    }).format(value);
+  }
+
+  protected formatCompactCurrency(value: number): string {
+    if (value >= 1000) {
+      return `${(value / 1000).toFixed(1).replace('.0', '')}k KM`;
+    }
+    return `${Math.round(value)} KM`;
+  }
+
+  protected formatShortDate(dateString: string): string {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    return `${day}.${month}`;
+  }
+
   protected formatTimeAgo(dateString: string): string {
     const date = new Date(dateString);
     const now = new Date();
@@ -161,15 +166,6 @@ export class DashboardComponent implements OnInit {
     return date.toLocaleDateString('bs-BA');
   }
 
-  protected getActivityIcon(type: ActivityType): string {
-    switch (type) {
-      case ActivityType.ProductReview: return 'star';
-      case ActivityType.ProjectReview: return 'chat';
-      case ActivityType.NewProject: return 'photo';
-      default: return 'activity';
-    }
-  }
-
   protected getActivityColor(type: ActivityType): string {
     switch (type) {
       case ActivityType.ProductReview: return '#f7931e';
@@ -179,144 +175,161 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  private loadStats() {
-    // Load products count
-    this.productService.getProducts({ pageSize: 1 }).subscribe({
-      next: (result) => {
-        this.updateStat(0, result.totalCount);
-      },
-      error: () => this.updateStat(0, 'Greška')
+  // Sales chart helpers
+  protected getSalesChartPath(): string {
+    const data = this.report()?.salesChart;
+    if (!data || data.length === 0) return '';
+
+    const maxRevenue = Math.max(...data.map(d => d.revenue), 1);
+    const width = this.chartWidth - this.chartPadding * 2;
+    const height = this.chartHeight - this.chartPadding * 2;
+
+    const points = data.map((d, i) => {
+      const x = this.chartPadding + (i / (data.length - 1)) * width;
+      const y = this.chartPadding + height - (d.revenue / maxRevenue) * height;
+      return `${x},${y}`;
     });
 
-    // Load categories count
-    this.categoryService.getCategories({ pageSize: 1 }).subscribe({
-      next: (result) => {
-        this.updateStat(1, result.totalCount);
-      },
-      error: () => this.updateStat(1, 'Greška')
-    });
-
-    // Load projects count
-    this.projectService.getProjects({ pageSize: 1 }).subscribe({
-      next: (result) => {
-        this.updateStat(2, result.totalCount);
-      },
-      error: () => this.updateStat(2, 'Greška')
-    });
-
-    // Load users count
-    this.userService.getUsers({ pageSize: 1 }).subscribe({
-      next: (result) => {
-        this.updateStat(3, result.totalCount);
-      },
-      error: () => this.updateStat(3, 'Greška')
-    });
+    return `M ${points.join(' L ')}`;
   }
 
-  private updateStat(index: number, value: string | number) {
-    const currentStats = this.stats();
-    const updated = [...currentStats];
-    updated[index] = { ...updated[index], value, loading: false };
-    this.stats.set(updated);
-  }
+  protected getSalesChartArea(): string {
+    const data = this.report()?.salesChart;
+    if (!data || data.length === 0) return '';
 
-  // Dev tools methods
-  protected createTestOrder(): void {
-    if (this.isCreatingOrder()) return;
+    const maxRevenue = Math.max(...data.map(d => d.revenue), 1);
+    const width = this.chartWidth - this.chartPadding * 2;
+    const height = this.chartHeight - this.chartPadding * 2;
 
-    this.isCreatingOrder.set(true);
-    this.showLoadingOverlay.set(true);
-    this.devMessage.set(null);
-
-    const request: CreateOrderRequest = this.generateRandomOrder();
-
-    this.orderService.createTestOrder(request).subscribe({
-      next: (order) => {
-        this.isCreatingOrder.set(false);
-        this.devMessage.set({ type: 'success', text: `Narudžba #${order.id} kreirana!` });
-        this.loadStats();
-        // Trigger the notification callout on the topbar
-        this.orderNotificationService.triggerNewOrderCallout();
-        // Hide overlay after delay so user can see the success message
-        setTimeout(() => this.showLoadingOverlay.set(false), 1500);
-        setTimeout(() => this.devMessage.set(null), 4000);
-      },
-      error: () => {
-        this.isCreatingOrder.set(false);
-        this.showLoadingOverlay.set(false);
-        this.devMessage.set({ type: 'error', text: 'Greška pri kreiranju narudžbe' });
-        setTimeout(() => this.devMessage.set(null), 3000);
-      }
+    const points = data.map((d, i) => {
+      const x = this.chartPadding + (i / (data.length - 1)) * width;
+      const y = this.chartPadding + height - (d.revenue / maxRevenue) * height;
+      return `${x},${y}`;
     });
+
+    const startX = this.chartPadding;
+    const endX = this.chartPadding + width;
+    const bottomY = this.chartPadding + height;
+
+    return `M ${startX},${bottomY} L ${points.join(' L ')} L ${endX},${bottomY} Z`;
   }
 
-  protected createTestProject(): void {
-    if (this.isCreatingProject()) return;
+  protected getChartPoints(): { x: number; y: number; data: SalesChartDataPoint }[] {
+    const data = this.report()?.salesChart;
+    if (!data || data.length === 0) return [];
 
-    this.isCreatingProject.set(true);
-    this.showLoadingOverlay.set(true);
-    this.devMessage.set(null);
+    const maxRevenue = Math.max(...data.map(d => d.revenue), 1);
+    const width = this.chartWidth - this.chartPadding * 2;
+    const height = this.chartHeight - this.chartPadding * 2;
 
-    const request: CreateProjectRequest = this.generateRandomProject();
-
-    this.projectService.createProject(request).subscribe({
-      next: (project) => {
-        this.isCreatingProject.set(false);
-        this.devMessage.set({ type: 'success', text: `Projekat "${project.title}" kreiran!` });
-        this.loadStats();
-        this.loadActivity();
-        // Hide overlay after delay so user can see the success message
-        setTimeout(() => this.showLoadingOverlay.set(false), 1500);
-        setTimeout(() => this.devMessage.set(null), 4000);
-      },
-      error: () => {
-        this.isCreatingProject.set(false);
-        this.showLoadingOverlay.set(false);
-        this.devMessage.set({ type: 'error', text: 'Greška pri kreiranju projekta' });
-        setTimeout(() => this.devMessage.set(null), 3000);
-      }
-    });
+    return data.map((d, i) => ({
+      x: this.chartPadding + (i / (data.length - 1)) * width,
+      y: this.chartPadding + height - (d.revenue / maxRevenue) * height,
+      data: d
+    }));
   }
 
-  private generateRandomOrder(): CreateOrderRequest {
-    const userId = this.randomFrom(this.VALID_USER_IDS);
-    const itemCount = Math.floor(Math.random() * 3) + 1; // 1-3 items
-    const usedProducts = new Set<number>();
-    const items = [];
+  protected getMaxRevenue(): number {
+    const data = this.report()?.salesChart;
+    if (!data || data.length === 0) return 0;
+    return Math.max(...data.map(d => d.revenue));
+  }
 
-    for (let i = 0; i < itemCount; i++) {
-      let productId: number;
-      do {
-        productId = this.randomFrom(this.VALID_PRODUCT_IDS);
-      } while (usedProducts.has(productId));
-      usedProducts.add(productId);
+  // Top products chart
+  protected getMaxProductRevenue(): number {
+    const products = this.report()?.topProducts;
+    if (!products || products.length === 0) return 0;
+    return Math.max(...products.map(p => p.totalRevenue));
+  }
 
-      items.push({
-        productId,
-        quantity: Math.floor(Math.random() * 3) + 1 // 1-3 quantity
-      });
+  protected getProductBarWidth(revenue: number): number {
+    const max = this.getMaxProductRevenue();
+    if (max === 0) return 0;
+    return (revenue / max) * 100;
+  }
+
+  // Rating helpers
+  protected getRatingBarWidth(count: number, total: number): number {
+    if (total === 0) return 0;
+    return (count / total) * 100;
+  }
+
+  protected getTotalProductReviews(): number {
+    const dist = this.report()?.ratingOverview?.productRatingDistribution;
+    if (!dist) return 0;
+    return dist.oneStar + dist.twoStar + dist.threeStar + dist.fourStar + dist.fiveStar;
+  }
+
+  // Order status helpers
+  protected getStatusClass(status: string): string {
+    switch (status.toLowerCase()) {
+      case 'processing': return 'status-processing';
+      case 'delivered': return 'status-delivered';
+      case 'cancelled': return 'status-cancelled';
+      default: return 'status-processing';
     }
-
-    return { userId, items };
   }
 
-  private generateRandomProject(): CreateProjectRequest {
-    const userId = this.randomFrom(this.VALID_USER_IDS);
-    const hobbyId = this.randomFrom(this.VALID_HOBBY_IDS);
-    const baseTitle = this.randomFrom(this.PROJECT_TITLES);
-    const title = `${baseTitle} #${Date.now().toString(36)}`; // Unique suffix
-
-    return {
-      title,
-      userId,
-      hobbyId,
-      description: 'Test projekat kreiran putem admin panela za testiranje.',
-      hoursSpent: Math.floor(Math.random() * 20) + 1,
-      productId: Math.random() > 0.5 ? this.randomFrom(this.VALID_PRODUCT_IDS) : undefined
-    };
+  protected getStatusLabel(status: string): string {
+    switch (status.toLowerCase()) {
+      case 'processing': return 'U obradi';
+      case 'delivered': return 'Isporučeno';
+      case 'cancelled': return 'Otkazano';
+      default: return status;
+    }
   }
 
-  private randomFrom<T>(arr: T[]): T {
-    return arr[Math.floor(Math.random() * arr.length)];
+  // User growth chart
+  protected getUserGrowthPath(): string {
+    const data = this.report()?.userGrowth?.growthChart;
+    if (!data || data.length === 0) return '';
+
+    const maxUsers = Math.max(...data.map(d => d.totalUsers), 1);
+    const width = this.chartWidth - this.chartPadding * 2;
+    const height = this.chartHeight - this.chartPadding * 2;
+
+    const points = data.map((d, i) => {
+      const x = this.chartPadding + (i / (data.length - 1)) * width;
+      const y = this.chartPadding + height - (d.totalUsers / maxUsers) * height;
+      return `${x},${y}`;
+    });
+
+    return `M ${points.join(' L ')}`;
+  }
+
+  protected getUserGrowthArea(): string {
+    const data = this.report()?.userGrowth?.growthChart;
+    if (!data || data.length === 0) return '';
+
+    const maxUsers = Math.max(...data.map(d => d.totalUsers), 1);
+    const width = this.chartWidth - this.chartPadding * 2;
+    const height = this.chartHeight - this.chartPadding * 2;
+
+    const points = data.map((d, i) => {
+      const x = this.chartPadding + (i / (data.length - 1)) * width;
+      const y = this.chartPadding + height - (d.totalUsers / maxUsers) * height;
+      return `${x},${y}`;
+    });
+
+    const startX = this.chartPadding;
+    const endX = this.chartPadding + width;
+    const bottomY = this.chartPadding + height;
+
+    return `M ${startX},${bottomY} L ${points.join(' L ')} L ${endX},${bottomY} Z`;
+  }
+
+  protected getUserGrowthPoints(): { x: number; y: number; data: UserGrowthDataPoint }[] {
+    const data = this.report()?.userGrowth?.growthChart;
+    if (!data || data.length === 0) return [];
+
+    const maxUsers = Math.max(...data.map(d => d.totalUsers), 1);
+    const width = this.chartWidth - this.chartPadding * 2;
+    const height = this.chartHeight - this.chartPadding * 2;
+
+    return data.map((d, i) => ({
+      x: this.chartPadding + (i / (data.length - 1)) * width,
+      y: this.chartPadding + height - (d.totalUsers / maxUsers) * height,
+      data: d
+    }));
   }
 }
