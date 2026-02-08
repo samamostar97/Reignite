@@ -1,55 +1,58 @@
-<app-header></app-header>
+<div class="faq-page">
+  <app-ember-background density="sparse" [maxOpacity]="0.4" />
+  <app-header></app-header>
 
-<div class="faq-container">
-  <div class="faq-hero">
-    <h1 class="faq-title">Često postavljana pitanja</h1>
-    <p class="faq-subtitle">Pronađite odgovore na najčešća pitanja</p>
-  </div>
-
-  @if (isLoading()) {
-    <div class="loading-container">
-      <div class="spinner"></div>
-      <p>Učitavanje pitanja...</p>
+  <div class="faq-container">
+    <div class="faq-hero">
+      <h1 class="faq-title">Često postavljana pitanja</h1>
+      <p class="faq-subtitle">Pronađite odgovore na najčešća pitanja</p>
     </div>
-  }
 
-  @if (!isLoading() && faqs().length > 0) {
-    <div class="faq-list">
-      @for (faq of faqs(); track faq.id) {
-        <div class="faq-item" [class.expanded]="isExpanded(faq.id)">
-          <button
-            class="faq-question"
-            (click)="toggleFaq(faq.id)"
-            [attr.aria-expanded]="isExpanded(faq.id)"
-          >
-            <span>{{ faq.question }}</span>
-            <svg
-              class="faq-icon"
-              [class.rotated]="isExpanded(faq.id)"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+    @if (isLoading()) {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Učitavanje pitanja...</p>
+      </div>
+    }
+
+    @if (!isLoading() && faqs().length > 0) {
+      <div class="faq-list">
+        @for (faq of faqs(); track faq.id) {
+          <div class="faq-item" [class.expanded]="isExpanded(faq.id)">
+            <button
+              class="faq-question"
+              (click)="toggleFaq(faq.id)"
+              [attr.aria-expanded]="isExpanded(faq.id)"
             >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
-          </button>
-          @if (isExpanded(faq.id)) {
-            <div class="faq-answer">
-              <p>{{ faq.answer }}</p>
-            </div>
-          }
-        </div>
-      }
-    </div>
-  }
+              <span>{{ faq.question }}</span>
+              <svg
+                class="faq-icon"
+                [class.rotated]="isExpanded(faq.id)"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            @if (isExpanded(faq.id)) {
+              <div class="faq-answer">
+                <p>{{ faq.answer }}</p>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
 
-  @if (!isLoading() && faqs().length === 0) {
-    <div class="empty-state">
-      <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-      </svg>
-      <h3>Nema pitanja</h3>
-      <p>Trenutno nema dostupnih pitanja.</p>
-    </div>
-  }
+    @if (!isLoading() && faqs().length === 0) {
+      <div class="empty-state">
+        <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <h3>Nema pitanja</h3>
+        <p>Trenutno nema dostupnih pitanja.</p>
+      </div>
+    }
+  </div>
 </div>

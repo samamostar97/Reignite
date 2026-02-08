@@ -12,12 +12,13 @@ import { CartService } from '../../../core/services/cart.service';
 import { ProductResponse } from '../../../core/models/product.model';
 import { ProductReviewResponse } from '../../../core/models/product-review.model';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
+import { EmberBackgroundComponent } from '../../../shared/components/ember-background/ember-background.component';
 import { getImageUrl, getInitials } from '../../../shared/utils/image.utils';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, HeaderComponent],
+  imports: [CommonModule, RouterLink, HeaderComponent, EmberBackgroundComponent],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.scss'
 })

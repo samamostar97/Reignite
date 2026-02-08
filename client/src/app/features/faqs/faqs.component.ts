@@ -5,11 +5,12 @@ import { takeUntil } from 'rxjs/operators';
 import { FaqService } from '../../core/services/faq.service';
 import { FaqResponse } from '../../core/models/faq.model';
 import { HeaderComponent } from '../../shared/components/header/header.component';
+import { EmberBackgroundComponent } from '../../shared/components/ember-background/ember-background.component';
 
 @Component({
   selector: 'app-faqs',
   standalone: true,
-  imports: [CommonModule, HeaderComponent],
+  imports: [CommonModule, HeaderComponent, EmberBackgroundComponent],
   templateUrl: './faqs.component.html',
   styleUrl: './faqs.component.scss'
 })

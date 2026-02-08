@@ -6,11 +6,12 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { TopbarComponent } from './topbar/topbar.component';
 import { SidebarService } from '../services/sidebar.service';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { EmberBackgroundComponent } from '../../../shared/components/ember-background/ember-background.component';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, SidebarComponent, TopbarComponent, ConfirmDialogComponent],
+  imports: [CommonModule, RouterOutlet, SidebarComponent, TopbarComponent, ConfirmDialogComponent, EmberBackgroundComponent],
   templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
