@@ -14,12 +14,16 @@ namespace Reignite.Infrastructure.Services
     public class UserService : BaseService<User, UserResponse, CreateUserRequest, UpdateUserRequest, UserQueryFilter, int>, IUserService
     {
         private readonly IFileStorageService _fileStorageService;
+        private readonly IRepository<UserAddress, int> _userAddressRepository;
+
         public UserService(
             IRepository<User, int> repository,
             IMapper mapper,
-            IFileStorageService fileStorageService) : base(repository, mapper)
+            IFileStorageService fileStorageService,
+            IRepository<UserAddress, int> userAddressRepository) : base(repository, mapper)
         {
             _fileStorageService = fileStorageService;
+            _userAddressRepository = userAddressRepository;
         }
         protected override async Task BeforeCreateAsync(User entity, CreateUserRequest dto)
         {
@@ -196,6 +200,62 @@ namespace Reignite.Infrastructure.Services
             await _repository.UpdateAsync(user);
 
             return deleted;
+        }
+
+        // User Address Management
+        public async Task<UserAddressResponse?> GetUserAddressAsync(int userId)
+        {
+            var address = await _userAddressRepository.AsQueryable()
+                .FirstOrDefaultAsync(a => a.UserId == userId);
+
+            return address != null ? _mapper.Map<UserAddressResponse>(address) : null;
+        }
+
+        public async Task<UserAddressResponse> CreateUserAddressAsync(int userId, CreateUserAddressRequest request)
+        {
+            // Check if user exists
+            var user = await _repository.GetByIdAsync(userId);
+            if (user == null)
+                throw new KeyNotFoundException("Korisnik nije pronađen.");
+
+            // Check if user already has an address
+            var existingAddress = await _userAddressRepository.AsQueryable()
+                .FirstOrDefaultAsync(a => a.UserId == userId);
+
+            if (existingAddress != null)
+                throw new InvalidOperationException("Korisnik već ima adresu. Koristite ažuriranje.");
+
+            var address = _mapper.Map<UserAddress>(request);
+            address.UserId = userId;
+
+            await _userAddressRepository.AddAsync(address);
+
+            return _mapper.Map<UserAddressResponse>(address);
+        }
+
+        public async Task<UserAddressResponse> UpdateUserAddressAsync(int userId, UpdateUserAddressRequest request)
+        {
+            var address = await _userAddressRepository.AsQueryable()
+                .FirstOrDefaultAsync(a => a.UserId == userId);
+
+            if (address == null)
+                throw new KeyNotFoundException("Adresa nije pronađena.");
+
+            _mapper.Map(request, address);
+            await _userAddressRepository.UpdateAsync(address);
+
+            return _mapper.Map<UserAddressResponse>(address);
+        }
+
+        public async Task DeleteUserAddressAsync(int userId)
+        {
+            var address = await _userAddressRepository.AsQueryable()
+                .FirstOrDefaultAsync(a => a.UserId == userId);
+
+            if (address == null)
+                throw new KeyNotFoundException("Adresa nije pronađena.");
+
+            await _userAddressRepository.DeleteAsync(address);
         }
     }
 }

@@ -51,5 +51,37 @@ namespace Reignite.API.Controllers
                 imageStream?.Dispose();
             }
         }
+
+        // User Address Management
+        [HttpGet("{userId}/address")]
+        public async Task<ActionResult<UserAddressResponse>> GetUserAddress(int userId)
+        {
+            var address = await _userService.GetUserAddressAsync(userId);
+            if (address == null)
+                return NotFound("Korisnik nema adresu.");
+
+            return Ok(address);
+        }
+
+        [HttpPost("{userId}/address")]
+        public async Task<ActionResult<UserAddressResponse>> CreateUserAddress(int userId, [FromBody] CreateUserAddressRequest request)
+        {
+            var address = await _userService.CreateUserAddressAsync(userId, request);
+            return CreatedAtAction(nameof(GetUserAddress), new { userId }, address);
+        }
+
+        [HttpPut("{userId}/address")]
+        public async Task<ActionResult<UserAddressResponse>> UpdateUserAddress(int userId, [FromBody] UpdateUserAddressRequest request)
+        {
+            var address = await _userService.UpdateUserAddressAsync(userId, request);
+            return Ok(address);
+        }
+
+        [HttpDelete("{userId}/address")]
+        public async Task<ActionResult> DeleteUserAddress(int userId)
+        {
+            await _userService.DeleteUserAddressAsync(userId);
+            return NoContent();
+        }
     }
 }
