@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { FaqService } from '../../core/services/faq.service';
 import { FaqResponse } from '../../core/models/faq.model';
-import { HeaderComponent } from '../../core/layout/header/header.component';
+import { HeaderComponent } from '../../shared/components/header/header.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 
 @Component({
