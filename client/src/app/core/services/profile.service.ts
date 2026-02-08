@@ -15,7 +15,7 @@ import {
   WishlistResponse,
   WishlistItemResponse
 } from '../models/user.model';
-import { OrderResponse } from '../models/order.model';
+import { OrderResponse, CheckoutRequest } from '../models/order.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
@@ -96,5 +96,10 @@ export class ProfileService {
 
   removeFromWishlist(productId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/wishlist/${productId}`);
+  }
+
+  // Checkout
+  checkout(request: CheckoutRequest): Observable<OrderResponse> {
+    return this.http.post<OrderResponse>(`${this.apiUrl}/checkout`, request);
   }
 }

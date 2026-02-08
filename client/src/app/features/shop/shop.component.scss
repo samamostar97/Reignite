@@ -320,11 +320,6 @@
     .product-image {
       transform: scale(1.05);
     }
-
-    .product-button {
-      background: #ff6b35;
-      color: white;
-    }
   }
 }
 
@@ -482,8 +477,11 @@
   }
 }
 
-.product-button {
-  padding: 0.55rem 1.3rem;
+.add-to-cart-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.5rem 1.1rem;
   background: transparent;
   border: 2px solid #ff6b35;
   color: #ff6b35;
@@ -491,12 +489,27 @@
   font-weight: 600;
   font-size: 0.85rem;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: all 0.2s ease;
   letter-spacing: 0.03em;
 
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover {
+    background: #ff6b35;
+    color: white;
+  }
+
   @media (max-width: 640px) {
-    padding: 0.5rem 1rem;
+    padding: 0.45rem 0.9rem;
     font-size: 0.8rem;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
   }
 }
 
