@@ -16,10 +16,12 @@ namespace Reignite.API.Controllers
     public class UserController : BaseController<User, UserResponse, CreateUserRequest, UpdateUserRequest, UserQueryFilter, int>
     {
         private readonly IUserService _userService;
+        private readonly IWishlistService _wishlistService;
 
-        public UserController(IUserService service) : base(service)
+        public UserController(IUserService service, IWishlistService wishlistService) : base(service)
         {
             _userService = service;
+            _wishlistService = wishlistService;
         }
 
         [HttpPost]
@@ -82,6 +84,17 @@ namespace Reignite.API.Controllers
         {
             await _userService.DeleteUserAddressAsync(userId);
             return NoContent();
+        }
+
+        // User Wishlist (Read-only)
+        [HttpGet("{userId}/wishlist")]
+        public async Task<ActionResult<WishlistResponse>> GetUserWishlist(int userId)
+        {
+            var wishlist = await _wishlistService.GetUserWishlistAsync(userId);
+            if (wishlist == null)
+                return Ok(new WishlistResponse { UserId = userId, Items = new List<WishlistItemResponse>() });
+
+            return Ok(wishlist);
         }
     }
 }
