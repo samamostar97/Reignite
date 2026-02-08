@@ -2,10 +2,10 @@ $ember: #ff6b35;
 $flame: #f7931e;
 
 .tab-panel {
-  background: #1A1410;
+  background: white;
   border-radius: 16px;
-  border: 1px solid rgba(255, 107, 53, 0.08);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(255, 107, 53, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   padding: 2rem;
   animation: fadeIn 0.3s ease-out;
 }
@@ -19,12 +19,12 @@ $flame: #f7931e;
   font-family: 'Cinzel', serif;
   font-size: 1.35rem;
   font-weight: 700;
-  color: #FAF5F0;
+  color: #2c1810;
   margin: 0 0 0.25rem 0;
 }
 
 .tab-description {
-  color: #7A6B59;
+  color: #8b4513;
   font-size: 0.9rem;
   margin: 0 0 2rem 0;
 }
@@ -46,7 +46,7 @@ $flame: #f7931e;
   }
 
   p {
-    color: #C4B5A3;
+    color: #5a3a2a;
     margin-top: 1rem;
     font-size: 0.9rem;
   }
@@ -68,7 +68,7 @@ $flame: #f7931e;
     width: 72px;
     height: 72px;
     border-radius: 50%;
-    background: rgba($ember, 0.1);
+    background: rgba($ember, 0.08);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -83,13 +83,13 @@ $flame: #f7931e;
 
   h4 {
     font-size: 1.1rem;
-    color: #FAF5F0;
+    color: #2c1810;
     margin: 0 0 0.5rem 0;
     font-weight: 600;
   }
 
   > p {
-    color: #7A6B59;
+    color: #8b4513;
     font-size: 0.9rem;
     margin: 0;
   }
@@ -103,14 +103,14 @@ $flame: #f7931e;
 }
 
 .order-card {
-  background: #0D0A07;
+  background: #faf8f5;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 107, 53, 0.08);
   overflow: hidden;
   transition: border-color 0.2s ease;
 
   &.expanded {
-    border-color: rgba($ember, 0.2);
+    border-color: rgba($ember, 0.25);
   }
 }
 
@@ -126,7 +126,7 @@ $flame: #f7931e;
   transition: background 0.15s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(255, 107, 53, 0.03);
   }
 }
 
@@ -138,12 +138,12 @@ $flame: #f7931e;
 
 .order-id {
   font-weight: 700;
-  color: #FAF5F0;
+  color: #2c1810;
   font-size: 0.95rem;
 }
 
 .order-date {
-  color: #7A6B59;
+  color: #8b4513;
   font-size: 0.85rem;
 }
 
@@ -160,23 +160,23 @@ $flame: #f7931e;
   font-weight: 600;
 
   &.status-processing {
-    background: rgba(#F59E0B, 0.15);
-    color: #F59E0B;
+    background: rgba(#F59E0B, 0.1);
+    color: #D97706;
   }
 
   &.status-delivery {
-    background: rgba(#3B82F6, 0.15);
-    color: #60A5FA;
+    background: rgba(#3B82F6, 0.1);
+    color: #2563EB;
   }
 
   &.status-delivered {
-    background: rgba(#10B981, 0.15);
-    color: #34D399;
+    background: rgba(#10B981, 0.1);
+    color: #059669;
   }
 
   &.status-cancelled {
-    background: rgba(#EF4444, 0.15);
-    color: #F87171;
+    background: rgba(#EF4444, 0.1);
+    color: #DC2626;
   }
 }
 
@@ -191,7 +191,7 @@ $flame: #f7931e;
 .chevron {
   width: 18px;
   height: 18px;
-  color: #7A6B59;
+  color: #8b4513;
   transition: transform 0.2s ease;
 
   .expanded & {
@@ -201,7 +201,7 @@ $flame: #f7931e;
 
 // Order items (expanded)
 .order-items {
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(255, 107, 53, 0.08);
   padding: 1rem 1.25rem;
   animation: slideDown 0.2s ease-out;
 }
@@ -218,7 +218,7 @@ $flame: #f7931e;
   padding: 0.75rem 0;
 
   & + .order-item {
-    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    border-top: 1px solid rgba(255, 107, 53, 0.06);
   }
 }
 
@@ -228,7 +228,7 @@ $flame: #f7931e;
   border-radius: 8px;
   overflow: hidden;
   flex-shrink: 0;
-  background: #1A1410;
+  background: rgba(255, 107, 53, 0.05);
 
   img {
     width: 100%;
@@ -246,7 +246,7 @@ $flame: #f7931e;
     svg {
       width: 20px;
       height: 20px;
-      color: #7A6B59;
+      color: #a08070;
     }
   }
 }
@@ -259,18 +259,18 @@ $flame: #f7931e;
 }
 
 .item-name {
-  color: #FAF5F0;
+  color: #2c1810;
   font-size: 0.9rem;
   font-weight: 500;
 }
 
 .item-qty {
-  color: #7A6B59;
+  color: #8b4513;
   font-size: 0.8rem;
 }
 
 .item-total {
-  color: #C4B5A3;
+  color: #5a3a2a;
   font-weight: 600;
   font-size: 0.9rem;
 }
@@ -281,10 +281,10 @@ $flame: #f7931e;
   align-items: center;
   padding-top: 0.75rem;
   margin-top: 0.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(255, 107, 53, 0.08);
 
   span {
-    color: #7A6B59;
+    color: #8b4513;
     font-size: 0.85rem;
   }
 
@@ -309,15 +309,16 @@ $flame: #f7931e;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid transparent;
+  background: #faf8f5;
+  border: 1px solid rgba(255, 107, 53, 0.15);
   border-radius: 8px;
-  color: #C4B5A3;
+  color: #5a3a2a;
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover:not(:disabled) {
     background: $ember;
+    border-color: $ember;
     color: #fff;
   }
 
@@ -334,7 +335,7 @@ $flame: #f7931e;
 
 .pagination-info {
   font-size: 0.85rem;
-  color: #C4B5A3;
+  color: #5a3a2a;
   font-weight: 500;
 }
 
