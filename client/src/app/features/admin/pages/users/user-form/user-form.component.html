@@ -250,5 +250,164 @@
         </div>
       </form>
     </div>
+
+    <!-- Address Section (Edit mode only) -->
+    @if (isEditMode()) {
+      <div class="form-card address-section">
+        <div class="section-header">
+          <h2 class="section-title">Adresa korisnika</h2>
+          @if (!userAddress() && !showAddressForm()) {
+            <button type="button" class="btn-secondary btn-sm" (click)="toggleAddressForm()">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              Dodaj adresu
+            </button>
+          }
+        </div>
+
+        @if (isLoadingAddress()) {
+          <div class="loading-small">
+            <div class="spinner-small"></div>
+            <span>Učitavanje adrese...</span>
+          </div>
+        } @else if (userAddress() && !showAddressForm()) {
+          <div class="address-display">
+            <div class="address-info">
+              <div class="info-row">
+                <span class="info-label">Adresa:</span>
+                <span class="info-value">{{ userAddress()!.addressLine }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Grad:</span>
+                <span class="info-value">{{ userAddress()!.city }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Poštanski broj:</span>
+                <span class="info-value">{{ userAddress()!.postalCode }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Država:</span>
+                <span class="info-value">{{ userAddress()!.country }}</span>
+              </div>
+            </div>
+            <div class="address-actions">
+              <button type="button" class="btn-secondary btn-sm" (click)="toggleAddressForm()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                </svg>
+                Uredi
+              </button>
+              <button type="button" class="btn-danger btn-sm" (click)="deleteAddress()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                </svg>
+                Obriši
+              </button>
+            </div>
+          </div>
+        } @else if (showAddressForm()) {
+          <form [formGroup]="addressForm" (ngSubmit)="saveAddress()">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="addressLine" class="form-label">
+                  Adresa
+                  <span class="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="addressLine"
+                  formControlName="addressLine"
+                  class="form-input"
+                  [class.error]="hasAddressError('addressLine', 'required')"
+                  placeholder="Ulica i broj"
+                  maxlength="200">
+                @if (hasAddressError('addressLine', 'required')) {
+                  <span class="error-message">Adresa je obavezna</span>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="city" class="form-label">
+                  Grad
+                  <span class="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="city"
+                  formControlName="city"
+                  class="form-input"
+                  [class.error]="hasAddressError('city', 'required')"
+                  placeholder="Grad"
+                  maxlength="100">
+                @if (hasAddressError('city', 'required')) {
+                  <span class="error-message">Grad je obavezan</span>
+                }
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="postalCode" class="form-label">
+                  Poštanski broj
+                  <span class="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="postalCode"
+                  formControlName="postalCode"
+                  class="form-input"
+                  [class.error]="hasAddressError('postalCode', 'required')"
+                  placeholder="71000"
+                  maxlength="20">
+                @if (hasAddressError('postalCode', 'required')) {
+                  <span class="error-message">Poštanski broj je obavezan</span>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="country" class="form-label">
+                  Država
+                  <span class="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="country"
+                  formControlName="country"
+                  class="form-input"
+                  [class.error]="hasAddressError('country', 'required')"
+                  placeholder="Bosna i Hercegovina"
+                  maxlength="100">
+                @if (hasAddressError('country', 'required')) {
+                  <span class="error-message">Država je obavezna</span>
+                }
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn-secondary" (click)="toggleAddressForm()" [disabled]="isSavingAddress()">
+                Otkaži
+              </button>
+              <button type="submit" class="btn-primary" [disabled]="isSavingAddress()">
+                @if (isSavingAddress()) {
+                  <span class="spinner-small"></span>
+                  Spremanje...
+                } @else {
+                  {{ userAddress() ? 'Ažuriraj adresu' : 'Spremi adresu' }}
+                }
+              </button>
+            </div>
+          </form>
+        } @else {
+          <div class="empty-state-small">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+            </svg>
+            <p>Korisnik nema dodanu adresu</p>
+          </div>
+        }
+      </div>
+    }
   }
 </div>
