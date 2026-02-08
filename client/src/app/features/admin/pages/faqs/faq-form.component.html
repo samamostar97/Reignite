@@ -1,0 +1,78 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">{{ isEditMode() ? 'Uredi pitanje' : 'Novo pitanje' }}</h1>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Učitavanje...</p>
+    </div>
+  } @else {
+    <form (ngSubmit)="onSubmit()" class="form-container">
+      <div class="form-grid">
+        <!-- Question -->
+        <div class="form-group full-width">
+          <label for="question" class="form-label">
+            Pitanje *
+            <span class="char-count">{{ questionCharCount }}</span>
+          </label>
+          <input
+            type="text"
+            id="question"
+            [(ngModel)]="question"
+            name="question"
+            class="form-input"
+            placeholder="Unesite pitanje..."
+            maxlength="500"
+            required
+            [disabled]="isSaving()"
+          />
+        </div>
+
+        <!-- Answer -->
+        <div class="form-group full-width">
+          <label for="answer" class="form-label">
+            Odgovor *
+            <span class="char-count">{{ answerCharCount }}</span>
+          </label>
+          <textarea
+            id="answer"
+            [(ngModel)]="answer"
+            name="answer"
+            class="form-textarea"
+            placeholder="Unesite odgovor..."
+            rows="8"
+            maxlength="2000"
+            required
+            [disabled]="isSaving()"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button
+          type="button"
+          routerLink="/admin/faqs"
+          class="btn-secondary"
+          [disabled]="isSaving()"
+        >
+          Otkaži
+        </button>
+        <button
+          type="submit"
+          class="btn-primary"
+          [disabled]="isSaving()"
+        >
+          @if (isSaving()) {
+            <span class="spinner-small"></span>
+            Spremanje...
+          } @else {
+            {{ isEditMode() ? 'Ažuriraj' : 'Kreiraj' }}
+          }
+        </button>
+      </div>
+    </form>
+  }
+</div>
