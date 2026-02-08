@@ -83,3 +83,24 @@ export interface WishlistItemResponse {
   productImageUrl: string | null;
   addedAt: string;
 }
+
+export enum SkillLevel {
+  Beginner = 0,
+  Intermediate = 1,
+  Advanced = 2
+}
+
+export interface UserHobbyResponse {
+  id: number;
+  userId: number;
+  hobbyId: number;
+  hobbyName: string;
+  skillLevel: SkillLevel;
+  bio: string | null;
+}
+
+export interface AddUserHobbyRequest {
+  hobbyId: number;
+  skillLevel: SkillLevel;
+  bio?: string;
+}
