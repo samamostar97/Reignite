@@ -9,12 +9,13 @@ import { CategoryService } from '../../core/services/category.service';
 import { ProductResponse } from '../../core/models/product.model';
 import { ProductCategoryResponse } from '../../core/models/category.model';
 import { HeaderComponent } from '../../shared/components/header/header.component';
+import { EmberBackgroundComponent } from '../../shared/components/ember-background/ember-background.component';
 import { getImageUrl } from '../../shared/utils/image.utils';
 
 @Component({
   selector: 'app-shop',
   standalone: true,
-  imports: [CommonModule, RouterLink, HeaderComponent],
+  imports: [CommonModule, RouterLink, HeaderComponent, EmberBackgroundComponent],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.scss'
 })
@@ -24,15 +25,6 @@ export class ShopComponent implements OnInit, OnDestroy {
   private readonly sanitizer = inject(DomSanitizer);
   private readonly destroy$ = new Subject<void>();
   private readonly searchSubject = new Subject<string>();
-
-  // Ember particles for background effect
-  protected readonly embers = Array.from({ length: 25 }, (_, i) => ({
-    id: i,
-    left: Math.random() * 100,
-    delay: Math.random() * 8,
-    duration: 8 + Math.random() * 6,
-    size: 3 + Math.random() * 4
-  }));
 
   // Data signals
   protected readonly products = signal<ProductResponse[]>([]);

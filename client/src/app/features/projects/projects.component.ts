@@ -9,12 +9,13 @@ import { HobbyService } from '../../core/services/hobby.service';
 import { ProjectResponse } from '../../core/models/project.model';
 import { HobbyResponse } from '../../core/models/hobby.model';
 import { HeaderComponent } from '../../shared/components/header/header.component';
+import { EmberBackgroundComponent } from '../../shared/components/ember-background/ember-background.component';
 import { getImageUrl } from '../../shared/utils/image.utils';
 
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [CommonModule, RouterLink, HeaderComponent],
+  imports: [CommonModule, RouterLink, HeaderComponent, EmberBackgroundComponent],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.scss'
 })
@@ -24,15 +25,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   private readonly sanitizer = inject(DomSanitizer);
   private readonly destroy$ = new Subject<void>();
   private readonly searchSubject = new Subject<string>();
-
-  // Ember particles for background effect
-  protected readonly embers = Array.from({ length: 25 }, (_, i) => ({
-    id: i,
-    left: Math.random() * 100,
-    delay: Math.random() * 8,
-    duration: 8 + Math.random() * 6,
-    size: 3 + Math.random() * 4
-  }));
 
   // Data signals
   protected readonly projects = signal<ProjectResponse[]>([]);

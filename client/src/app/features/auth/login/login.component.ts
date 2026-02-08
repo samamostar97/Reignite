@@ -4,11 +4,12 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import { EmberBackgroundComponent } from '../../../shared/components/ember-background/ember-background.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, EmberBackgroundComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -26,14 +27,6 @@ export class LoginComponent {
     email: ['', [Validators.required]],
     password: ['', [Validators.required]]
   });
-
-  protected readonly embers = Array.from({ length: 10 }, (_, i) => ({
-    id: i,
-    delay: Math.random() * 8,
-    duration: 8 + Math.random() * 6,
-    left: Math.random() * 100,
-    size: 3 + Math.random() * 4
-  }));
 
   protected togglePassword(): void {
     this.showPassword.set(!this.showPassword());

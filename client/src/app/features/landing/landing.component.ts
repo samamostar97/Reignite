@@ -7,11 +7,12 @@ import { AuthService } from '../../core/services/auth.service';
 import { ProductResponse } from '../../core/models/product.model';
 import { ProjectResponse } from '../../core/models/project.model';
 import { HeaderComponent } from '../../shared/components/header/header.component';
+import { EmberBackgroundComponent } from '../../shared/components/ember-background/ember-background.component';
 import { getImageUrl } from '../../shared/utils/image.utils';
 
 @Component({
   selector: 'app-landing',
-  imports: [CommonModule, RouterLink, HeaderComponent],
+  imports: [CommonModule, RouterLink, HeaderComponent, EmberBackgroundComponent],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.scss'
 })
@@ -142,12 +143,4 @@ export class LandingComponent implements OnInit, OnDestroy {
   }
 
   protected getImageUrl = getImageUrl;
-
-  protected readonly embers = Array.from({ length: 15 }, (_, i) => ({
-    id: i,
-    delay: Math.random() * 10,
-    duration: 8 + Math.random() * 6,
-    left: Math.random() * 100,
-    size: 4 + Math.random() * 4
-  }));
 }

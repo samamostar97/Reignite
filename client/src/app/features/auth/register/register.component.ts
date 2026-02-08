@@ -4,11 +4,12 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractContro
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import { EmberBackgroundComponent } from '../../../shared/components/ember-background/ember-background.component';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, EmberBackgroundComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
@@ -32,14 +33,6 @@ export class RegisterComponent {
     password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
     confirmPassword: ['', [Validators.required]]
   }, { validators: this.passwordMatchValidator });
-
-  protected readonly embers = Array.from({ length: 10 }, (_, i) => ({
-    id: i,
-    delay: Math.random() * 8,
-    duration: 8 + Math.random() * 6,
-    left: Math.random() * 100,
-    size: 3 + Math.random() * 4
-  }));
 
   private passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.get('password');
