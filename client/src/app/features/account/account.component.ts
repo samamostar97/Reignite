@@ -6,6 +6,7 @@ import { OrdersTabComponent } from './tabs/orders-tab.component';
 import { HobbiesTabComponent } from './tabs/hobbies-tab.component';
 import { PasswordTabComponent } from './tabs/password-tab.component';
 import { EmberBackgroundComponent } from '../../shared/components/ember-background/ember-background.component';
+import { HeaderComponent } from '../../shared/components/header/header.component';
 
 export type AccountTab = 'profile' | 'address' | 'orders' | 'hobbies' | 'password';
 
@@ -18,7 +19,7 @@ interface TabItem {
 @Component({
   selector: 'app-account',
   standalone: true,
-  imports: [CommonModule, ProfileTabComponent, AddressTabComponent, OrdersTabComponent, HobbiesTabComponent, PasswordTabComponent, EmberBackgroundComponent],
+  imports: [CommonModule, ProfileTabComponent, AddressTabComponent, OrdersTabComponent, HobbiesTabComponent, PasswordTabComponent, EmberBackgroundComponent, HeaderComponent],
   templateUrl: './account.component.html',
   styleUrl: './account.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
