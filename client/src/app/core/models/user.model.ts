@@ -104,3 +104,9 @@ export interface AddUserHobbyRequest {
   skillLevel: SkillLevel;
   bio?: string;
 }
+
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}

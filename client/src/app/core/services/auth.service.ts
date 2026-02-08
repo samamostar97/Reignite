@@ -101,4 +101,13 @@ export class AuthService {
   getAccessToken(): string | null {
     return localStorage.getItem('accessToken');
   }
+
+  refreshCurrentUser(user: { firstName: string; lastName: string; email: string }): void {
+    const current = this._currentUser();
+    if (current) {
+      const updated = { ...current, ...user };
+      this._currentUser.set(updated);
+      localStorage.setItem('currentUser', JSON.stringify(updated));
+    }
+  }
 }
