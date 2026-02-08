@@ -966,3 +966,70 @@
     padding: 3rem 0;
   }
 }
+
+@media (max-width: 480px) {
+  .content-wrapper {
+    padding: 0.5rem;
+  }
+
+  .hero-section {
+    padding: 0.5rem;
+  }
+
+  .brand-subtitle {
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+  }
+
+  .kit-carousel {
+    padding: 0 36px;
+  }
+
+  .carousel-nav {
+    width: 30px;
+    height: 30px;
+
+    svg { width: 16px; height: 16px; }
+  }
+
+  .kit-content {
+    padding: 0.875rem;
+  }
+
+  .kit-name {
+    font-size: 1.05rem;
+  }
+
+  .kit-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .kit-button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .about-content {
+    padding: 0 1rem;
+  }
+
+  .cta-button {
+    padding: 0.85rem 1.5rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+  }
+
+  .footer-tagline {
+    font-size: 1rem;
+  }
+
+  .project-card {
+    height: 280px;
+  }
+
+  .section-description {
+    font-size: 0.95rem;
+  }
+}

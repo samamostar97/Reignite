@@ -829,3 +829,91 @@ $surface-light: #231C15;
     svg { color: $ember; }
   }
 }
+
+// Mobile responsiveness
+@media (max-width: 480px) {
+  .welcome-section {
+    margin-bottom: 1.25rem;
+
+    h2 { font-size: 1.35rem; }
+    p { font-size: 0.85rem; }
+  }
+
+  .welcome-actions {
+    width: 100%;
+
+    .btn-primary,
+    .btn-secondary {
+      flex: 1;
+      justify-content: center;
+      padding: 0.55rem 0.75rem;
+      font-size: 0.8rem;
+    }
+  }
+
+  .kpi-card {
+    padding: 0.875rem 1rem;
+  }
+
+  .kpi-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+
+    svg { width: 20px; height: 20px; }
+  }
+
+  .kpi-value {
+    font-size: 1.4rem;
+  }
+
+  .kpi-label {
+    font-size: 0.7rem;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  .card-header h3 {
+    font-size: 0.9rem;
+  }
+
+  .quick-links {
+    gap: 0.5rem;
+  }
+
+  .quick-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .activity-filters {
+    flex-wrap: wrap;
+  }
+
+  .filter-chip {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .growth-stats {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .growth-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+  }
+
+  .growth-stat-value {
+    font-size: 1.1rem;
+  }
+
+  .rating-big-value {
+    font-size: 2rem;
+  }
+}

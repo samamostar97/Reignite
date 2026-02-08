@@ -485,3 +485,48 @@ $smoke: #5a3a2a;
   background: rgba($ash, 0.1);
   margin: 0.25rem 0;
 }
+
+// Small mobile
+@media (max-width: 480px) {
+  .header-content {
+    padding: 0.875rem 1rem;
+  }
+
+  .header-logo {
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+  }
+
+  .header-actions {
+    gap: 0.25rem;
+  }
+
+  .cart-icon,
+  .wishlist-icon {
+    width: 36px;
+    height: 36px;
+
+    svg { width: 20px; height: 20px; }
+  }
+
+  .user-button {
+    padding: 0.25rem 0.4rem;
+  }
+
+  .user-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 0.65rem;
+  }
+
+  .mobile-nav-link {
+    padding: 0.875rem 0.5rem;
+    font-size: 0.95rem;
+
+    svg { width: 20px; height: 20px; }
+  }
+
+  .dropdown-menu {
+    min-width: 170px;
+  }
+}
