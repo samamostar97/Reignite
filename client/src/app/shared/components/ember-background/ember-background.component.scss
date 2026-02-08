@@ -1,0 +1,70 @@
+.embers-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.ember {
+  position: absolute;
+  bottom: -10px;
+  background: radial-gradient(circle, #F97316 0%, #F59E0B 40%, transparent 70%);
+  border-radius: 50%;
+  opacity: 0;
+  animation: float-up linear infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes float-up {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: var(--ember-max-opacity, 0.9);
+  }
+  90% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-110vh) scale(0.5);
+    opacity: 0;
+  }
+}
+
+// Sparse: lower opacity for subtle backgrounds
+.embers-sparse .ember {
+  @keyframes float-up {
+    0% {
+      transform: translateY(0) scale(1);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.4;
+    }
+    90% {
+      opacity: 0.1;
+    }
+    100% {
+      transform: translateY(-110vh) scale(0.3);
+      opacity: 0;
+    }
+  }
+}
+
+// Full: vivid particles for hero sections
+.embers-full .ember {
+  background: radial-gradient(circle, #ff6b35 0%, #f7931e 40%, transparent 70%);
+}
+
+// Disable on reduced-motion preference
+@media (prefers-reduced-motion: reduce) {
+  .ember {
+    animation: none;
+    display: none;
+  }
+}
