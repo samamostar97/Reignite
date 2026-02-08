@@ -88,7 +88,7 @@ export class CouponListComponent implements OnInit, OnDestroy {
   }
 
   protected async deleteCoupon(id: number, code: string): Promise<void> {
-    const confirmed = await this.confirmDialog.confirm({
+    const confirmed = await this.confirmDialog.open({
       title: 'Brisanje kupona',
       message: `Da li ste sigurni da želite obrisati kupon "${code}"?`,
       confirmText: 'Obriši',

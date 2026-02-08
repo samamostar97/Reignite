@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { FaqResponse, CreateFaqRequest, UpdateFaqRequest, FaqQueryFilter } from '../models/faq.model';
-import { PaginatedResponse } from '../models/api.model';
+import { PagedResult } from '../models/common.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class FaqService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/faqs`;
 
-  getAll(filter?: FaqQueryFilter): Observable<PaginatedResponse<FaqResponse>> {
+  getAll(filter?: FaqQueryFilter): Observable<PagedResult<FaqResponse>> {
     let params = new HttpParams();
 
     if (filter) {
@@ -22,7 +22,7 @@ export class FaqService {
       if (filter.orderBy) params = params.set('orderBy', filter.orderBy);
     }
 
-    return this.http.get<PaginatedResponse<FaqResponse>>(this.apiUrl, { params });
+    return this.http.get<PagedResult<FaqResponse>>(this.apiUrl, { params });
   }
 
   getById(id: number): Observable<FaqResponse> {
