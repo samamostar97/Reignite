@@ -1,0 +1,57 @@
+<div class="account-page">
+  <div class="account-container">
+    <!-- Sidebar -->
+    <aside class="account-sidebar">
+      <h2 class="sidebar-title">Moj Račun</h2>
+      <nav class="sidebar-nav">
+        @for (tab of tabs; track tab.id) {
+          <button
+            class="nav-item"
+            [class.active]="activeTab() === tab.id"
+            (click)="setTab(tab.id)">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="tab.icon" />
+            </svg>
+            <span>{{ tab.label }}</span>
+          </button>
+        }
+      </nav>
+    </aside>
+
+    <!-- Mobile tabs -->
+    <div class="mobile-tabs">
+      @for (tab of tabs; track tab.id) {
+        <button
+          class="mobile-tab"
+          [class.active]="activeTab() === tab.id"
+          (click)="setTab(tab.id)">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="tab.icon" />
+          </svg>
+          <span>{{ tab.label }}</span>
+        </button>
+      }
+    </div>
+
+    <!-- Content -->
+    <main class="account-content">
+      @switch (activeTab()) {
+        @case ('profile') {
+          <app-profile-tab />
+        }
+        @case ('address') {
+          <app-address-tab />
+        }
+        @case ('orders') {
+          <app-orders-tab />
+        }
+        @case ('hobbies') {
+          <app-hobbies-tab />
+        }
+        @case ('password') {
+          <app-password-tab />
+        }
+      }
+    </main>
+  </div>
+</div>
