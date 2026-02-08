@@ -10,7 +10,7 @@ import { PagedResult } from '../models/common.model';
 })
 export class ActivityService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}/activity`;
+  private readonly apiUrl = `${environment.apiUrl}/activities`;
 
   getActivities(filter: ActivityQueryFilter): Observable<PagedResult<ActivityResponse>> {
     let params = new HttpParams()
