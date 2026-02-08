@@ -4,7 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { UserService } from '../../../../../core/services/user.service';
 import { NotificationService } from '../../../../../core/services/notification.service';
-import { UserAddressResponse } from '../../../../../core/models/user.model';
+import { UserAddressResponse, WishlistResponse } from '../../../../../core/models/user.model';
 import { getImageUrl } from '../../../../../shared/utils/image.utils';
 import { environment } from '../../../../../../environments/environment';
 
@@ -40,6 +40,10 @@ export class UserFormComponent implements OnInit {
   protected readonly isLoadingAddress = signal(false);
   protected readonly isSavingAddress = signal(false);
   protected readonly showAddressForm = signal(false);
+
+  // Wishlist-related signals
+  protected readonly userWishlist = signal<WishlistResponse | null>(null);
+  protected readonly isLoadingWishlist = signal(false);
 
   // Phone pattern: +387 6X XXX XXX or 06X XXX XXX formats
   private readonly phonePattern = /^(\+387|0)\s?6[0-9]\s?[0-9]{3}\s?[0-9]{3,4}$/;
@@ -87,8 +91,9 @@ export class UserFormComponent implements OnInit {
           this.currentImageUrl.set(getImageUrl(user.profileImageUrl));
         }
         this.isLoading.set(false);
-        // Load address after user data
+        // Load address and wishlist after user data
         this.loadUserAddress(id);
+        this.loadUserWishlist(id);
       },
       error: () => {
         this.isLoading.set(false);
@@ -114,6 +119,21 @@ export class UserFormComponent implements OnInit {
         // Address doesn't exist yet - that's OK
         this.userAddress.set(null);
         this.isLoadingAddress.set(false);
+      }
+    });
+  }
+
+  private loadUserWishlist(userId: number) {
+    this.isLoadingWishlist.set(true);
+    this.userService.getUserWishlist(userId).subscribe({
+      next: (wishlist) => {
+        this.userWishlist.set(wishlist);
+        this.isLoadingWishlist.set(false);
+      },
+      error: () => {
+        // Wishlist doesn't exist - that's OK
+        this.userWishlist.set(null);
+        this.isLoadingWishlist.set(false);
       }
     });
   }

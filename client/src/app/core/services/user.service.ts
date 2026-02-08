@@ -10,7 +10,8 @@ import {
   UpdateUserRequest,
   UserAddressResponse,
   CreateUserAddressRequest,
-  UpdateUserAddressRequest
+  UpdateUserAddressRequest,
+  WishlistResponse
 } from '../models/user.model';
 
 @Injectable({
@@ -82,5 +83,10 @@ export class UserService {
 
   deleteUserAddress(userId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${userId}/address`);
+  }
+
+  // User Wishlist (read-only)
+  getUserWishlist(userId: number): Observable<WishlistResponse> {
+    return this.http.get<WishlistResponse>(`${this.apiUrl}/${userId}/wishlist`);
   }
 }
