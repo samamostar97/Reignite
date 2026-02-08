@@ -66,3 +66,20 @@ export interface UpdateUserAddressRequest {
   postalCode: string;
   country: string;
 }
+
+export interface WishlistResponse {
+  id: number;
+  userId: number;
+  createdAt: string;
+  items: WishlistItemResponse[];
+}
+
+export interface WishlistItemResponse {
+  id: number;
+  wishlistId: number;
+  productId: number;
+  productName: string;
+  productPrice: number;
+  productImageUrl: string | null;
+  addedAt: string;
+}
