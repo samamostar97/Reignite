@@ -22,7 +22,7 @@ namespace Reignite.Infrastructure.Services
         {
             var wishlist = await _wishlistRepository
                 .AsQueryable()
-                .Include(w => w.Items)
+                .Include(w => w.WishlistItems)
                     .ThenInclude(i => i.Product)
                 .FirstOrDefaultAsync(w => w.UserId == userId);
 
@@ -32,7 +32,7 @@ namespace Reignite.Infrastructure.Services
             var response = _mapper.Map<WishlistResponse>(wishlist);
 
             // Map items with product details
-            response.Items = wishlist.Items.Select(item => new WishlistItemResponse
+            response.Items = wishlist.WishlistItems.Select(item => new WishlistItemResponse
             {
                 Id = item.Id,
                 WishlistId = item.WishlistId,
