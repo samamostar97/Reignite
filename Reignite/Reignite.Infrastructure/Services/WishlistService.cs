@@ -21,7 +21,7 @@ namespace Reignite.Infrastructure.Services
         public async Task<WishlistResponse?> GetUserWishlistAsync(int userId)
         {
             var wishlist = await _wishlistRepository
-                .GetQueryable()
+                .AsQueryable()
                 .Include(w => w.Items)
                     .ThenInclude(i => i.Product)
                 .FirstOrDefaultAsync(w => w.UserId == userId);
