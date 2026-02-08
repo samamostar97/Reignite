@@ -2,7 +2,9 @@ import { PaginationRequest } from './common.model';
 
 export enum OrderStatus {
   Processing = 0,
-  OnDelivery = 1
+  OnDelivery = 1,
+  Delivered = 2,
+  Cancelled = 3
 }
 
 export interface OrderItemResponse {
@@ -43,4 +45,8 @@ export interface CreateOrderItemRequest {
 export interface CreateOrderRequest {
   userId: number;
   items: CreateOrderItemRequest[];
+}
+
+export interface UpdateOrderRequest {
+  status: OrderStatus;
 }
