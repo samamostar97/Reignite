@@ -7,12 +7,11 @@ import { AuthService } from '../../core/services/auth.service';
 import { ProductResponse } from '../../core/models/product.model';
 import { ProjectResponse } from '../../core/models/project.model';
 import { HeaderComponent } from '../../shared/components/header/header.component';
-import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { getImageUrl } from '../../shared/utils/image.utils';
 
 @Component({
   selector: 'app-landing',
-  imports: [CommonModule, RouterLink, HeaderComponent, FooterComponent],
+  imports: [CommonModule, RouterLink, HeaderComponent],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.scss'
 })

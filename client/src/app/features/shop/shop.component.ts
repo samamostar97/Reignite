@@ -9,13 +9,12 @@ import { CategoryService } from '../../core/services/category.service';
 import { ProductResponse } from '../../core/models/product.model';
 import { ProductCategoryResponse } from '../../core/models/category.model';
 import { HeaderComponent } from '../../shared/components/header/header.component';
-import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { getImageUrl } from '../../shared/utils/image.utils';
 
 @Component({
   selector: 'app-shop',
   standalone: true,
-  imports: [CommonModule, RouterLink, HeaderComponent, FooterComponent],
+  imports: [CommonModule, RouterLink, HeaderComponent],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.scss'
 })

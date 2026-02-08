@@ -5,12 +5,11 @@ import { takeUntil } from 'rxjs/operators';
 import { FaqService } from '../../core/services/faq.service';
 import { FaqResponse } from '../../core/models/faq.model';
 import { HeaderComponent } from '../../shared/components/header/header.component';
-import { FooterComponent } from '../../shared/components/footer/footer.component';
 
 @Component({
   selector: 'app-faqs',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, FooterComponent],
+  imports: [CommonModule, HeaderComponent],
   templateUrl: './faqs.component.html',
   styleUrl: './faqs.component.scss'
 })
