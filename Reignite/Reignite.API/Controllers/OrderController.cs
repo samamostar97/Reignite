@@ -5,40 +5,35 @@ using Reignite.Application.DTOs.Request;
 using Reignite.Application.DTOs.Response;
 using Reignite.Application.Filters;
 using Reignite.Application.IServices;
+using Reignite.Core.Entities;
 
 namespace Reignite.API.Controllers
 {
     [ApiController]
     [Route("api/orders")]
     [Authorize(Roles = "Admin")]
-    public class OrderController : ControllerBase
+    public class OrderController : BaseController<Order, OrderResponse, CreateOrderRequest, UpdateOrderRequest, OrderQueryFilter, int>
     {
-        private readonly IOrderService _orderService;
-
-        public OrderController(IOrderService orderService)
+        public OrderController(IOrderService service) : base(service)
         {
-            _orderService = orderService;
         }
+
+        // Only expose GET and PUT - no POST (create) or DELETE
+        // Orders are created by users through checkout flow (not admin)
 
         [HttpGet]
-        public async Task<ActionResult<PagedResult<OrderResponse>>> GetAllPaged([FromQuery] OrderQueryFilter filter)
-        {
-            var result = await _orderService.GetPagedAsync(filter);
-            return Ok(result);
-        }
+        public override Task<ActionResult<PagedResult<OrderResponse>>> GetAllPagedAsync([FromQuery] OrderQueryFilter filter)
+            => base.GetAllPagedAsync(filter);
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<OrderResponse>> GetById(int id)
-        {
-            var order = await _orderService.GetByIdAsync(id);
-            return Ok(order);
-        }
+        public override Task<ActionResult<OrderResponse>> GetById(int id)
+            => base.GetById(id);
 
-        [HttpPost("test")]
-        public async Task<ActionResult<OrderResponse>> CreateTestOrder([FromBody] CreateOrderRequest request)
-        {
-            var order = await _orderService.CreateTestOrderAsync(request);
-            return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
-        }
+        [HttpPut("{id}")]
+        public override Task<ActionResult<OrderResponse>> Update(int id, [FromBody] UpdateOrderRequest dto)
+            => base.Update(id, dto);
+
+        // Create and Delete endpoints are intentionally not exposed
+        // Orders are user-generated, not admin-created
     }
 }
