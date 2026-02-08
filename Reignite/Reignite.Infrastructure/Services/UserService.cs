@@ -331,5 +331,25 @@ namespace Reignite.Infrastructure.Services
 
             await _userHobbyRepository.DeleteAsync(userHobby);
         }
+
+        // Password Management
+        public async Task<bool> VerifyPasswordAsync(int userId, string password)
+        {
+            var user = await _repository.GetByIdAsync(userId);
+            if (user == null)
+                throw new KeyNotFoundException("Korisnik nije pronađen.");
+
+            return BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
+        }
+
+        public async Task ChangePasswordAsync(int userId, string newPassword)
+        {
+            var user = await _repository.GetByIdAsync(userId);
+            if (user == null)
+                throw new KeyNotFoundException("Korisnik nije pronađen.");
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            await _repository.UpdateAsync(user);
+        }
     }
 }
