@@ -80,7 +80,7 @@ export class FaqListComponent implements OnInit, OnDestroy {
   }
 
   protected async deleteFaq(id: number, question: string): Promise<void> {
-    const confirmed = await this.confirmDialog.confirm({
+    const confirmed = await this.confirmDialog.open({
       title: 'Brisanje pitanja',
       message: `Da li ste sigurni da želite obrisati pitanje "${question}"?`,
       confirmText: 'Obriši',

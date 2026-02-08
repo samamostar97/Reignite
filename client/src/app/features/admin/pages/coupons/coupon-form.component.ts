@@ -1,7 +1,7 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, ActivatedRoute, RouterLink } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CouponService } from '../../../../core/services/coupon.service';
 import { CreateCouponRequest, UpdateCouponRequest } from '../../../../core/models/coupon.model';
 import { NotificationService } from '../../../../core/services/notification.service';
@@ -9,7 +9,7 @@ import { NotificationService } from '../../../../core/services/notification.serv
 @Component({
   selector: 'app-coupon-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './coupon-form.component.html',
   styleUrl: './coupon-form.component.scss'
 })
