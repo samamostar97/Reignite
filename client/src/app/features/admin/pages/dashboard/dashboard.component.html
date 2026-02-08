@@ -147,56 +147,6 @@
     </div>
   </div>
 
-  <!-- Dev Tools Section -->
-  <div class="dev-tools">
-    <div class="dev-tools-header">
-      <h3>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="warning-icon">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
-        </svg>
-        Razvojni Alati (TEST)
-      </h3>
-      @if (devMessage(); as msg) {
-        <span class="dev-message" [class.success]="msg.type === 'success'" [class.error]="msg.type === 'error'">
-          {{ msg.text }}
-        </span>
-      }
-    </div>
-    <div class="dev-actions-grid">
-      <button class="dev-action-card" (click)="createTestOrder()" [disabled]="isCreatingOrder()">
-        <div class="dev-action-icon">
-          @if (isCreatingOrder()) {
-            <div class="spinner-small"></div>
-          } @else {
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-            </svg>
-          }
-        </div>
-        <div class="dev-action-content">
-          <span class="dev-action-title">Kreiraj Test Narudžbu</span>
-          <span class="dev-action-desc">Nasumična narudžba za testiranje</span>
-        </div>
-      </button>
-
-      <button class="dev-action-card" (click)="createTestProject()" [disabled]="isCreatingProject()">
-        <div class="dev-action-icon">
-          @if (isCreatingProject()) {
-            <div class="spinner-small"></div>
-          } @else {
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-            </svg>
-          }
-        </div>
-        <div class="dev-action-content">
-          <span class="dev-action-title">Kreiraj Test Projekat</span>
-          <span class="dev-action-desc">Nasumičan projekat za testiranje</span>
-        </div>
-      </button>
-    </div>
-  </div>
-
   <div class="recent-activity">
     <div class="activity-header">
       <h3>Nedavna Aktivnost</h3>
