@@ -298,6 +298,48 @@
   margin: 0;
 }
 
+// View All Products CTA
+.view-all-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+}
+
+.view-all-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #ff6b35;
+  background: transparent;
+  border: 2px solid #ff6b35;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    background: #ff6b35;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
+
+    svg {
+      transform: translateX(4px);
+    }
+  }
+}
+
 // Call to Action Section
 .cta-section {
   display: flex;
