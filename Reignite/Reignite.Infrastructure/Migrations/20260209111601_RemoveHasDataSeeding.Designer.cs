@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Reignite.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using Reignite.Infrastructure.Data;
 namespace Reignite.Infrastructure.Migrations
 {
     [DbContext(typeof(ReigniteDbContext))]
-    partial class ReigniteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260209111601_RemoveHasDataSeeding")]
+    partial class RemoveHasDataSeeding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

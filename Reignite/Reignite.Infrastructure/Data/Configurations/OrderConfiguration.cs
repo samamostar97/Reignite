@@ -17,14 +17,6 @@ namespace Reignite.Infrastructure.Data.Configurations
                 .WithMany(u => u.Orders)
                 .HasForeignKey(o => o.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            var seedDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
-            builder.HasData(
-                new Order { Id = 1, UserId = 2, TotalAmount = 123.00m, PurchaseDate = seedDate, Status = Reignite.Core.Enums.OrderStatus.Processing, CreatedAt = seedDate },
-                new Order { Id = 2, UserId = 3, TotalAmount = 188.49m, PurchaseDate = seedDate, Status = Reignite.Core.Enums.OrderStatus.OnDelivery, CreatedAt = seedDate },
-                new Order { Id = 3, UserId = 4, TotalAmount = 84.80m, PurchaseDate = seedDate, Status = Reignite.Core.Enums.OrderStatus.Processing, CreatedAt = seedDate }
-            );
         }
     }
 

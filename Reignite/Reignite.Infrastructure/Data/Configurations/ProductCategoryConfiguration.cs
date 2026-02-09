@@ -14,16 +14,6 @@ namespace Reignite.Infrastructure.Data.Configurations
             builder.HasIndex(c => c.Name)
                 .IsUnique()
                 .HasFilter("[IsDeleted] = 0");
-
-
-            var seedDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
-            builder.HasData(
-                new ProductCategory { Id = 1, Name = "Ručni Alati", CreatedAt = seedDate },
-                new ProductCategory { Id = 2, Name = "Premium Materijali", CreatedAt = seedDate },
-                new ProductCategory { Id = 3, Name = "Kompleti za Početnike", CreatedAt = seedDate },
-                new ProductCategory { Id = 4, Name = "Pribor za Radionicu", CreatedAt = seedDate }
-            );
         }
     }
 }
