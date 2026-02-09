@@ -46,8 +46,8 @@ $smoke: #5a3a2a;
   align-items: center;
   gap: 0.75rem;
   padding: 1rem 1.25rem;
-  background: linear-gradient(135deg, #3b1111 0%, #4a1515 100%);
-  border: 1px solid #7f1d1d;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
   border-left: 4px solid #ef4444;
   border-radius: 10px;
   margin-bottom: 1.5rem;
@@ -62,7 +62,7 @@ $smoke: #5a3a2a;
 
   span {
     flex: 1;
-    color: #fca5a5;
+    color: #dc2626;
     font-weight: 500;
     font-size: 0.95rem;
     line-height: 1.4;
@@ -73,7 +73,7 @@ $smoke: #5a3a2a;
     border: none;
     padding: 0.25rem;
     cursor: pointer;
-    color: #fca5a5;
+    color: #dc2626;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -112,7 +112,7 @@ $smoke: #5a3a2a;
     transform: translateY(-50%);
     width: 18px;
     height: 18px;
-    color: #7A6B59;
+    color: #8b6b53;
     pointer-events: none;
   }
 
@@ -120,15 +120,15 @@ $smoke: #5a3a2a;
     width: 240px;
     height: 44px;
     padding: 0 1rem 0 2.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(44, 24, 16, 0.1);
     border-radius: 10px;
     font-size: 0.9rem;
-    color: #FAF5F0;
-    background: rgba(255, 255, 255, 0.04);
+    color: #2c1810;
+    background: rgba(44, 24, 16, 0.06);
     transition: all 0.2s ease;
 
     &::placeholder {
-      color: #7A6B59;
+      color: #8b6b53;
     }
 
     &:focus {
@@ -140,12 +140,12 @@ $smoke: #5a3a2a;
 }
 
 .total-count {
-  color: #C4B5A3;
+  color: #5a3a2a;
   margin: 0;
   font-size: 0.95rem;
 
   strong {
-    color: #FAF5F0;
+    color: #2c1810;
     font-weight: 700;
   }
 }
@@ -184,37 +184,37 @@ $smoke: #5a3a2a;
 
 .btn-secondary {
   padding: 0.75rem 1.25rem;
-  background: rgba(255, 255, 255, 0.06);
-  color: #C4B5A3;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(44, 24, 16, 0.08);
+  color: #5a3a2a;
+  border: 1px solid rgba(44, 24, 16, 0.1);
   border-radius: 10px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(44, 24, 16, 0.12);
   }
 }
 
 // Add form
 .add-form {
-  background: #231C15;
+  background: #FFF8F0;
   padding: 1.5rem;
   border-radius: 14px;
   margin-bottom: 1.5rem;
-  box-shadow: 0 1px 3px rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 1px 3px rgba(44, 24, 16, 0.06);
+  border: 1px solid rgba(44, 24, 16, 0.06);
   animation: slideDown 0.2s ease-out;
 
   .form-input {
     width: 100%;
     padding: 0.875rem 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(44, 24, 16, 0.1);
     border-radius: 10px;
     font-size: 1rem;
-    color: #FAF5F0;
-    background: rgba(255, 255, 255, 0.04);
+    color: #2c1810;
+    background: rgba(44, 24, 16, 0.06);
     margin-bottom: 1rem;
     transition: all 0.2s ease;
 
@@ -225,18 +225,18 @@ $smoke: #5a3a2a;
     }
 
     &::placeholder {
-      color: #7A6B59;
+      color: #8b6b53;
     }
   }
 
   .form-textarea {
     width: 100%;
     padding: 0.875rem 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(44, 24, 16, 0.1);
     border-radius: 10px;
     font-size: 1rem;
-    color: #FAF5F0;
-    background: rgba(255, 255, 255, 0.04);
+    color: #2c1810;
+    background: rgba(44, 24, 16, 0.06);
     margin-bottom: 1rem;
     resize: vertical;
     font-family: inherit;
@@ -249,7 +249,7 @@ $smoke: #5a3a2a;
     }
 
     &::placeholder {
-      color: #7A6B59;
+      color: #8b6b53;
     }
   }
 
@@ -278,9 +278,9 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: center;
   padding: 5rem 2rem;
-  background: #231C15;
+  background: #FFF8F0;
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(44, 24, 16, 0.06);
 
   .spinner {
     width: 44px;
@@ -292,7 +292,7 @@ $smoke: #5a3a2a;
   }
 
   p {
-    color: #C4B5A3;
+    color: #5a3a2a;
     margin-top: 1.25rem;
     font-size: 0.95rem;
   }
@@ -316,7 +316,7 @@ $smoke: #5a3a2a;
 
   h3 {
     font-size: 1.25rem;
-    color: #FAF5F0;
+    color: #2c1810;
     margin: 0 0 0.5rem 0;
     font-weight: 600;
   }
@@ -328,11 +328,11 @@ $smoke: #5a3a2a;
 
 // Hobbies list
 .hobbies-list {
-  background: #231C15;
+  background: #FFF8F0;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 1px 3px rgba(44, 24, 16, 0.06);
+  border: 1px solid rgba(44, 24, 16, 0.06);
 }
 
 .hobby-item {
@@ -340,7 +340,7 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(44, 24, 16, 0.06);
   transition: background-color 0.15s ease;
 
   &:last-child {
@@ -374,8 +374,8 @@ $smoke: #5a3a2a;
       border: 2px solid $ember;
       border-radius: 8px;
       font-size: 0.95rem;
-      color: #FAF5F0;
-      background: rgba(255, 255, 255, 0.04);
+      color: #2c1810;
+      background: rgba(44, 24, 16, 0.06);
 
       &:focus {
         outline: none;
@@ -417,13 +417,13 @@ $smoke: #5a3a2a;
 
 .hobby-name {
   font-weight: 600;
-  color: #FAF5F0;
+  color: #2c1810;
   font-size: 0.95rem;
 }
 
 .hobby-description {
   font-size: 0.85rem;
-  color: #C4B5A3;
+  color: #5a3a2a;
 }
 
 .item-actions {
@@ -444,10 +444,10 @@ $smoke: #5a3a2a;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(44, 24, 16, 0.06);
   border: 1px solid transparent;
   border-radius: 8px;
-  color: #C4B5A3;
+  color: #5a3a2a;
   cursor: pointer;
   transition: all 0.2s ease;
 
@@ -479,8 +479,8 @@ $smoke: #5a3a2a;
     cursor: not-allowed;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.04);
-      color: #C4B5A3;
+      background: rgba(44, 24, 16, 0.06);
+      color: #5a3a2a;
       border-color: transparent;
     }
   }
@@ -498,8 +498,8 @@ $smoke: #5a3a2a;
   justify-content: center;
   gap: 1rem;
   padding: 1.25rem;
-  background: rgba(255, 255, 255, 0.04);
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(44, 24, 16, 0.06);
+  border-top: 1px solid rgba(44, 24, 16, 0.06);
   border-radius: 0 0 16px 16px;
 }
 
@@ -509,10 +509,10 @@ $smoke: #5a3a2a;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(44, 24, 16, 0.06);
   border: 1px solid transparent;
   border-radius: 10px;
-  color: #C4B5A3;
+  color: #5a3a2a;
   cursor: pointer;
   transition: all 0.2s ease;
 
@@ -535,7 +535,7 @@ $smoke: #5a3a2a;
 
 .pagination-info {
   font-size: 0.9rem;
-  color: #C4B5A3;
+  color: #5a3a2a;
   font-weight: 500;
 }
 

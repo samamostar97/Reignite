@@ -35,12 +35,12 @@ $smoke: #5a3a2a;
 }
 
 .total-count {
-  color: #C4B5A3;
+  color: #5a3a2a;
   margin: 0;
   font-size: 0.95rem;
 
   strong {
-    color: #FAF5F0;
+    color: #2c1810;
     font-weight: 700;
   }
 }
@@ -56,7 +56,7 @@ $smoke: #5a3a2a;
 .filter-tabs {
   display: flex;
   gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(44, 24, 16, 0.06);
   padding: 0.25rem;
   border-radius: 10px;
 }
@@ -71,7 +71,7 @@ $smoke: #5a3a2a;
   border-radius: 8px;
   font-size: 0.85rem;
   font-weight: 500;
-  color: #C4B5A3;
+  color: #5a3a2a;
   cursor: pointer;
   transition: all 0.2s ease;
 
@@ -82,13 +82,13 @@ $smoke: #5a3a2a;
   }
 
   &:hover {
-    color: #FAF5F0;
+    color: #2c1810;
   }
 
   &.active {
     background: linear-gradient(135deg, $ember, $flame);
     color: #fff;
-    box-shadow: 0 1px 3px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 1px 3px rgba(44, 24, 16, 0.12);
   }
 }
 
@@ -99,7 +99,7 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: center;
   padding: 5rem 2rem;
-  background: #231C15;
+  background: #FFF8F0;
   border-radius: 16px;
 
   .spinner {
@@ -112,7 +112,7 @@ $smoke: #5a3a2a;
   }
 
   p {
-    color: #C4B5A3;
+    color: #5a3a2a;
     margin-top: 1.25rem;
     font-size: 0.95rem;
   }
@@ -129,9 +129,9 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: center;
   padding: 5rem 2rem;
-  background: #231C15;
+  background: #FFF8F0;
   border-radius: 16px;
-  border: 2px dashed rgba(255, 255, 255, 0.1);
+  border: 2px dashed rgba(44, 24, 16, 0.12);
 
   .empty-icon {
     width: 80px;
@@ -152,13 +152,13 @@ $smoke: #5a3a2a;
 
   h3 {
     font-size: 1.25rem;
-    color: #FAF5F0;
+    color: #2c1810;
     margin: 0 0 0.5rem 0;
     font-weight: 600;
   }
 
   p {
-    color: #C4B5A3;
+    color: #5a3a2a;
     margin: 0;
     text-align: center;
   }
@@ -166,11 +166,11 @@ $smoke: #5a3a2a;
 
 // Table container
 .table-container {
-  background: #231C15;
+  background: #FFF8F0;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 1px 3px rgba(44, 24, 16, 0.06);
+  border: 1px solid rgba(44, 24, 16, 0.06);
 }
 
 .data-table {
@@ -183,20 +183,20 @@ $smoke: #5a3a2a;
   }
 
   th {
-    background: linear-gradient(to bottom, #2C2318, #231C15);
+    background: linear-gradient(to bottom, #F0DCC0, #FFF8F0);
     font-weight: 600;
-    color: #FAF5F0;
+    color: #2c1810;
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(44, 24, 16, 0.08);
     position: sticky;
     top: 0;
     z-index: 10;
   }
 
   tbody tr {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid rgba(44, 24, 16, 0.06);
     transition: background-color 0.15s ease;
 
     &:hover {
@@ -212,7 +212,7 @@ $smoke: #5a3a2a;
 // Cell styles
 .cell-id {
   font-weight: 600;
-  color: #FAF5F0;
+  color: #2c1810;
   font-size: 0.9rem;
   width: 70px;
 }
@@ -246,13 +246,13 @@ $smoke: #5a3a2a;
 
   .user-name {
     font-weight: 500;
-    color: #FAF5F0;
+    color: #2c1810;
     font-size: 0.9rem;
   }
 }
 
 .cell-product {
-  color: #FAF5F0;
+  color: #2c1810;
   font-size: 0.9rem;
   font-weight: 500;
   max-width: 200px;
@@ -281,19 +281,19 @@ $smoke: #5a3a2a;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: #C4B5A3;
+    color: #5a3a2a;
     font-size: 0.85rem;
   }
 
   .no-comment {
-    color: rgba(#C4B5A3, 0.5);
+    color: rgba(#5a3a2a, 0.5);
     font-size: 0.85rem;
     font-style: italic;
   }
 }
 
 .cell-date {
-  color: #C4B5A3;
+  color: #5a3a2a;
   font-size: 0.85rem;
   white-space: nowrap;
 }
@@ -309,10 +309,10 @@ $smoke: #5a3a2a;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(44, 24, 16, 0.06);
   border: 1px solid transparent;
   border-radius: 8px;
-  color: #C4B5A3;
+  color: #5a3a2a;
   cursor: pointer;
   transition: all 0.2s ease;
 
@@ -341,8 +341,8 @@ $smoke: #5a3a2a;
   justify-content: center;
   gap: 1rem;
   padding: 1.25rem;
-  background: #231C15;
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  background: #FFF8F0;
+  border-top: 1px solid rgba(44, 24, 16, 0.06);
   border-radius: 0 0 16px 16px;
 }
 
@@ -352,10 +352,10 @@ $smoke: #5a3a2a;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(44, 24, 16, 0.06);
   border: 1px solid transparent;
   border-radius: 10px;
-  color: #FAF5F0;
+  color: #2c1810;
   cursor: pointer;
   transition: all 0.2s ease;
 
@@ -378,7 +378,7 @@ $smoke: #5a3a2a;
 
 .pagination-info {
   font-size: 0.9rem;
-  color: #C4B5A3;
+  color: #5a3a2a;
   font-weight: 500;
 }
 
@@ -397,14 +397,14 @@ $smoke: #5a3a2a;
 }
 
 .modal-content {
-  background: #231C15;
+  background: #FFF8F0;
   border-radius: 20px;
   width: 100%;
   max-width: 500px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 25px 50px -12px rgba(44, 24, 16, 0.15);
   animation: slideUp 0.3s ease-out;
 
   &.modal-small {
@@ -428,7 +428,7 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: space-between;
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(44, 24, 16, 0.08);
   background: linear-gradient(135deg, $ember, $flame);
 
   h2 {
@@ -448,7 +448,7 @@ $smoke: #5a3a2a;
   background: rgba(255, 255, 255, 0.04);
   border: none;
   border-radius: 10px;
-  color: #C4B5A3;
+  color: #5a3a2a;
   cursor: pointer;
   transition: all 0.2s ease;
 
@@ -472,8 +472,8 @@ $smoke: #5a3a2a;
   justify-content: flex-end;
   gap: 0.75rem;
   padding: 1rem 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid rgba(44, 24, 16, 0.08);
+  background: rgba(44, 24, 16, 0.03);
 }
 
 // Delete warning
@@ -498,7 +498,7 @@ $smoke: #5a3a2a;
   }
 
   p {
-    color: #FAF5F0;
+    color: #2c1810;
     margin: 0 0 0.75rem 0;
     font-size: 0.95rem;
     line-height: 1.5;
@@ -509,7 +509,7 @@ $smoke: #5a3a2a;
   }
 
   .warning-note {
-    color: #C4B5A3;
+    color: #5a3a2a;
     font-size: 0.85rem;
   }
 }
@@ -535,11 +535,11 @@ $smoke: #5a3a2a;
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.06);
-  color: #C4B5A3;
+  background: rgba(44, 24, 16, 0.08);
+  color: #5a3a2a;
 
   &:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(44, 24, 16, 0.12);
   }
 }
 

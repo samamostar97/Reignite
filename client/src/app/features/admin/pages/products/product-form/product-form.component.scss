@@ -21,7 +21,7 @@ $smoke: #5a3a2a;
 .page-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #FAF5F0;
+  color: #2c1810;
   margin: 0.5rem 0 0 0;
 }
 
@@ -29,7 +29,7 @@ $smoke: #5a3a2a;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: #C4B5A3;
+  color: #5a3a2a;
   text-decoration: none;
   font-size: 0.9rem;
   font-weight: 500;
@@ -53,9 +53,9 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: center;
   padding: 3rem 2rem;
-  background: #231C15;
+  background: #FFF8F0;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(44, 24, 16, 0.06);
 
   .spinner {
     width: 44px;
@@ -67,7 +67,7 @@ $smoke: #5a3a2a;
   }
 
   p {
-    color: #C4B5A3;
+    color: #5a3a2a;
     margin-top: 1.25rem;
     font-size: 0.95rem;
   }
@@ -79,11 +79,11 @@ $smoke: #5a3a2a;
 
 // Form card
 .form-card {
-  background: #231C15;
+  background: #FFF8F0;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 1px 3px rgba(44, 24, 16, 0.06);
+  border: 1px solid rgba(44, 24, 16, 0.06);
 }
 
 // Two-column layout
@@ -135,8 +135,8 @@ $smoke: #5a3a2a;
   aspect-ratio: 1;
   border-radius: 10px;
   overflow: hidden;
-  background: linear-gradient(135deg, #1A1410 0%, #15110D 100%);
-  border: 2px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(135deg, #FAEBD7 0%, #FFF0E0 100%);
+  border: 2px solid rgba(44, 24, 16, 0.08);
 
   img {
     width: 100%;
@@ -150,7 +150,7 @@ $smoke: #5a3a2a;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #7A6B59;
+    color: #8b6b53;
 
     svg {
       width: 48px;
@@ -161,7 +161,7 @@ $smoke: #5a3a2a;
 
 .form-section {
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(44, 24, 16, 0.06);
 
   &:last-of-type {
     border-bottom: none;
@@ -173,7 +173,7 @@ $smoke: #5a3a2a;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #C4B5A3;
+  color: #5a3a2a;
   margin: 0 0 0.75rem 0;
 }
 
@@ -202,7 +202,7 @@ $smoke: #5a3a2a;
   display: block;
   font-size: 0.9rem;
   font-weight: 500;
-  color: #C4B5A3;
+  color: #5a3a2a;
   margin-bottom: 0.5rem;
 
   .required {
@@ -214,12 +214,12 @@ $smoke: #5a3a2a;
 .form-input {
   width: 100%;
   padding: 0.625rem 0.875rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(44, 24, 16, 0.12);
   border-radius: 8px;
   font-size: 0.95rem;
-  color: #FAF5F0;
+  color: #2c1810;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(44, 24, 16, 0.06);
 
   &:focus {
     outline: none;
@@ -236,7 +236,7 @@ $smoke: #5a3a2a;
   }
 
   &::placeholder {
-    color: #7A6B59;
+    color: #8b6b53;
   }
 }
 
@@ -248,13 +248,13 @@ $smoke: #5a3a2a;
 
 .form-select {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23C4B5A3'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m19.5 8.25-7.5 7.5-7.5-7.5'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%235a3a2a'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m19.5 8.25-7.5 7.5-7.5-7.5'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   background-size: 18px;
   padding-right: 2.75rem;
   cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.04);
+  background-color: rgba(44, 24, 16, 0.06);
 }
 
 .error-message {
@@ -309,8 +309,8 @@ $smoke: #5a3a2a;
   height: 120px;
   border-radius: 10px;
   overflow: hidden;
-  background: linear-gradient(135deg, #1A1410 0%, #15110D 100%);
-  border: 2px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(135deg, #FAEBD7 0%, #FFF0E0 100%);
+  border: 2px solid rgba(44, 24, 16, 0.08);
   position: relative;
 
   img {
@@ -326,7 +326,7 @@ $smoke: #5a3a2a;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: #7A6B59;
+    color: #8b6b53;
 
     svg {
       width: 36px;
@@ -375,7 +375,7 @@ $smoke: #5a3a2a;
 
   .upload-text {
     font-size: 0.85rem;
-    color: #FAF5F0;
+    color: #2c1810;
     margin-bottom: 0.125rem;
 
     strong {
@@ -385,7 +385,7 @@ $smoke: #5a3a2a;
 
   .upload-hint {
     font-size: 0.75rem;
-    color: #C4B5A3;
+    color: #5a3a2a;
     opacity: 0.7;
   }
 }
@@ -445,7 +445,7 @@ $smoke: #5a3a2a;
 
   span {
     font-size: 0.85rem;
-    color: #C4B5A3;
+    color: #5a3a2a;
   }
 }
 
@@ -455,21 +455,21 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: center;
   padding: 2.5rem 1.5rem;
-  background: linear-gradient(135deg, #1A1410 0%, #15110D 100%);
-  border: 2px dashed rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, #FAEBD7 0%, #FFF0E0 100%);
+  border: 2px dashed rgba(44, 24, 16, 0.12);
   border-radius: 12px;
   text-align: center;
 
   svg {
     width: 48px;
     height: 48px;
-    color: #7A6B59;
+    color: #8b6b53;
     margin-bottom: 1rem;
   }
 
   p {
     font-size: 0.9rem;
-    color: #C4B5A3;
+    color: #5a3a2a;
     margin: 0;
   }
 }
@@ -480,18 +480,18 @@ $smoke: #5a3a2a;
   justify-content: flex-end;
   gap: 0.75rem;
   padding: 1rem 1.5rem;
-  background: linear-gradient(to bottom, #1A1410, #15110D);
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  background: linear-gradient(to bottom, #FAEBD7, #FFF0E0);
+  border-top: 1px solid rgba(44, 24, 16, 0.06);
 }
 
 .btn-secondary {
   display: inline-flex;
   align-items: center;
   padding: 0.75rem 1.25rem;
-  background: rgba(255, 255, 255, 0.06);
-  color: #C4B5A3;
+  background: rgba(44, 24, 16, 0.08);
+  color: #5a3a2a;
   text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(44, 24, 16, 0.1);
   border-radius: 10px;
   font-weight: 500;
   font-size: 0.9rem;
@@ -499,7 +499,7 @@ $smoke: #5a3a2a;
   transition: background-color 0.15s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(44, 24, 16, 0.12);
   }
 }
 

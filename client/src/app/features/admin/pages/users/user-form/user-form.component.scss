@@ -21,7 +21,7 @@ $smoke: #5a3a2a;
 .page-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #FAF5F0;
+  color: #2c1810;
   margin: 0.5rem 0 0 0;
 }
 
@@ -29,7 +29,7 @@ $smoke: #5a3a2a;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: #C4B5A3;
+  color: #5a3a2a;
   text-decoration: none;
   font-size: 0.9rem;
   font-weight: 500;
@@ -53,9 +53,9 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: center;
   padding: 3rem 2rem;
-  background: #231C15;
+  background: #FFF8F0;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(44, 24, 16, 0.06);
 
   .spinner {
     width: 44px;
@@ -67,7 +67,7 @@ $smoke: #5a3a2a;
   }
 
   p {
-    color: #C4B5A3;
+    color: #5a3a2a;
     margin-top: 1.25rem;
     font-size: 0.95rem;
   }
@@ -79,11 +79,11 @@ $smoke: #5a3a2a;
 
 // Form card
 .form-card {
-  background: #231C15;
+  background: #FFF8F0;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 1px 3px rgba(44, 24, 16, 0.06);
+  border: 1px solid rgba(44, 24, 16, 0.06);
 }
 
 // Two-column layout
@@ -125,8 +125,8 @@ $smoke: #5a3a2a;
   aspect-ratio: 1;
   border-radius: 50%;
   overflow: hidden;
-  background: linear-gradient(135deg, #1A1410 0%, #15110D 100%);
-  border: 3px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(135deg, #FAEBD7 0%, #FFF0E0 100%);
+  border: 3px solid rgba(44, 24, 16, 0.08);
 
   img {
     width: 100%;
@@ -140,7 +140,7 @@ $smoke: #5a3a2a;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #7A6B59;
+    color: #8b6b53;
 
     svg {
       width: 64px;
@@ -160,7 +160,7 @@ $smoke: #5a3a2a;
   display: block;
   font-size: 0.9rem;
   font-weight: 500;
-  color: #C4B5A3;
+  color: #5a3a2a;
   margin-bottom: 0.5rem;
 
   .required {
@@ -172,12 +172,12 @@ $smoke: #5a3a2a;
 .form-input {
   width: 100%;
   padding: 0.625rem 0.875rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(44, 24, 16, 0.12);
   border-radius: 8px;
   font-size: 0.95rem;
-  color: #FAF5F0;
+  color: #2c1810;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(44, 24, 16, 0.06);
 
   &:focus {
     outline: none;
@@ -194,7 +194,7 @@ $smoke: #5a3a2a;
   }
 
   &::placeholder {
-    color: #7A6B59;
+    color: #8b6b53;
   }
 }
 
@@ -258,7 +258,7 @@ $smoke: #5a3a2a;
 
   span {
     font-size: 0.8rem;
-    color: #C4B5A3;
+    color: #5a3a2a;
   }
 }
 
@@ -318,7 +318,7 @@ $smoke: #5a3a2a;
 
   span {
     font-size: 0.8rem;
-    color: #C4B5A3;
+    color: #5a3a2a;
   }
 }
 
@@ -328,18 +328,18 @@ $smoke: #5a3a2a;
   justify-content: flex-end;
   gap: 0.75rem;
   padding: 1rem 1.5rem;
-  background: linear-gradient(to bottom, #1A1410, #15110D);
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  background: linear-gradient(to bottom, #FAEBD7, #FFF0E0);
+  border-top: 1px solid rgba(44, 24, 16, 0.06);
 }
 
 .btn-secondary {
   display: inline-flex;
   align-items: center;
   padding: 0.75rem 1.25rem;
-  background: rgba(255, 255, 255, 0.06);
-  color: #C4B5A3;
+  background: rgba(44, 24, 16, 0.08);
+  color: #5a3a2a;
   text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(44, 24, 16, 0.1);
   border-radius: 10px;
   font-weight: 500;
   font-size: 0.9rem;
@@ -347,7 +347,7 @@ $smoke: #5a3a2a;
   transition: background-color 0.15s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(44, 24, 16, 0.12);
   }
 }
 
@@ -402,7 +402,7 @@ $smoke: #5a3a2a;
 .section-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #FAF5F0;
+  color: #2c1810;
   margin: 0;
 }
 
@@ -437,13 +437,13 @@ $smoke: #5a3a2a;
   align-items: center;
   gap: 0.75rem;
   padding: 1rem;
-  color: #C4B5A3;
+  color: #5a3a2a;
   font-size: 0.9rem;
 }
 
 .address-display {
-  background: #1A1410;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #FAEBD7;
+  border: 1px solid rgba(44, 24, 16, 0.1);
   border-radius: 8px;
   padding: 1.5rem;
 }
@@ -454,7 +454,7 @@ $smoke: #5a3a2a;
   .info-row {
     display: flex;
     padding: 0.5rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(44, 24, 16, 0.08);
 
     &:last-child {
       border-bottom: none;
@@ -463,12 +463,12 @@ $smoke: #5a3a2a;
 
   .info-label {
     font-weight: 600;
-    color: #C4B5A3;
+    color: #5a3a2a;
     min-width: 150px;
   }
 
   .info-value {
-    color: #FAF5F0;
+    color: #2c1810;
     flex: 1;
   }
 }
@@ -477,7 +477,7 @@ $smoke: #5a3a2a;
   display: flex;
   gap: 0.75rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(44, 24, 16, 0.08);
 }
 
 .btn-danger {
@@ -507,7 +507,7 @@ $smoke: #5a3a2a;
 .empty-state-small {
   text-align: center;
   padding: 2rem;
-  color: #7A6B59;
+  color: #8b6b53;
 
   svg {
     margin: 0 auto 0.75rem;
@@ -532,14 +532,14 @@ $smoke: #5a3a2a;
 }
 
 .wishlist-item {
-  background: #1A1410;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #FAEBD7;
+  border: 1px solid rgba(44, 24, 16, 0.1);
   border-radius: 8px;
   overflow: hidden;
   transition: box-shadow 0.2s ease;
 
   &:hover {
-    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.06);
+    box-shadow: 0 2px 8px rgba(44, 24, 16, 0.08);
   }
 }
 
@@ -555,8 +555,8 @@ $smoke: #5a3a2a;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #15110D;
-  color: #7A6B59;
+  background: #FFF0E0;
+  color: #8b6b53;
 
   svg {
     width: 3rem;
@@ -571,7 +571,7 @@ $smoke: #5a3a2a;
 .product-name {
   font-size: 1rem;
   font-weight: 600;
-  color: #FAF5F0;
+  color: #2c1810;
   margin: 0 0 0.5rem;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -587,6 +587,6 @@ $smoke: #5a3a2a;
 
 .added-date {
   font-size: 0.875rem;
-  color: #C4B5A3;
+  color: #5a3a2a;
   margin: 0;
 }

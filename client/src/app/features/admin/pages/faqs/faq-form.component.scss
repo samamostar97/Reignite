@@ -26,7 +26,7 @@ $flame: #f7931e;
 .page-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #FAF5F0;
+  color: #2c1810;
   margin: 0;
 }
 
@@ -37,9 +37,9 @@ $flame: #f7931e;
   align-items: center;
   justify-content: center;
   padding: 5rem 2rem;
-  background: #231C15;
+  background: #FFF8F0;
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(44, 24, 16, 0.06);
 
   .spinner {
     width: 44px;
@@ -51,7 +51,7 @@ $flame: #f7931e;
   }
 
   p {
-    color: #C4B5A3;
+    color: #5a3a2a;
     margin-top: 1.25rem;
     font-size: 0.95rem;
   }
@@ -63,11 +63,11 @@ $flame: #f7931e;
 
 // Form container
 .form-container {
-  background: #231C15;
+  background: #FFF8F0;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 1px 3px rgba(44, 24, 16, 0.06);
+  border: 1px solid rgba(44, 24, 16, 0.06);
 }
 
 .form-grid {
@@ -88,25 +88,25 @@ $flame: #f7931e;
   display: block;
   font-size: 0.9rem;
   font-weight: 500;
-  color: #C4B5A3;
+  color: #5a3a2a;
   margin-bottom: 0.5rem;
 }
 
 .char-count {
   float: right;
   font-size: 0.8rem;
-  color: #7A6B59;
+  color: #8b6b53;
   font-weight: 400;
 }
 
 .form-input {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(44, 24, 16, 0.12);
   border-radius: 10px;
   font-size: 1rem;
-  color: #FAF5F0;
-  background: rgba(255, 255, 255, 0.04);
+  color: #2c1810;
+  background: rgba(44, 24, 16, 0.06);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 
   &:focus {
@@ -116,11 +116,11 @@ $flame: #f7931e;
   }
 
   &::placeholder {
-    color: #7A6B59;
+    color: #8b6b53;
   }
 
   &:disabled {
-    background: #1A1410;
+    background: #FAEBD7;
     cursor: not-allowed;
   }
 }
@@ -128,19 +128,19 @@ $flame: #f7931e;
 .form-textarea {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(44, 24, 16, 0.12);
   border-radius: 10px;
   font-family: inherit;
   font-size: 1rem;
   line-height: 1.5;
   resize: vertical;
   min-height: 120px;
-  background: rgba(255, 255, 255, 0.04);
-  color: #FAF5F0;
+  background: rgba(44, 24, 16, 0.06);
+  color: #2c1810;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 
   &::placeholder {
-    color: #7A6B59;
+    color: #8b6b53;
   }
 
   &:focus {
@@ -150,7 +150,7 @@ $flame: #f7931e;
   }
 
   &:disabled {
-    background: #1A1410;
+    background: #FAEBD7;
     cursor: not-allowed;
   }
 }
@@ -161,18 +161,18 @@ $flame: #f7931e;
   justify-content: flex-end;
   gap: 0.75rem;
   padding: 1rem 1.5rem;
-  background: linear-gradient(to bottom, #1A1410, #15110D);
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  background: linear-gradient(to bottom, #FAEBD7, #FFF0E0);
+  border-top: 1px solid rgba(44, 24, 16, 0.06);
 }
 
 .btn-secondary {
   display: inline-flex;
   align-items: center;
   padding: 0.75rem 1.25rem;
-  background: rgba(255, 255, 255, 0.06);
-  color: #C4B5A3;
+  background: rgba(44, 24, 16, 0.08);
+  color: #5a3a2a;
   text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(44, 24, 16, 0.1);
   border-radius: 10px;
   font-weight: 500;
   font-size: 0.9rem;
@@ -180,7 +180,7 @@ $flame: #f7931e;
   transition: background-color 0.15s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(44, 24, 16, 0.12);
   }
 
   &:disabled {
