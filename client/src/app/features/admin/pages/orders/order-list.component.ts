@@ -31,6 +31,10 @@ export class OrderListComponent implements OnInit, OnDestroy {
   protected readonly orderDetail = signal<OrderResponse | null>(null);
   protected readonly isLoadingDetail = signal(false);
 
+  // Status change confirmation state
+  protected readonly confirmingStatusChange = signal<{ orderId: number; newStatus: OrderStatus } | null>(null);
+  protected readonly isUpdatingStatus = signal(false);
+
   protected readonly totalPages = computed(() =>
     Math.ceil(this.totalCount() / this.pageSize())
   );
@@ -127,25 +131,64 @@ export class OrderListComponent implements OnInit, OnDestroy {
     }
   }
 
-  protected updateOrderStatus(orderId: number, newStatus: OrderStatus): void {
-    this.orderService.updateOrder(orderId, { status: newStatus }).subscribe({
+  protected requestStatusChange(orderId: number, newStatus: OrderStatus): void {
+    this.confirmingStatusChange.set({ orderId, newStatus });
+  }
+
+  protected confirmStatusChange(): void {
+    const change = this.confirmingStatusChange();
+    if (!change) return;
+
+    this.isUpdatingStatus.set(true);
+    this.orderService.updateOrder(change.orderId, { status: change.newStatus }).subscribe({
       next: (updatedOrder) => {
-        // Update the order in the list
         const orders = this.orders();
-        const index = orders.findIndex(o => o.id === orderId);
+        const index = orders.findIndex(o => o.id === change.orderId);
         if (index !== -1) {
           orders[index] = updatedOrder;
           this.orders.set([...orders]);
         }
-        // Update detail view if open
-        if (this.orderDetail()?.id === orderId) {
+        if (this.orderDetail()?.id === change.orderId) {
           this.orderDetail.set(updatedOrder);
         }
+        this.confirmingStatusChange.set(null);
+        this.isUpdatingStatus.set(false);
       },
       error: (error) => {
         console.error('Greška prilikom ažuriranja statusa:', error);
+        this.isUpdatingStatus.set(false);
       }
     });
+  }
+
+  protected cancelStatusChange(): void {
+    this.confirmingStatusChange.set(null);
+  }
+
+  protected getStatusActionLabel(status: OrderStatus): string {
+    switch (status) {
+      case OrderStatus.OnDelivery:
+        return 'Pošalji na dostavu';
+      case OrderStatus.Delivered:
+        return 'Označi dostavljeno';
+      case OrderStatus.Cancelled:
+        return 'Otkaži narudžbu';
+      default:
+        return '';
+    }
+  }
+
+  protected getStatusActionIcon(status: OrderStatus): string {
+    switch (status) {
+      case OrderStatus.OnDelivery:
+        return 'truck';
+      case OrderStatus.Delivered:
+        return 'check';
+      case OrderStatus.Cancelled:
+        return 'cancel';
+      default:
+        return '';
+    }
   }
 
   protected getAvailableStatuses(currentStatus: OrderStatus): OrderStatus[] {
