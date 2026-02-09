@@ -28,7 +28,7 @@ namespace Reignite.Infrastructure.Services
             _fileStorageService = fileStorageService;
         }
 
-        public override async Task<ProjectResponse> GetByIdAsync(int id)
+        public override async Task<ProjectResponse> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             var project = await _projectRepository.AsQueryable()
                 .Include(p => p.User)
@@ -36,7 +36,7 @@ namespace Reignite.Infrastructure.Services
                 .Include(p => p.Product)
                 .Include(p => p.Reviews)
                     .ThenInclude(r => r.User)
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 
             if (project == null)
                 throw new KeyNotFoundException("Projekat nije pronađen");
@@ -44,7 +44,7 @@ namespace Reignite.Infrastructure.Services
             return _mapper.Map<ProjectResponse>(project);
         }
 
-        public async Task<PagedResult<ProjectResponse>> GetTopRatedProjectsAsync(int pageNumber = 1, int pageSize = 3)
+        public async Task<PagedResult<ProjectResponse>> GetTopRatedProjectsAsync(int pageNumber = 1, int pageSize = 3, CancellationToken cancellationToken = default)
         {
             // Hard limit to 3 projects max for landing page display
             pageSize = Math.Min(pageSize, 3);
@@ -64,12 +64,12 @@ namespace Reignite.Infrastructure.Services
                 .OrderByDescending(x => x.AverageRating)
                 .ThenByDescending(x => x.ReviewCount);
 
-            var totalCount = await query.CountAsync();
+            var totalCount = await query.CountAsync(cancellationToken);
 
             var projects = await query
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             var items = projects.Select(x =>
             {
@@ -87,37 +87,37 @@ namespace Reignite.Infrastructure.Services
             };
         }
 
-        public async Task<ProjectResponse> UploadImageAsync(int projectId, FileUploadRequest fileRequest)
+        public async Task<ProjectResponse> UploadImageAsync(int projectId, FileUploadRequest fileRequest, CancellationToken cancellationToken = default)
         {
             var project = await _projectRepository.AsQueryable()
                 .Include(x => x.User)
                 .Include(x => x.Hobby)
                 .Include(x => x.Product)
                 .Include(x => x.Reviews)
-                .FirstOrDefaultAsync(x => x.Id == projectId);
+                .FirstOrDefaultAsync(x => x.Id == projectId, cancellationToken);
 
             if (project == null)
                 throw new KeyNotFoundException("Projekat nije pronađen");
 
             if (!string.IsNullOrEmpty(project.ImageUrl))
             {
-                await _fileStorageService.DeleteAsync(project.ImageUrl);
+                await _fileStorageService.DeleteAsync(project.ImageUrl, cancellationToken);
             }
 
-            var uploadResult = await _fileStorageService.UploadAsync(fileRequest, "projects", projectId.ToString());
+            var uploadResult = await _fileStorageService.UploadAsync(fileRequest, "projects", projectId.ToString(), cancellationToken);
 
             if (!uploadResult.Success)
                 throw new InvalidOperationException(uploadResult.ErrorMessage);
 
             project.ImageUrl = uploadResult.FileUrl;
-            await _projectRepository.UpdateAsync(project);
+            await _projectRepository.UpdateAsync(project, cancellationToken);
 
             return _mapper.Map<ProjectResponse>(project);
         }
 
-        public async Task<bool> DeleteImageAsync(int projectId)
+        public async Task<bool> DeleteImageAsync(int projectId, CancellationToken cancellationToken = default)
         {
-            var project = await _projectRepository.GetByIdAsync(projectId);
+            var project = await _projectRepository.GetByIdAsync(projectId, cancellationToken);
 
             if (project == null)
                 throw new KeyNotFoundException("Projekat nije pronađen");
@@ -125,19 +125,19 @@ namespace Reignite.Infrastructure.Services
             if (string.IsNullOrEmpty(project.ImageUrl))
                 return false;
 
-            var deleted = await _fileStorageService.DeleteAsync(project.ImageUrl);
+            var deleted = await _fileStorageService.DeleteAsync(project.ImageUrl, cancellationToken);
 
             project.ImageUrl = null;
-            await _projectRepository.UpdateAsync(project);
+            await _projectRepository.UpdateAsync(project, cancellationToken);
 
             return deleted;
         }
 
-        public async Task<bool> IsOwnerAsync(int projectId, int userId)
+        public async Task<bool> IsOwnerAsync(int projectId, int userId, CancellationToken cancellationToken = default)
         {
             return await _projectRepository.AsQueryable()
                 .AsNoTracking()
-                .AnyAsync(p => p.Id == projectId && p.UserId == userId);
+                .AnyAsync(p => p.Id == projectId && p.UserId == userId, cancellationToken);
         }
 
         protected override IQueryable<Project> ApplyFilter(IQueryable<Project> query, ProjectQueryFilter filter)
@@ -165,18 +165,18 @@ namespace Reignite.Infrastructure.Services
             return query;
         }
 
-        protected override async Task BeforeCreateAsync(Project entity, CreateProjectRequest dto)
+        protected override async Task BeforeCreateAsync(Project entity, CreateProjectRequest dto, CancellationToken cancellationToken = default)
         {
             // Check if user already has a project with the same title
             var exists = await _projectRepository.AsQueryable()
                 .AnyAsync(p => p.UserId == entity.UserId &&
-                              p.Title.ToLower() == entity.Title.ToLower());
+                              p.Title.ToLower() == entity.Title.ToLower(), cancellationToken);
 
             if (exists)
                 throw new InvalidOperationException("Već imate projekat sa istim nazivom");
         }
 
-        protected override async Task BeforeUpdateAsync(Project entity, UpdateProjectRequest dto)
+        protected override async Task BeforeUpdateAsync(Project entity, UpdateProjectRequest dto, CancellationToken cancellationToken = default)
         {
             // Only check if title is being changed
             if (!string.IsNullOrEmpty(dto.Title))
@@ -184,30 +184,30 @@ namespace Reignite.Infrastructure.Services
                 var exists = await _projectRepository.AsQueryable()
                     .AnyAsync(p => p.Id != entity.Id &&
                                   p.UserId == entity.UserId &&
-                                  p.Title.ToLower() == dto.Title.ToLower());
+                                  p.Title.ToLower() == dto.Title.ToLower(), cancellationToken);
 
                 if (exists)
                     throw new InvalidOperationException("Već imate projekat sa istim nazivom");
             }
         }
 
-        protected override async Task BeforeDeleteAsync(Project entity)
+        protected override async Task BeforeDeleteAsync(Project entity, CancellationToken cancellationToken = default)
         {
             if (!string.IsNullOrEmpty(entity.ImageUrl))
-                await _fileStorageService.DeleteAsync(entity.ImageUrl);
+                await _fileStorageService.DeleteAsync(entity.ImageUrl, cancellationToken);
         }
 
-        protected override async Task AfterCreateAsync(Project entity, CreateProjectRequest dto)
+        protected override async Task AfterCreateAsync(Project entity, CreateProjectRequest dto, CancellationToken cancellationToken = default)
         {
-            await LoadNavigationPropertiesAsync(entity);
+            await LoadNavigationPropertiesAsync(entity, cancellationToken);
         }
 
-        protected override async Task AfterUpdateAsync(Project entity, UpdateProjectRequest dto)
+        protected override async Task AfterUpdateAsync(Project entity, UpdateProjectRequest dto, CancellationToken cancellationToken = default)
         {
-            await LoadNavigationPropertiesAsync(entity);
+            await LoadNavigationPropertiesAsync(entity, cancellationToken);
         }
 
-        private async Task LoadNavigationPropertiesAsync(Project entity)
+        private async Task LoadNavigationPropertiesAsync(Project entity, CancellationToken cancellationToken = default)
         {
             // Reload entity with all navigation properties for proper mapping
             var loaded = await _projectRepository.AsQueryable()
@@ -215,7 +215,7 @@ namespace Reignite.Infrastructure.Services
                 .Include(p => p.Hobby)
                 .Include(p => p.Product)
                 .Include(p => p.Reviews)
-                .FirstOrDefaultAsync(p => p.Id == entity.Id);
+                .FirstOrDefaultAsync(p => p.Id == entity.Id, cancellationToken);
 
             if (loaded != null)
             {

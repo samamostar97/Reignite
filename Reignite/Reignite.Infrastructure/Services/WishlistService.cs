@@ -26,13 +26,13 @@ namespace Reignite.Infrastructure.Services
             _mapper = mapper;
         }
 
-        public async Task<WishlistResponse?> GetUserWishlistAsync(int userId)
+        public async Task<WishlistResponse?> GetUserWishlistAsync(int userId, CancellationToken cancellationToken = default)
         {
             var wishlist = await _wishlistRepository
                 .AsQueryable()
                 .Include(w => w.WishlistItems)
                     .ThenInclude(i => i.Product)
-                .FirstOrDefaultAsync(w => w.UserId == userId);
+                .FirstOrDefaultAsync(w => w.UserId == userId, cancellationToken);
 
             if (wishlist == null)
                 return null;
@@ -54,9 +54,9 @@ namespace Reignite.Infrastructure.Services
             return response;
         }
 
-        public async Task<WishlistItemResponse> AddItemAsync(int userId, int productId)
+        public async Task<WishlistItemResponse> AddItemAsync(int userId, int productId, CancellationToken cancellationToken = default)
         {
-            var product = await _productRepository.GetByIdAsync(productId);
+            var product = await _productRepository.GetByIdAsync(productId, cancellationToken);
             if (product == null)
                 throw new KeyNotFoundException("Proizvod nije pronađen.");
 
@@ -64,7 +64,7 @@ namespace Reignite.Infrastructure.Services
             var wishlist = await _wishlistRepository
                 .AsQueryable()
                 .Include(w => w.WishlistItems)
-                .FirstOrDefaultAsync(w => w.UserId == userId);
+                .FirstOrDefaultAsync(w => w.UserId == userId, cancellationToken);
 
             if (wishlist == null)
             {
@@ -73,7 +73,7 @@ namespace Reignite.Infrastructure.Services
                     UserId = userId,
                     CreatedAt = DateTime.UtcNow
                 };
-                await _wishlistRepository.AddAsync(wishlist);
+                await _wishlistRepository.AddAsync(wishlist, cancellationToken);
             }
 
             // Check if already in wishlist
@@ -89,7 +89,7 @@ namespace Reignite.Infrastructure.Services
                 UnitPrice = product.Price,
                 CreatedAt = DateTime.UtcNow
             };
-            await _wishlistItemRepository.AddAsync(item);
+            await _wishlistItemRepository.AddAsync(item, cancellationToken);
 
             return new WishlistItemResponse
             {
@@ -103,12 +103,12 @@ namespace Reignite.Infrastructure.Services
             };
         }
 
-        public async Task RemoveItemAsync(int userId, int productId)
+        public async Task RemoveItemAsync(int userId, int productId, CancellationToken cancellationToken = default)
         {
             var wishlist = await _wishlistRepository
                 .AsQueryable()
                 .Include(w => w.WishlistItems)
-                .FirstOrDefaultAsync(w => w.UserId == userId);
+                .FirstOrDefaultAsync(w => w.UserId == userId, cancellationToken);
 
             if (wishlist == null)
                 throw new KeyNotFoundException("Lista želja nije pronađena.");
@@ -117,7 +117,7 @@ namespace Reignite.Infrastructure.Services
             if (item == null)
                 throw new KeyNotFoundException("Proizvod nije na listi želja.");
 
-            await _wishlistItemRepository.DeleteAsync(item);
+            await _wishlistItemRepository.DeleteAsync(item, cancellationToken);
         }
     }
 }

@@ -17,13 +17,13 @@ namespace Reignite.Infrastructure.Services
             _productRepository = productRepository;
         }
 
-        public async Task<PaymentIntentResponse> CreatePaymentIntentAsync(List<CreateOrderItemRequest> items)
+        public async Task<PaymentIntentResponse> CreatePaymentIntentAsync(List<CreateOrderItemRequest> items, CancellationToken cancellationToken = default)
         {
             // Validate and calculate total from actual DB prices
             var productIds = items.Select(i => i.ProductId).Distinct().ToList();
             var products = await _productRepository.AsQueryable()
                 .Where(p => productIds.Contains(p.Id))
-                .ToDictionaryAsync(p => p.Id, p => p.Price);
+                .ToDictionaryAsync(p => p.Id, p => p.Price, cancellationToken);
 
             var missingProducts = productIds.Where(id => !products.ContainsKey(id)).ToList();
             if (missingProducts.Any())
@@ -50,7 +50,7 @@ namespace Reignite.Infrastructure.Services
             };
 
             var service = new PaymentIntentService();
-            var paymentIntent = await service.CreateAsync(options);
+            var paymentIntent = await service.CreateAsync(options, null, cancellationToken);
 
             return new PaymentIntentResponse
             {
@@ -60,10 +60,10 @@ namespace Reignite.Infrastructure.Services
             };
         }
 
-        public async Task<bool> VerifyPaymentAsync(string paymentIntentId)
+        public async Task<bool> VerifyPaymentAsync(string paymentIntentId, CancellationToken cancellationToken = default)
         {
             var service = new PaymentIntentService();
-            var paymentIntent = await service.GetAsync(paymentIntentId);
+            var paymentIntent = await service.GetAsync(paymentIntentId, null, null, cancellationToken);
             return paymentIntent.Status == "succeeded";
         }
     }

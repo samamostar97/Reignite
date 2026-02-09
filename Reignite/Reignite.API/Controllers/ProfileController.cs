@@ -33,26 +33,26 @@ namespace Reignite.API.Controllers
 
         // GET api/profile
         [HttpGet]
-        public async Task<ActionResult<UserResponse>> GetProfile()
+        public async Task<ActionResult<UserResponse>> GetProfile(CancellationToken cancellationToken = default)
         {
             var userId = GetCurrentUserId();
-            var user = await _userService.GetByIdAsync(userId);
+            var user = await _userService.GetByIdAsync(userId, cancellationToken);
             return Ok(user);
         }
 
         // PUT api/profile
         [HttpPut]
-        public async Task<ActionResult<UserResponse>> UpdateProfile([FromBody] UpdateUserRequest request)
+        public async Task<ActionResult<UserResponse>> UpdateProfile([FromBody] UpdateUserRequest request, CancellationToken cancellationToken = default)
         {
             var userId = GetCurrentUserId();
             request.ProfileImageUrl = null; // Image is handled by separate endpoint
-            var user = await _userService.UpdateAsync(userId, request);
+            var user = await _userService.UpdateAsync(userId, request, cancellationToken);
             return Ok(user);
         }
 
         // POST api/profile/image
         [HttpPost("image")]
-        public async Task<ActionResult<UserResponse>> UploadImage(IFormFile image)
+        public async Task<ActionResult<UserResponse>> UploadImage(IFormFile image, CancellationToken cancellationToken = default)
         {
             if (image == null || image.Length == 0)
                 return BadRequest("Slika nije proslijeđena.");
@@ -68,39 +68,39 @@ namespace Reignite.API.Controllers
                 FileSize = image.Length
             };
 
-            var result = await _userService.UploadImageAsync(userId, fileRequest);
+            var result = await _userService.UploadImageAsync(userId, fileRequest, cancellationToken);
             return Ok(result);
         }
 
         // DELETE api/profile/image
         [HttpDelete("image")]
-        public async Task<ActionResult> DeleteImage()
+        public async Task<ActionResult> DeleteImage(CancellationToken cancellationToken = default)
         {
             var userId = GetCurrentUserId();
-            await _userService.DeleteImageAsync(userId);
+            await _userService.DeleteImageAsync(userId, cancellationToken);
             return NoContent();
         }
 
         // PUT api/profile/password
         [HttpPut("password")]
-        public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+        public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordRequest request, CancellationToken cancellationToken = default)
         {
             var userId = GetCurrentUserId();
 
-            var isValid = await _userService.VerifyPasswordAsync(userId, request.CurrentPassword);
+            var isValid = await _userService.VerifyPasswordAsync(userId, request.CurrentPassword, cancellationToken);
             if (!isValid)
                 return BadRequest("Trenutna lozinka nije ispravna.");
 
-            await _userService.ChangePasswordAsync(userId, request.NewPassword);
+            await _userService.ChangePasswordAsync(userId, request.NewPassword, cancellationToken);
             return Ok(new { message = "Lozinka uspješno promijenjena." });
         }
 
         // GET api/profile/address
         [HttpGet("address")]
-        public async Task<ActionResult<UserAddressResponse>> GetAddress()
+        public async Task<ActionResult<UserAddressResponse>> GetAddress(CancellationToken cancellationToken = default)
         {
             var userId = GetCurrentUserId();
-            var address = await _userService.GetUserAddressAsync(userId);
+            var address = await _userService.GetUserAddressAsync(userId, cancellationToken);
             if (address == null)
                 return NotFound("Nemate dodatu adresu.");
 
@@ -109,28 +109,28 @@ namespace Reignite.API.Controllers
 
         // POST api/profile/address
         [HttpPost("address")]
-        public async Task<ActionResult<UserAddressResponse>> CreateAddress([FromBody] CreateUserAddressRequest request)
+        public async Task<ActionResult<UserAddressResponse>> CreateAddress([FromBody] CreateUserAddressRequest request, CancellationToken cancellationToken = default)
         {
             var userId = GetCurrentUserId();
-            var address = await _userService.CreateUserAddressAsync(userId, request);
+            var address = await _userService.CreateUserAddressAsync(userId, request, cancellationToken);
             return Created($"/api/profile/address", address);
         }
 
         // PUT api/profile/address
         [HttpPut("address")]
-        public async Task<ActionResult<UserAddressResponse>> UpdateAddress([FromBody] UpdateUserAddressRequest request)
+        public async Task<ActionResult<UserAddressResponse>> UpdateAddress([FromBody] UpdateUserAddressRequest request, CancellationToken cancellationToken = default)
         {
             var userId = GetCurrentUserId();
-            var address = await _userService.UpdateUserAddressAsync(userId, request);
+            var address = await _userService.UpdateUserAddressAsync(userId, request, cancellationToken);
             return Ok(address);
         }
 
         // DELETE api/profile/address
         [HttpDelete("address")]
-        public async Task<ActionResult> DeleteAddress()
+        public async Task<ActionResult> DeleteAddress(CancellationToken cancellationToken = default)
         {
             var userId = GetCurrentUserId();
-            await _userService.DeleteUserAddressAsync(userId);
+            await _userService.DeleteUserAddressAsync(userId, cancellationToken);
             return NoContent();
         }
 
@@ -138,7 +138,8 @@ namespace Reignite.API.Controllers
         [HttpGet("orders")]
         public async Task<ActionResult<PagedResult<OrderResponse>>> GetOrders(
             [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 10)
+            [FromQuery] int pageSize = 10,
+            CancellationToken cancellationToken = default)
         {
             var userId = GetCurrentUserId();
             var filter = new OrderQueryFilter
@@ -147,72 +148,72 @@ namespace Reignite.API.Controllers
                 PageSize = pageSize,
                 UserId = userId
             };
-            var orders = await _orderService.GetPagedAsync(filter);
+            var orders = await _orderService.GetPagedAsync(filter, cancellationToken);
             return Ok(orders);
         }
 
         // GET api/profile/hobbies
         [HttpGet("hobbies")]
-        public async Task<ActionResult<List<UserHobbyResponse>>> GetHobbies()
+        public async Task<ActionResult<List<UserHobbyResponse>>> GetHobbies(CancellationToken cancellationToken = default)
         {
             var userId = GetCurrentUserId();
-            var hobbies = await _userService.GetUserHobbiesAsync(userId);
+            var hobbies = await _userService.GetUserHobbiesAsync(userId, cancellationToken);
             return Ok(hobbies);
         }
 
         // POST api/profile/hobbies
         [HttpPost("hobbies")]
-        public async Task<ActionResult<UserHobbyResponse>> AddHobby([FromBody] AddUserHobbyRequest request)
+        public async Task<ActionResult<UserHobbyResponse>> AddHobby([FromBody] AddUserHobbyRequest request, CancellationToken cancellationToken = default)
         {
             var userId = GetCurrentUserId();
-            var hobby = await _userService.AddUserHobbyAsync(userId, request);
+            var hobby = await _userService.AddUserHobbyAsync(userId, request, cancellationToken);
             return Created($"/api/profile/hobbies", hobby);
         }
 
         // DELETE api/profile/hobbies/{hobbyId}
         [HttpDelete("hobbies/{hobbyId}")]
-        public async Task<ActionResult> DeleteHobby(int hobbyId)
+        public async Task<ActionResult> DeleteHobby(int hobbyId, CancellationToken cancellationToken = default)
         {
             var userId = GetCurrentUserId();
-            await _userService.DeleteUserHobbyAsync(userId, hobbyId);
+            await _userService.DeleteUserHobbyAsync(userId, hobbyId, cancellationToken);
             return NoContent();
         }
 
         // GET api/profile/wishlist
         [HttpGet("wishlist")]
-        public async Task<ActionResult<WishlistResponse>> GetWishlist()
+        public async Task<ActionResult<WishlistResponse>> GetWishlist(CancellationToken cancellationToken = default)
         {
             var userId = GetCurrentUserId();
-            var wishlist = await _wishlistService.GetUserWishlistAsync(userId);
+            var wishlist = await _wishlistService.GetUserWishlistAsync(userId, cancellationToken);
             return Ok(wishlist ?? new WishlistResponse { UserId = userId, Items = new List<WishlistItemResponse>() });
         }
 
         // POST api/profile/wishlist/{productId}
         [HttpPost("wishlist/{productId}")]
-        public async Task<ActionResult<WishlistItemResponse>> AddToWishlist(int productId)
+        public async Task<ActionResult<WishlistItemResponse>> AddToWishlist(int productId, CancellationToken cancellationToken = default)
         {
             var userId = GetCurrentUserId();
-            var item = await _wishlistService.AddItemAsync(userId, productId);
+            var item = await _wishlistService.AddItemAsync(userId, productId, cancellationToken);
             return Created($"/api/profile/wishlist", item);
         }
 
         // DELETE api/profile/wishlist/{productId}
         [HttpDelete("wishlist/{productId}")]
-        public async Task<ActionResult> RemoveFromWishlist(int productId)
+        public async Task<ActionResult> RemoveFromWishlist(int productId, CancellationToken cancellationToken = default)
         {
             var userId = GetCurrentUserId();
-            await _wishlistService.RemoveItemAsync(userId, productId);
+            await _wishlistService.RemoveItemAsync(userId, productId, cancellationToken);
             return NoContent();
         }
 
         // POST api/profile/checkout
         [HttpPost("checkout")]
-        public async Task<ActionResult<OrderResponse>> Checkout([FromBody] CheckoutRequest request)
+        public async Task<ActionResult<OrderResponse>> Checkout([FromBody] CheckoutRequest request, CancellationToken cancellationToken = default)
         {
             var userId = GetCurrentUserId();
 
             // Verify Stripe payment before creating order
-            var paymentVerified = await _paymentService.VerifyPaymentAsync(request.StripePaymentIntentId);
+            var paymentVerified = await _paymentService.VerifyPaymentAsync(request.StripePaymentIntentId, cancellationToken);
             if (!paymentVerified)
                 return BadRequest("Plaćanje nije uspjelo. Molimo pokušajte ponovo.");
 
@@ -222,7 +223,7 @@ namespace Reignite.API.Controllers
                 Items = request.Items,
                 StripePaymentIntentId = request.StripePaymentIntentId
             };
-            var order = await _orderService.CreateAsync(createOrderRequest);
+            var order = await _orderService.CreateAsync(createOrderRequest, cancellationToken);
             return Created($"/api/profile/orders", order);
         }
     }

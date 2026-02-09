@@ -23,73 +23,73 @@ namespace Reignite.API.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public override Task<ActionResult<PagedResult<ProjectReviewResponse>>> GetAllPagedAsync([FromQuery] ProjectReviewQueryFilter filter)
-            => base.GetAllPagedAsync(filter);
+        public override Task<ActionResult<PagedResult<ProjectReviewResponse>>> GetAllPagedAsync([FromQuery] ProjectReviewQueryFilter filter, CancellationToken cancellationToken = default)
+            => base.GetAllPagedAsync(filter, cancellationToken);
 
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public override Task<ActionResult<ProjectReviewResponse>> GetById(int id)
-            => base.GetById(id);
+        public override Task<ActionResult<ProjectReviewResponse>> GetById(int id, CancellationToken cancellationToken = default)
+            => base.GetById(id, cancellationToken);
 
         [AllowAnonymous]
         [HttpGet("project/{projectId}")]
-        public async Task<ActionResult<PagedResult<ProjectReviewResponse>>> GetByProjectId(int projectId, [FromQuery] PaginationRequest pagination)
+        public async Task<ActionResult<PagedResult<ProjectReviewResponse>>> GetByProjectId(int projectId, [FromQuery] PaginationRequest pagination, CancellationToken cancellationToken = default)
         {
-            var result = await _projectReviewService.GetByProjectIdAsync(projectId, pagination);
+            var result = await _projectReviewService.GetByProjectIdAsync(projectId, pagination, cancellationToken);
             return Ok(result);
         }
 
         [AllowAnonymous]
         [HttpGet("project/{projectId}/average-rating")]
-        public async Task<ActionResult<double>> GetAverageRating(int projectId)
+        public async Task<ActionResult<double>> GetAverageRating(int projectId, CancellationToken cancellationToken = default)
         {
-            var rating = await _projectReviewService.GetAverageRatingAsync(projectId);
+            var rating = await _projectReviewService.GetAverageRatingAsync(projectId, cancellationToken);
             return Ok(rating);
         }
 
         [Authorize]
         [HttpGet("project/{projectId}/has-reviewed")]
-        public async Task<ActionResult<bool>> HasUserReviewed(int projectId)
+        public async Task<ActionResult<bool>> HasUserReviewed(int projectId, CancellationToken cancellationToken = default)
         {
             var userId = GetCurrentUserId();
-            var hasReviewed = await _projectReviewService.HasUserReviewedAsync(userId, projectId);
+            var hasReviewed = await _projectReviewService.HasUserReviewedAsync(userId, projectId, cancellationToken);
             return Ok(hasReviewed);
         }
 
         [Authorize]
         [HttpPost]
-        public override async Task<ActionResult<ProjectReviewResponse>> Create([FromBody] CreateProjectReviewRequest dto)
+        public override async Task<ActionResult<ProjectReviewResponse>> Create([FromBody] CreateProjectReviewRequest dto, CancellationToken cancellationToken = default)
         {
             var userId = GetCurrentUserId();
-            var result = await _projectReviewService.CreateForUserAsync(userId, dto);
+            var result = await _projectReviewService.CreateForUserAsync(userId, dto, cancellationToken);
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
 
         [Authorize]
         [HttpPut("{id}")]
-        public override async Task<ActionResult<ProjectReviewResponse>> Update(int id, [FromBody] UpdateProjectReviewRequest dto)
+        public override async Task<ActionResult<ProjectReviewResponse>> Update(int id, [FromBody] UpdateProjectReviewRequest dto, CancellationToken cancellationToken = default)
         {
             var userId = GetCurrentUserId();
-            var existing = await _projectReviewService.GetByIdAsync(id);
+            var existing = await _projectReviewService.GetByIdAsync(id, cancellationToken);
 
             if (existing.UserId != userId)
                 return Forbid();
 
-            return await base.Update(id, dto);
+            return await base.Update(id, dto, cancellationToken);
         }
 
         [Authorize]
         [HttpDelete("{id}")]
-        public override async Task<ActionResult> Delete(int id)
+        public override async Task<ActionResult> Delete(int id, CancellationToken cancellationToken = default)
         {
             var userId = GetCurrentUserId();
-            var existing = await _projectReviewService.GetByIdAsync(id);
+            var existing = await _projectReviewService.GetByIdAsync(id, cancellationToken);
 
             var isAdmin = User.IsInRole("Admin");
             if (existing.UserId != userId && !isAdmin)
                 return Forbid();
 
-            return await base.Delete(id);
+            return await base.Delete(id, cancellationToken);
         }
 
         private int GetCurrentUserId()

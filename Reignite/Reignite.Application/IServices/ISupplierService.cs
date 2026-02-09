@@ -7,6 +7,6 @@ namespace Reignite.Application.IServices
 {
     public interface ISupplierService : IService<Supplier, SupplierResponse, CreateSupplierRequest, UpdateSupplierRequest, SupplierQueryFilter, int>
     {
-        Task<List<SupplierResponse>> GetAllAsync();
+        Task<List<SupplierResponse>> GetAllAsync(CancellationToken cancellationToken = default);
     }
 }

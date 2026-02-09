@@ -18,23 +18,23 @@ namespace Reignite.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<AuthResponse>> Register([FromBody] RegisterRequest request)
+        public async Task<ActionResult<AuthResponse>> Register([FromBody] RegisterRequest request, CancellationToken cancellationToken = default)
         {
-                var response = await _authService.RegisterAsync(request);
+                var response = await _authService.RegisterAsync(request, cancellationToken);
                 return Ok(response);
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<AuthResponse>> Login([FromBody] LoginRequest request)
+        public async Task<ActionResult<AuthResponse>> Login([FromBody] LoginRequest request, CancellationToken cancellationToken = default)
         {
-                var response = await _authService.LoginAsync(request);
+                var response = await _authService.LoginAsync(request, cancellationToken);
                 return Ok(response);
         }
 
         [HttpPost("refresh")]
-        public async Task<ActionResult<AuthResponse>> Refresh([FromBody] RefreshRequest request)
+        public async Task<ActionResult<AuthResponse>> Refresh([FromBody] RefreshRequest request, CancellationToken cancellationToken = default)
         {
-                var response = await _authService.RefreshTokenAsync(request);
+                var response = await _authService.RefreshTokenAsync(request, cancellationToken);
                 return Ok(response);
         }
     }

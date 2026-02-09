@@ -7,6 +7,6 @@ namespace Reignite.Application.IServices
 {
     public interface IHobbyService : IService<Hobby, HobbyResponse, CreateHobbyRequest, UpdateHobbyRequest, HobbyQueryFilter, int>
     {
-        Task<List<HobbyResponse>> GetAllAsync();
+        Task<List<HobbyResponse>> GetAllAsync(CancellationToken cancellationToken = default);
     }
 }

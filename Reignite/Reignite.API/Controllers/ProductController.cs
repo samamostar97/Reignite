@@ -22,13 +22,13 @@ namespace Reignite.API.Controllers
         }
         [AllowAnonymous]
         [HttpGet]
-        public override Task<ActionResult<PagedResult<ProductResponse>>> GetAllPagedAsync([FromQuery] ProductQueryFilter filter) => base.GetAllPagedAsync(filter);
+        public override Task<ActionResult<PagedResult<ProductResponse>>> GetAllPagedAsync([FromQuery] ProductQueryFilter filter, CancellationToken cancellationToken = default) => base.GetAllPagedAsync(filter, cancellationToken);
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public override Task<ActionResult<ProductResponse>> GetById(int id) => base.GetById(id);
+        public override Task<ActionResult<ProductResponse>> GetById(int id, CancellationToken cancellationToken = default) => base.GetById(id, cancellationToken);
 
         [HttpPost]
-        public override async Task<ActionResult<ProductResponse>> Create([FromForm] CreateProductRequest dto)
+        public override async Task<ActionResult<ProductResponse>> Create([FromForm] CreateProductRequest dto, CancellationToken cancellationToken = default)
         {
             var image = Request.Form.Files.Count > 0 ? Request.Form.Files[0] : null;
             FileUploadRequest? fileRequest = null;
@@ -48,7 +48,7 @@ namespace Reignite.API.Controllers
                     };
                 }
 
-                var result = await _productService.CreateWithImageAsync(dto, fileRequest);
+                var result = await _productService.CreateWithImageAsync(dto, fileRequest, cancellationToken);
                 return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
             }
             finally
@@ -59,9 +59,9 @@ namespace Reignite.API.Controllers
 
         [AllowAnonymous]
         [HttpGet("best-selling")]
-        public async Task<ActionResult<List<ProductResponse>>> GetBestSelling([FromQuery] int count = 5)
+        public async Task<ActionResult<List<ProductResponse>>> GetBestSelling([FromQuery] int count = 5, CancellationToken cancellationToken = default)
         {
-            var products = await _productService.GetBestSellingAsync(count);
+            var products = await _productService.GetBestSellingAsync(count, cancellationToken);
             return Ok(products);
         }
     }

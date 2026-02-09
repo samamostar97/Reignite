@@ -18,22 +18,22 @@ namespace Reignite.Infrastructure.Services
         {
         }
 
-        protected override async Task BeforeCreateAsync(ProductReview entity, CreateProductReviewRequest dto)
+        protected override async Task BeforeCreateAsync(ProductReview entity, CreateProductReviewRequest dto, CancellationToken cancellationToken = default)
         {
             if (entity.UserId > 0)
             {
                 var exists = await _repository.AsQueryable()
-                    .AnyAsync(r => r.UserId == entity.UserId && r.ProductId == entity.ProductId);
+                    .AnyAsync(r => r.UserId == entity.UserId && r.ProductId == entity.ProductId, cancellationToken);
 
                 if (exists)
                     throw new InvalidOperationException("Već ste ostavili recenziju za ovaj proizvod.");
             }
         }
 
-        public async Task<ProductReviewResponse> CreateForUserAsync(int userId, CreateProductReviewRequest dto)
+        public async Task<ProductReviewResponse> CreateForUserAsync(int userId, CreateProductReviewRequest dto, CancellationToken cancellationToken = default)
         {
             var existingReview = await _repository.AsQueryable()
-                .AnyAsync(r => r.UserId == userId && r.ProductId == dto.ProductId);
+                .AnyAsync(r => r.UserId == userId && r.ProductId == dto.ProductId, cancellationToken);
 
             if (existingReview)
                 throw new InvalidOperationException("Već ste ostavili recenziju za ovaj proizvod.");
@@ -46,17 +46,17 @@ namespace Reignite.Infrastructure.Services
                 Comment = dto.Comment
             };
 
-            await _repository.AddAsync(review);
+            await _repository.AddAsync(review, cancellationToken);
 
             var result = await _repository.AsQueryable()
                 .Include(r => r.User)
                 .Include(r => r.Product)
-                .FirstOrDefaultAsync(r => r.Id == review.Id);
+                .FirstOrDefaultAsync(r => r.Id == review.Id, cancellationToken);
 
             return MapToResponse(result!);
         }
 
-        public async Task<PagedResult<ProductReviewResponse>> GetByProductIdAsync(int productId, PaginationRequest pagination)
+        public async Task<PagedResult<ProductReviewResponse>> GetByProductIdAsync(int productId, PaginationRequest pagination, CancellationToken cancellationToken = default)
         {
             var query = _repository.AsQueryable()
                 .Include(r => r.User)
@@ -64,11 +64,11 @@ namespace Reignite.Infrastructure.Services
                 .Where(r => r.ProductId == productId)
                 .OrderByDescending(r => r.CreatedAt);
 
-            var totalCount = await query.CountAsync();
+            var totalCount = await query.CountAsync(cancellationToken);
             var items = await query
                 .Skip((pagination.PageNumber - 1) * pagination.PageSize)
                 .Take(pagination.PageSize)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return new PagedResult<ProductReviewResponse>
             {
@@ -78,11 +78,11 @@ namespace Reignite.Infrastructure.Services
             };
         }
 
-        public async Task<double> GetAverageRatingAsync(int productId)
+        public async Task<double> GetAverageRatingAsync(int productId, CancellationToken cancellationToken = default)
         {
             var reviews = await _repository.AsQueryable()
                 .Where(r => r.ProductId == productId)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             if (!reviews.Any())
                 return 0;
@@ -90,10 +90,10 @@ namespace Reignite.Infrastructure.Services
             return reviews.Average(r => r.Rating);
         }
 
-        public async Task<bool> HasUserReviewedAsync(int userId, int productId)
+        public async Task<bool> HasUserReviewedAsync(int userId, int productId, CancellationToken cancellationToken = default)
         {
             return await _repository.AsQueryable()
-                .AnyAsync(r => r.UserId == userId && r.ProductId == productId);
+                .AnyAsync(r => r.UserId == userId && r.ProductId == productId, cancellationToken);
         }
 
         protected override IQueryable<ProductReview> ApplyFilter(IQueryable<ProductReview> query, ProductReviewQueryFilter filter)
@@ -127,12 +127,12 @@ namespace Reignite.Infrastructure.Services
             return query.OrderByDescending(r => r.CreatedAt);
         }
 
-        public override async Task<ProductReviewResponse> GetByIdAsync(int id)
+        public override async Task<ProductReviewResponse> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             var entity = await _repository.AsQueryable()
                 .Include(r => r.User)
                 .Include(r => r.Product)
-                .FirstOrDefaultAsync(r => r.Id == id);
+                .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
 
             if (entity == null)
                 throw new KeyNotFoundException($"Recenzija sa id '{id}' nije pronađena.");
@@ -140,16 +140,16 @@ namespace Reignite.Infrastructure.Services
             return MapToResponse(entity);
         }
 
-        public override async Task<PagedResult<ProductReviewResponse>> GetPagedAsync(ProductReviewQueryFilter filter)
+        public override async Task<PagedResult<ProductReviewResponse>> GetPagedAsync(ProductReviewQueryFilter filter, CancellationToken cancellationToken = default)
         {
             var query = _repository.AsQueryable();
             query = ApplyFilter(query, filter);
 
-            var totalCount = await query.CountAsync();
+            var totalCount = await query.CountAsync(cancellationToken);
             var items = await query
                 .Skip((filter.PageNumber - 1) * filter.PageSize)
                 .Take(filter.PageSize)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return new PagedResult<ProductReviewResponse>
             {
@@ -159,12 +159,12 @@ namespace Reignite.Infrastructure.Services
             };
         }
 
-        protected override async Task AfterCreateAsync(ProductReview entity, CreateProductReviewRequest dto)
+        protected override async Task AfterCreateAsync(ProductReview entity, CreateProductReviewRequest dto, CancellationToken cancellationToken = default)
         {
             var loaded = await _repository.AsQueryable()
                 .Include(r => r.User)
                 .Include(r => r.Product)
-                .FirstOrDefaultAsync(r => r.Id == entity.Id);
+                .FirstOrDefaultAsync(r => r.Id == entity.Id, cancellationToken);
 
             if (loaded != null)
             {
@@ -173,12 +173,12 @@ namespace Reignite.Infrastructure.Services
             }
         }
 
-        protected override async Task AfterUpdateAsync(ProductReview entity, UpdateProductReviewRequest dto)
+        protected override async Task AfterUpdateAsync(ProductReview entity, UpdateProductReviewRequest dto, CancellationToken cancellationToken = default)
         {
             var loaded = await _repository.AsQueryable()
                 .Include(r => r.User)
                 .Include(r => r.Product)
-                .FirstOrDefaultAsync(r => r.Id == entity.Id);
+                .FirstOrDefaultAsync(r => r.Id == entity.Id, cancellationToken);
 
             if (loaded != null)
             {

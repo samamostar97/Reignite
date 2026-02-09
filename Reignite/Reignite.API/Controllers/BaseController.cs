@@ -16,21 +16,21 @@ namespace Reignite.API.Controllers
             _service = service;
         }
         [HttpGet]
-        public virtual async Task<ActionResult<PagedResult<TDto>>> GetAllPagedAsync([FromQuery] TQueryFilter filter)
+        public virtual async Task<ActionResult<PagedResult<TDto>>> GetAllPagedAsync([FromQuery] TQueryFilter filter, CancellationToken cancellationToken = default)
         {
-            var list = await _service.GetPagedAsync(filter);
+            var list = await _service.GetPagedAsync(filter, cancellationToken);
             return Ok(list);
         }
         [HttpGet("{id}")]
-        public virtual async Task<ActionResult<TDto>> GetById(TKey id)
+        public virtual async Task<ActionResult<TDto>> GetById(TKey id, CancellationToken cancellationToken = default)
         {
-            var result = await _service.GetByIdAsync(id);
+            var result = await _service.GetByIdAsync(id, cancellationToken);
             return Ok(result);
         }
         [HttpPost]
-        public virtual async Task<ActionResult<TDto>> Create([FromBody] TCreateDto dto)
+        public virtual async Task<ActionResult<TDto>> Create([FromBody] TCreateDto dto, CancellationToken cancellationToken = default)
         {
-            var result = await _service.CreateAsync(dto);
+            var result = await _service.CreateAsync(dto, cancellationToken);
 
             var idProp = result!.GetType().GetProperty("Id");
             var id = idProp?.GetValue(result);
@@ -38,15 +38,15 @@ namespace Reignite.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id }, result);
         }
         [HttpPut("{id}")]
-        public virtual async Task<ActionResult<TDto>> Update(TKey id, [FromBody] TUpdateDto dto)
+        public virtual async Task<ActionResult<TDto>> Update(TKey id, [FromBody] TUpdateDto dto, CancellationToken cancellationToken = default)
         {
-            var result = await _service.UpdateAsync(id, dto);
+            var result = await _service.UpdateAsync(id, dto, cancellationToken);
             return Ok(result);
         }
         [HttpDelete("{id}")]
-        public virtual async Task<ActionResult> Delete(TKey id)
+        public virtual async Task<ActionResult> Delete(TKey id, CancellationToken cancellationToken = default)
         {
-            await _service.DeleteAsync(id);
+            await _service.DeleteAsync(id, cancellationToken);
             return NoContent();
         }
     }

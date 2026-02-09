@@ -24,7 +24,7 @@ namespace Reignite.Infrastructure.Services
             _projectRepository = projectRepository;
         }
 
-        public async Task<PagedResult<ActivityResponse>> GetPagedAsync(ActivityQueryFilter filter)
+        public async Task<PagedResult<ActivityResponse>> GetPagedAsync(ActivityQueryFilter filter, CancellationToken cancellationToken = default)
         {
             var activities = new List<ActivityResponse>();
 
@@ -39,13 +39,13 @@ namespace Reignite.Infrastructure.Services
 
             // Get counts for total calculation (lightweight queries)
             var productReviewCount = includeProductReviews
-                ? await _productReviewRepository.AsQueryable().AsNoTracking().CountAsync()
+                ? await _productReviewRepository.AsQueryable().AsNoTracking().CountAsync(cancellationToken)
                 : 0;
             var projectReviewCount = includeProjectReviews
-                ? await _projectReviewRepository.AsQueryable().AsNoTracking().CountAsync()
+                ? await _projectReviewRepository.AsQueryable().AsNoTracking().CountAsync(cancellationToken)
                 : 0;
             var projectCount = includeNewProjects
-                ? await _projectRepository.AsQueryable().AsNoTracking().CountAsync()
+                ? await _projectRepository.AsQueryable().AsNoTracking().CountAsync(cancellationToken)
                 : 0;
 
             var totalCount = productReviewCount + projectReviewCount + projectCount;
@@ -58,7 +58,7 @@ namespace Reignite.Infrastructure.Services
                     .Include(r => r.Product)
                     .OrderByDescending(r => r.CreatedAt)
                     .Take(maxRecordsNeeded)
-                    .ToListAsync();
+                    .ToListAsync(cancellationToken);
 
                 activities.AddRange(productReviews.Select(r => new ActivityResponse
                 {
@@ -84,7 +84,7 @@ namespace Reignite.Infrastructure.Services
                     .Include(r => r.Project)
                     .OrderByDescending(r => r.CreatedAt)
                     .Take(maxRecordsNeeded)
-                    .ToListAsync();
+                    .ToListAsync(cancellationToken);
 
                 activities.AddRange(projectReviews.Select(r => new ActivityResponse
                 {
@@ -110,7 +110,7 @@ namespace Reignite.Infrastructure.Services
                     .Include(p => p.Hobby)
                     .OrderByDescending(p => p.CreatedAt)
                     .Take(maxRecordsNeeded)
-                    .ToListAsync();
+                    .ToListAsync(cancellationToken);
 
                 activities.AddRange(projects.Select(p => new ActivityResponse
                 {

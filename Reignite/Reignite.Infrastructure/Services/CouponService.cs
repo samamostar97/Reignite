@@ -15,11 +15,11 @@ namespace Reignite.Infrastructure.Services
         {
         }
 
-        protected override async Task BeforeCreateAsync(Coupon entity, CreateCouponRequest dto)
+        protected override async Task BeforeCreateAsync(Coupon entity, CreateCouponRequest dto, CancellationToken cancellationToken = default)
         {
             // Validate unique code
             var existingCoupon = await _repository.AsQueryable()
-                .FirstOrDefaultAsync(c => c.Code.ToLower() == entity.Code.ToLower());
+                .FirstOrDefaultAsync(c => c.Code.ToLower() == entity.Code.ToLower(), cancellationToken);
 
             if (existingCoupon != null)
                 throw new InvalidOperationException($"Kupon sa kodom '{entity.Code}' već postoji.");
@@ -36,11 +36,11 @@ namespace Reignite.Infrastructure.Services
             entity.TimesUsed = 0;
         }
 
-        protected override async Task BeforeUpdateAsync(Coupon entity, UpdateCouponRequest dto)
+        protected override async Task BeforeUpdateAsync(Coupon entity, UpdateCouponRequest dto, CancellationToken cancellationToken = default)
         {
             // Validate unique code (excluding current entity)
             var existingCoupon = await _repository.AsQueryable()
-                .FirstOrDefaultAsync(c => c.Code.ToLower() == dto.Code.ToLower() && c.Id != entity.Id);
+                .FirstOrDefaultAsync(c => c.Code.ToLower() == dto.Code.ToLower() && c.Id != entity.Id, cancellationToken);
 
             if (existingCoupon != null)
                 throw new InvalidOperationException($"Kupon sa kodom '{dto.Code}' već postoji.");
@@ -54,7 +54,7 @@ namespace Reignite.Infrastructure.Services
                 throw new InvalidOperationException("Procenat popusta ne može biti veći od 100%.");
         }
 
-        protected override async Task BeforeDeleteAsync(Coupon entity)
+        protected override async Task BeforeDeleteAsync(Coupon entity, CancellationToken cancellationToken = default)
         {
             // Can safely delete coupons (no foreign key dependencies)
             await Task.CompletedTask;

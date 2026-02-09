@@ -22,37 +22,37 @@ namespace Reignite.Infrastructure.Services
             _projectRepository = projectRepository;
         }
 
-        protected override async Task BeforeDeleteAsync(Hobby entity)
+        protected override async Task BeforeDeleteAsync(Hobby entity, CancellationToken cancellationToken = default)
         {
             var projectCount = await _projectRepository.AsQueryable()
-                .CountAsync(p => p.HobbyId == entity.Id);
+                .CountAsync(p => p.HobbyId == entity.Id, cancellationToken);
 
             if (projectCount > 0)
                 throw new EntityHasDependentsException("hobi", "projekata", projectCount);
         }
 
-        public async Task<List<HobbyResponse>> GetAllAsync()
+        public async Task<List<HobbyResponse>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             var hobbies = await _repository.AsQueryable()
                 .OrderBy(h => h.Name)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return _mapper.Map<List<HobbyResponse>>(hobbies);
         }
 
-        protected override async Task BeforeCreateAsync(Hobby entity, CreateHobbyRequest dto)
+        protected override async Task BeforeCreateAsync(Hobby entity, CreateHobbyRequest dto, CancellationToken cancellationToken = default)
         {
             var exists = await _repository.AsQueryable()
-                .AnyAsync(h => h.Name.ToLower() == dto.Name.ToLower());
+                .AnyAsync(h => h.Name.ToLower() == dto.Name.ToLower(), cancellationToken);
 
             if (exists)
                 throw new ConflictException($"Hobi sa imenom '{dto.Name}' već postoji.");
         }
 
-        protected override async Task BeforeUpdateAsync(Hobby entity, UpdateHobbyRequest dto)
+        protected override async Task BeforeUpdateAsync(Hobby entity, UpdateHobbyRequest dto, CancellationToken cancellationToken = default)
         {
             var exists = await _repository.AsQueryable()
-                .AnyAsync(h => h.Id != entity.Id && h.Name.ToLower() == dto.Name.ToLower());
+                .AnyAsync(h => h.Id != entity.Id && h.Name.ToLower() == dto.Name.ToLower(), cancellationToken);
 
             if (exists)
                 throw new ConflictException($"Hobi sa imenom '{dto.Name}' već postoji.");

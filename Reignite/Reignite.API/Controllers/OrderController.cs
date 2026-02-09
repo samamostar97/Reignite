@@ -22,16 +22,16 @@ namespace Reignite.API.Controllers
         // Orders are created by users through checkout flow (not admin)
 
         [HttpGet]
-        public override Task<ActionResult<PagedResult<OrderResponse>>> GetAllPagedAsync([FromQuery] OrderQueryFilter filter)
-            => base.GetAllPagedAsync(filter);
+        public override Task<ActionResult<PagedResult<OrderResponse>>> GetAllPagedAsync([FromQuery] OrderQueryFilter filter, CancellationToken cancellationToken = default)
+            => base.GetAllPagedAsync(filter, cancellationToken);
 
         [HttpGet("{id}")]
-        public override Task<ActionResult<OrderResponse>> GetById(int id)
-            => base.GetById(id);
+        public override Task<ActionResult<OrderResponse>> GetById(int id, CancellationToken cancellationToken = default)
+            => base.GetById(id, cancellationToken);
 
         [HttpPut("{id}")]
-        public override Task<ActionResult<OrderResponse>> Update(int id, [FromBody] UpdateOrderRequest dto)
-            => base.Update(id, dto);
+        public override Task<ActionResult<OrderResponse>> Update(int id, [FromBody] UpdateOrderRequest dto, CancellationToken cancellationToken = default)
+            => base.Update(id, dto, cancellationToken);
 
         // Create and Delete endpoints are intentionally not exposed
         // Orders are user-generated, not admin-created

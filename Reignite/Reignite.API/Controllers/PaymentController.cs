@@ -31,9 +31,9 @@ namespace Reignite.API.Controllers
 
         // POST api/payment/create-intent
         [HttpPost("create-intent")]
-        public async Task<ActionResult<PaymentIntentResponse>> CreatePaymentIntent([FromBody] CreatePaymentIntentRequest request)
+        public async Task<ActionResult<PaymentIntentResponse>> CreatePaymentIntent([FromBody] CreatePaymentIntentRequest request, CancellationToken cancellationToken = default)
         {
-            var result = await _paymentService.CreatePaymentIntentAsync(request.Items);
+            var result = await _paymentService.CreatePaymentIntentAsync(request.Items, cancellationToken);
             return Ok(result);
         }
     }

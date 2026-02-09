@@ -20,28 +20,28 @@ namespace Reignite.API.Controllers
         // Public can read FAQs
         [AllowAnonymous]
         [HttpGet]
-        public override Task<ActionResult<PagedResult<FaqResponse>>> GetAllPagedAsync([FromQuery] FaqQueryFilter filter)
-            => base.GetAllPagedAsync(filter);
+        public override Task<ActionResult<PagedResult<FaqResponse>>> GetAllPagedAsync([FromQuery] FaqQueryFilter filter, CancellationToken cancellationToken = default)
+            => base.GetAllPagedAsync(filter, cancellationToken);
 
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public override Task<ActionResult<FaqResponse>> GetById(int id)
-            => base.GetById(id);
+        public override Task<ActionResult<FaqResponse>> GetById(int id, CancellationToken cancellationToken = default)
+            => base.GetById(id, cancellationToken);
 
         // Admin only for create, update, delete
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public override Task<ActionResult<FaqResponse>> Create([FromBody] CreateFaqRequest dto)
-            => base.Create(dto);
+        public override Task<ActionResult<FaqResponse>> Create([FromBody] CreateFaqRequest dto, CancellationToken cancellationToken = default)
+            => base.Create(dto, cancellationToken);
 
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public override Task<ActionResult<FaqResponse>> Update(int id, [FromBody] UpdateFaqRequest dto)
-            => base.Update(id, dto);
+        public override Task<ActionResult<FaqResponse>> Update(int id, [FromBody] UpdateFaqRequest dto, CancellationToken cancellationToken = default)
+            => base.Update(id, dto, cancellationToken);
 
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        public override Task<ActionResult> Delete(int id)
-            => base.Delete(id);
+        public override Task<ActionResult> Delete(int id, CancellationToken cancellationToken = default)
+            => base.Delete(id, cancellationToken);
     }
 }

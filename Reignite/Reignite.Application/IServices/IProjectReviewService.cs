@@ -8,9 +8,9 @@ namespace Reignite.Application.IServices
 {
     public interface IProjectReviewService : IService<ProjectReview, ProjectReviewResponse, CreateProjectReviewRequest, UpdateProjectReviewRequest, ProjectReviewQueryFilter, int>
     {
-        Task<ProjectReviewResponse> CreateForUserAsync(int userId, CreateProjectReviewRequest dto);
-        Task<PagedResult<ProjectReviewResponse>> GetByProjectIdAsync(int projectId, PaginationRequest pagination);
-        Task<double> GetAverageRatingAsync(int projectId);
-        Task<bool> HasUserReviewedAsync(int userId, int projectId);
+        Task<ProjectReviewResponse> CreateForUserAsync(int userId, CreateProjectReviewRequest dto, CancellationToken cancellationToken = default);
+        Task<PagedResult<ProjectReviewResponse>> GetByProjectIdAsync(int projectId, PaginationRequest pagination, CancellationToken cancellationToken = default);
+        Task<double> GetAverageRatingAsync(int projectId, CancellationToken cancellationToken = default);
+        Task<bool> HasUserReviewedAsync(int userId, int projectId, CancellationToken cancellationToken = default);
     }
 }

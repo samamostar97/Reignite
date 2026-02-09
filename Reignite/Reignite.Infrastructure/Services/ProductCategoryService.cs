@@ -22,28 +22,28 @@ namespace Reignite.Infrastructure.Services
             _productRepository = productRepository;
         }
 
-        protected override async Task BeforeCreateAsync(ProductCategory entity, CreateProductCategoryRequest dto)
+        protected override async Task BeforeCreateAsync(ProductCategory entity, CreateProductCategoryRequest dto, CancellationToken cancellationToken = default)
         {
             var exists = await _repository.AsQueryable()
-                .AnyAsync(c => c.Name.ToLower() == dto.Name.ToLower());
+                .AnyAsync(c => c.Name.ToLower() == dto.Name.ToLower(), cancellationToken);
 
             if (exists)
                 throw new ConflictException($"Kategorija sa imenom '{dto.Name}' već postoji.");
         }
 
-        protected override async Task BeforeUpdateAsync(ProductCategory entity, UpdateProductCategoryRequest dto)
+        protected override async Task BeforeUpdateAsync(ProductCategory entity, UpdateProductCategoryRequest dto, CancellationToken cancellationToken = default)
         {
             var exists = await _repository.AsQueryable()
-                .AnyAsync(c => c.Id != entity.Id && c.Name.ToLower() == dto.Name.ToLower());
+                .AnyAsync(c => c.Id != entity.Id && c.Name.ToLower() == dto.Name.ToLower(), cancellationToken);
 
             if (exists)
                 throw new ConflictException($"Kategorija sa imenom '{dto.Name}' već postoji.");
         }
 
-        protected override async Task BeforeDeleteAsync(ProductCategory entity)
+        protected override async Task BeforeDeleteAsync(ProductCategory entity, CancellationToken cancellationToken = default)
         {
             var productCount = await _productRepository.AsQueryable()
-                .CountAsync(p => p.ProductCategoryId == entity.Id);
+                .CountAsync(p => p.ProductCategoryId == entity.Id, cancellationToken);
 
             if (productCount > 0)
                 throw new EntityHasDependentsException("kategoriju", "proizvoda", productCount);
