@@ -5,7 +5,7 @@ $smoke: #5a3a2a;
 
 .topbar {
   height: 72px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(44, 24, 16, 0.08);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -13,7 +13,7 @@ $smoke: #5a3a2a;
   position: sticky;
   top: 0;
   z-index: 50;
-  background: #1A1410;
+  background: #FAEBD7;
 }
 
 .topbar-left {
@@ -25,7 +25,7 @@ $smoke: #5a3a2a;
 .page-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #FAF5F0;
+  color: #2c1810;
   margin: 0;
   font-family: var(--font-display, 'Cinzel', serif);
   position: relative;
@@ -62,7 +62,7 @@ $smoke: #5a3a2a;
     transform: translateY(-50%);
     width: 18px;
     height: 18px;
-    color: #7A6B59;
+    color: #8b6b53;
     transition: color 0.2s ease;
     pointer-events: none;
   }
@@ -71,21 +71,21 @@ $smoke: #5a3a2a;
     width: 100%;
     height: 44px;
     padding: 0 1rem 0 2.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(44, 24, 16, 0.1);
     border-radius: 12px;
     font-size: 0.9rem;
-    color: #FAF5F0;
-    background: rgba(255, 255, 255, 0.04);
+    color: #2c1810;
+    background: rgba(44, 24, 16, 0.06);
     transition: all 0.25s ease;
 
     &::placeholder {
-      color: #7A6B59;
+      color: #8b6b53;
     }
 
     &:focus {
       outline: none;
       border-color: rgba($ember, 0.4);
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(44, 24, 16, 0.08);
       box-shadow: 0 0 0 3px rgba($ember, 0.1);
 
       & + .search-icon,
@@ -101,10 +101,10 @@ $smoke: #5a3a2a;
     top: 50%;
     transform: translateY(-50%);
     padding: 0.2rem 0.5rem;
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(44, 24, 16, 0.08);
     border-radius: 4px;
     font-size: 0.7rem;
-    color: #7A6B59;
+    color: #8b6b53;
     font-family: monospace;
     pointer-events: none;
   }
@@ -129,7 +129,7 @@ $smoke: #5a3a2a;
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
-  color: #7A6B59;
+  color: #8b6b53;
 
   svg {
     width: 20px;
@@ -137,8 +137,8 @@ $smoke: #5a3a2a;
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.06);
-    color: #C4B5A3;
+    background: rgba(44, 24, 16, 0.08);
+    color: #5a3a2a;
   }
 
   .notification-badge {
@@ -150,7 +150,7 @@ $smoke: #5a3a2a;
     padding: 0 5px;
     background: $ember;
     border-radius: 9px;
-    border: 2px solid #1A1410;
+    border: 2px solid #FAEBD7;
     font-size: 0.65rem;
     font-weight: 700;
     color: #fff;
@@ -245,10 +245,10 @@ $smoke: #5a3a2a;
   top: calc(100% + 8px);
   right: 0;
   width: 340px;
-  background: #231C15;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #FFF8F0;
+  border: 1px solid rgba(44, 24, 16, 0.1);
   border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 40px rgba(44, 24, 16, 0.15);
   opacity: 0;
   visibility: hidden;
   transform: translateY(-8px);
@@ -268,13 +268,13 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(44, 24, 16, 0.08);
 
   h3 {
     margin: 0;
     font-size: 0.95rem;
     font-weight: 600;
-    color: #FAF5F0;
+    color: #2c1810;
   }
 
   .view-all-link {
@@ -323,7 +323,7 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: center;
   padding: 2.5rem 1.5rem;
-  color: #7A6B59;
+  color: #8b6b53;
 
   svg {
     width: 40px;
@@ -343,7 +343,7 @@ $smoke: #5a3a2a;
   align-items: flex-start;
   gap: 0.875rem;
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(44, 24, 16, 0.06);
   cursor: pointer;
   transition: background-color 0.15s ease;
   text-decoration: none;
@@ -389,12 +389,12 @@ $smoke: #5a3a2a;
 .notification-title {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #FAF5F0;
+  color: #2c1810;
 }
 
 .notification-desc {
   font-size: 0.8rem;
-  color: #C4B5A3;
+  color: #5a3a2a;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -402,12 +402,12 @@ $smoke: #5a3a2a;
 
 .notification-time {
   font-size: 0.7rem;
-  color: #7A6B59;
+  color: #8b6b53;
 }
 
 .notification-footer {
   padding: 0.75rem 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(44, 24, 16, 0.08);
 }
 
 .view-all-btn {
@@ -418,11 +418,11 @@ $smoke: #5a3a2a;
   width: 100%;
   padding: 0.75rem;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(44, 24, 16, 0.1);
   border-radius: 10px;
   font-size: 0.85rem;
   font-weight: 500;
-  color: #C4B5A3;
+  color: #5a3a2a;
   cursor: pointer;
   transition: all 0.2s ease;
 
@@ -447,7 +447,7 @@ $smoke: #5a3a2a;
 .topbar-divider {
   width: 1px;
   height: 28px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(44, 24, 16, 0.1);
   margin: 0 0.5rem;
 }
 
@@ -469,7 +469,7 @@ $smoke: #5a3a2a;
   transition: all 0.2s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(44, 24, 16, 0.08);
   }
 }
 
@@ -498,13 +498,13 @@ $smoke: #5a3a2a;
 .user-name {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #FAF5F0;
+  color: #2c1810;
   line-height: 1.2;
 }
 
 .user-role {
   font-size: 0.7rem;
-  color: #7A6B59;
+  color: #8b6b53;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -512,7 +512,7 @@ $smoke: #5a3a2a;
 .dropdown-arrow {
   width: 16px;
   height: 16px;
-  color: #7A6B59;
+  color: #8b6b53;
   transition: transform 0.2s ease;
 }
 
@@ -526,10 +526,10 @@ $smoke: #5a3a2a;
   top: calc(100% + 8px);
   right: 0;
   min-width: 200px;
-  background: #231C15;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #FFF8F0;
+  border: 1px solid rgba(44, 24, 16, 0.1);
   border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 40px rgba(44, 24, 16, 0.15);
   padding: 0.5rem;
   opacity: 0;
   visibility: hidden;
@@ -554,7 +554,7 @@ $smoke: #5a3a2a;
   width: 100%;
   border-radius: 8px;
   font-size: 0.9rem;
-  color: #C4B5A3;
+  color: #5a3a2a;
   cursor: pointer;
   transition: all 0.15s ease;
   text-decoration: none;
@@ -562,11 +562,11 @@ $smoke: #5a3a2a;
   svg {
     width: 18px;
     height: 18px;
-    color: #7A6B59;
+    color: #8b6b53;
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(44, 24, 16, 0.06);
 
     svg {
       color: $ember;
@@ -574,21 +574,21 @@ $smoke: #5a3a2a;
   }
 
   &.danger {
-    color: #BF616A;
+    color: #dc2626;
 
     svg {
-      color: #BF616A;
+      color: #dc2626;
     }
 
     &:hover {
-      background: rgba(#BF616A, 0.1);
+      background: rgba(#dc2626, 0.08);
     }
   }
 }
 
 .dropdown-divider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(44, 24, 16, 0.08);
   margin: 0.5rem 0;
 }
 
@@ -600,7 +600,7 @@ $smoke: #5a3a2a;
   border: none;
   background: transparent;
   border-radius: 10px;
-  color: #FAF5F0;
+  color: #2c1810;
   cursor: pointer;
   align-items: center;
   justify-content: center;
@@ -613,7 +613,7 @@ $smoke: #5a3a2a;
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(44, 24, 16, 0.08);
     color: $ember;
   }
 }
