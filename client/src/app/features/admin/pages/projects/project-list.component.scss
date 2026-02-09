@@ -35,12 +35,12 @@ $smoke: #5a3a2a;
 }
 
 .total-count {
-  color: #C4B5A3;
+  color: #5a3a2a;
   margin: 0;
   font-size: 0.95rem;
 
   strong {
-    color: #FAF5F0;
+    color: #2c1810;
     font-weight: 700;
   }
 }
@@ -62,7 +62,7 @@ $smoke: #5a3a2a;
     transform: translateY(-50%);
     width: 18px;
     height: 18px;
-    color: #7A6B59;
+    color: #8b6b53;
     pointer-events: none;
   }
 
@@ -70,15 +70,15 @@ $smoke: #5a3a2a;
     width: 280px;
     height: 44px;
     padding: 0 1rem 0 2.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(44, 24, 16, 0.1);
     border-radius: 10px;
     font-size: 0.9rem;
-    color: #FAF5F0;
-    background: rgba(255, 255, 255, 0.04);
+    color: #2c1810;
+    background: rgba(44, 24, 16, 0.06);
     transition: all 0.2s ease;
 
     &::placeholder {
-      color: #7A6B59;
+      color: #8b6b53;
     }
 
     &:focus {
@@ -96,9 +96,9 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: center;
   padding: 5rem 2rem;
-  background: #231C15;
+  background: #FFF8F0;
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(44, 24, 16, 0.06);
 
   .spinner {
     width: 44px;
@@ -110,7 +110,7 @@ $smoke: #5a3a2a;
   }
 
   p {
-    color: #C4B5A3;
+    color: #5a3a2a;
     margin-top: 1.25rem;
     font-size: 0.95rem;
   }
@@ -134,7 +134,7 @@ $smoke: #5a3a2a;
 
   h3 {
     font-size: 1.25rem;
-    color: #FAF5F0;
+    color: #2c1810;
     margin: 0 0 0.5rem 0;
     font-weight: 600;
   }
@@ -146,11 +146,11 @@ $smoke: #5a3a2a;
 
 // Table container
 .table-container {
-  background: #231C15;
+  background: #FFF8F0;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 1px 3px rgba(44, 24, 16, 0.06);
+  border: 1px solid rgba(44, 24, 16, 0.06);
 }
 
 .data-table {
@@ -163,20 +163,20 @@ $smoke: #5a3a2a;
   }
 
   th {
-    background: linear-gradient(to bottom, #2C2318, #231C15);
+    background: linear-gradient(to bottom, #F0DCC0, #FFF8F0);
     font-weight: 600;
-    color: #FAF5F0;
+    color: #2c1810;
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(44, 24, 16, 0.08);
     position: sticky;
     top: 0;
     z-index: 10;
   }
 
   tbody tr {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid rgba(44, 24, 16, 0.06);
     transition: background-color 0.15s ease;
 
     &:hover {
@@ -203,7 +203,7 @@ $smoke: #5a3a2a;
     object-fit: cover;
     border-radius: 10px;
     transition: transform 0.2s ease;
-    box-shadow: 0 2px 6px rgba(255, 255, 255, 0.08);
+    box-shadow: 0 2px 6px rgba(44, 24, 16, 0.1);
 
     &:hover {
       transform: scale(1.1);
@@ -213,7 +213,7 @@ $smoke: #5a3a2a;
   .no-image {
     width: 56px;
     height: 56px;
-    background: linear-gradient(135deg, #1A1410 0%, #1A1410 100%);
+    background: linear-gradient(135deg, #FAEBD7 0%, #FAEBD7 100%);
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -222,7 +222,7 @@ $smoke: #5a3a2a;
     svg {
       width: 22px;
       height: 22px;
-      color: #7A6B59;
+      color: #8b6b53;
     }
   }
 }
@@ -234,7 +234,7 @@ $smoke: #5a3a2a;
   .project-title {
     display: block;
     font-weight: 600;
-    color: #FAF5F0;
+    color: #2c1810;
     font-size: 0.95rem;
     margin-bottom: 0.25rem;
   }
@@ -242,7 +242,7 @@ $smoke: #5a3a2a;
   .project-desc {
     display: block;
     font-size: 0.8rem;
-    color: #C4B5A3;
+    color: #5a3a2a;
     line-height: 1.4;
     opacity: 0.8;
   }
@@ -252,7 +252,7 @@ $smoke: #5a3a2a;
 .author-cell {
   .author-name {
     font-weight: 500;
-    color: #FAF5F0;
+    color: #2c1810;
     font-size: 0.9rem;
   }
 }
@@ -275,12 +275,12 @@ $smoke: #5a3a2a;
 
   .rating-value {
     font-weight: 700;
-    color: #FAF5F0;
+    color: #2c1810;
     font-size: 0.9rem;
   }
 
   .review-count {
-    color: #C4B5A3;
+    color: #5a3a2a;
     font-weight: 400;
     font-size: 0.8rem;
     margin-left: 0.15rem;
@@ -290,7 +290,7 @@ $smoke: #5a3a2a;
 // Date cell
 .date-cell {
   font-size: 0.9rem;
-  color: #C4B5A3;
+  color: #5a3a2a;
   white-space: nowrap;
 }
 
@@ -312,10 +312,10 @@ $smoke: #5a3a2a;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(44, 24, 16, 0.06);
   border: 1px solid transparent;
   border-radius: 8px;
-  color: #C4B5A3;
+  color: #5a3a2a;
   cursor: pointer;
   transition: all 0.2s ease;
   text-decoration: none;
@@ -350,8 +350,8 @@ $smoke: #5a3a2a;
   justify-content: center;
   gap: 1rem;
   padding: 1.25rem;
-  background: rgba(255, 255, 255, 0.04);
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(44, 24, 16, 0.06);
+  border-top: 1px solid rgba(44, 24, 16, 0.06);
   border-radius: 0 0 16px 16px;
 }
 
@@ -361,10 +361,10 @@ $smoke: #5a3a2a;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(44, 24, 16, 0.06);
   border: 1px solid transparent;
   border-radius: 10px;
-  color: #C4B5A3;
+  color: #5a3a2a;
   cursor: pointer;
   transition: all 0.2s ease;
 
@@ -387,7 +387,7 @@ $smoke: #5a3a2a;
 
 .pagination-info {
   font-size: 0.9rem;
-  color: #C4B5A3;
+  color: #5a3a2a;
   font-weight: 500;
 }
 
@@ -426,7 +426,7 @@ $smoke: #5a3a2a;
 }
 
 .modal-content {
-  background: #231C15;
+  background: #FFF8F0;
   border-radius: 20px;
   width: 100%;
   max-width: 700px;
@@ -434,7 +434,7 @@ $smoke: #5a3a2a;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 25px 50px -12px rgba(44, 24, 16, 0.08);
   animation: slideUp 0.3s ease-out;
 }
 
@@ -454,7 +454,7 @@ $smoke: #5a3a2a;
   align-items: center;
   justify-content: space-between;
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(44, 24, 16, 0.08);
   background: linear-gradient(135deg, $ember, $flame);
 
   h2 {
@@ -471,10 +471,10 @@ $smoke: #5a3a2a;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(44, 24, 16, 0.06);
   border: none;
   border-radius: 10px;
-  color: #C4B5A3;
+  color: #5a3a2a;
   cursor: pointer;
   transition: all 0.2s ease;
 
@@ -507,7 +507,7 @@ $smoke: #5a3a2a;
 
   p {
     margin-top: 1rem;
-    color: #C4B5A3;
+    color: #5a3a2a;
     font-size: 0.9rem;
   }
 }
@@ -530,13 +530,13 @@ $smoke: #5a3a2a;
   object-fit: cover;
   border-radius: 16px;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(44, 24, 16, 0.12);
 }
 
 .detail-image-placeholder {
   width: 180px;
   height: 180px;
-  background: linear-gradient(135deg, #1A1410 0%, #1A1410 100%);
+  background: linear-gradient(135deg, #FAEBD7 0%, #FAEBD7 100%);
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -546,7 +546,7 @@ $smoke: #5a3a2a;
   svg {
     width: 48px;
     height: 48px;
-    color: #7A6B59;
+    color: #8b6b53;
   }
 }
 
@@ -558,7 +558,7 @@ $smoke: #5a3a2a;
     margin: 0 0 0.75rem 0;
     font-size: 1.35rem;
     font-weight: 700;
-    color: #FAF5F0;
+    color: #2c1810;
     line-height: 1.3;
   }
 }
@@ -575,10 +575,10 @@ $smoke: #5a3a2a;
   align-items: center;
   gap: 0.4rem;
   padding: 0.35rem 0.75rem;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(44, 24, 16, 0.06);
   border-radius: 20px;
   font-size: 0.8rem;
-  color: #C4B5A3;
+  color: #5a3a2a;
 
   svg {
     width: 14px;
@@ -605,12 +605,12 @@ $smoke: #5a3a2a;
   .rating-value {
     font-size: 1.1rem;
     font-weight: 700;
-    color: #FAF5F0;
+    color: #2c1810;
   }
 
   .rating-count {
     font-size: 0.85rem;
-    color: #C4B5A3;
+    color: #5a3a2a;
   }
 }
 
@@ -618,15 +618,15 @@ $smoke: #5a3a2a;
 .detail-description {
   margin-bottom: 1.5rem;
   padding: 1.25rem;
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(44, 24, 16, 0.03);
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(44, 24, 16, 0.06);
 
   h4 {
     margin: 0 0 0.75rem 0;
     font-size: 0.85rem;
     font-weight: 600;
-    color: #FAF5F0;
+    color: #2c1810;
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
@@ -634,7 +634,7 @@ $smoke: #5a3a2a;
   p {
     margin: 0;
     font-size: 0.95rem;
-    color: #C4B5A3;
+    color: #5a3a2a;
     line-height: 1.6;
   }
 }
@@ -645,7 +645,7 @@ $smoke: #5a3a2a;
     margin: 0 0 1rem 0;
     font-size: 0.85rem;
     font-weight: 600;
-    color: #FAF5F0;
+    color: #2c1810;
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
@@ -656,20 +656,20 @@ $smoke: #5a3a2a;
   flex-direction: column;
   align-items: center;
   padding: 2.5rem;
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(44, 24, 16, 0.03);
   border-radius: 12px;
-  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border: 1px dashed rgba(44, 24, 16, 0.12);
 
   svg {
     width: 40px;
     height: 40px;
-    color: #7A6B59;
+    color: #8b6b53;
     margin-bottom: 0.75rem;
   }
 
   p {
     margin: 0;
-    color: #C4B5A3;
+    color: #5a3a2a;
     font-size: 0.9rem;
   }
 }
@@ -687,7 +687,7 @@ $smoke: #5a3a2a;
   }
 
   &::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(44, 24, 16, 0.06);
     border-radius: 3px;
   }
 
@@ -703,10 +703,10 @@ $smoke: #5a3a2a;
 
 .review-card {
   padding: 1rem 1.25rem;
-  background: #231C15;
+  background: #FFF8F0;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(44, 24, 16, 0.08);
+  box-shadow: 0 2px 4px rgba(44, 24, 16, 0.03);
 }
 
 .review-header {
@@ -742,13 +742,13 @@ $smoke: #5a3a2a;
 
   .reviewer-name {
     font-weight: 600;
-    color: #FAF5F0;
+    color: #2c1810;
     font-size: 0.9rem;
   }
 
   .review-date {
     font-size: 0.75rem;
-    color: #C4B5A3;
+    color: #5a3a2a;
   }
 }
 
@@ -759,7 +759,7 @@ $smoke: #5a3a2a;
   svg {
     width: 16px;
     height: 16px;
-    fill: #3a2f25;
+    fill: rgba(44, 24, 16, 0.1);
 
     &.filled {
       fill: $flame;
@@ -770,7 +770,7 @@ $smoke: #5a3a2a;
 .review-comment {
   margin: 0;
   font-size: 0.9rem;
-  color: #C4B5A3;
+  color: #5a3a2a;
   line-height: 1.5;
 }
 
