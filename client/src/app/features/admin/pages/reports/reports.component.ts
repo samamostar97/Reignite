@@ -1,5 +1,6 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ReportService } from '../../../../core/services/report.service';
 import {
   DashboardReportResponse,
@@ -11,7 +12,7 @@ import { getImageUrl, getInitials } from '../../../../shared/utils/image.utils';
 @Component({
   selector: 'app-reports',
   standalone: true,
-  imports: [CommonModule, DecimalPipe],
+  imports: [CommonModule, DecimalPipe, FormsModule],
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.scss'
 })
@@ -22,6 +23,11 @@ export class ReportsComponent implements OnInit {
   protected readonly isLoading = signal(true);
   protected readonly error = signal<string | null>(null);
 
+  // PDF Export
+  protected exportStartDate = '';
+  protected exportEndDate = '';
+  protected readonly isExporting = signal(false);
+
   // Chart dimensions
   protected readonly chartWidth = 800;
   protected readonly chartHeight = 300;
@@ -29,6 +35,12 @@ export class ReportsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadReport();
+    // Default date range: last 30 days
+    const end = new Date();
+    const start = new Date();
+    start.setDate(start.getDate() - 30);
+    this.exportStartDate = start.toISOString().split('T')[0];
+    this.exportEndDate = end.toISOString().split('T')[0];
   }
 
   protected loadReport(): void {
@@ -238,5 +250,44 @@ export class ReportsComponent implements OnInit {
       y: this.chartPadding + height - (d.totalUsers / maxUsers) * height,
       data: d
     }));
+  }
+
+  protected exportOrdersPdf(): void {
+    if (!this.exportStartDate || !this.exportEndDate) return;
+    this.isExporting.set(true);
+    this.reportService.exportOrdersReport(this.exportStartDate, this.exportEndDate).subscribe({
+      next: (blob) => {
+        this.downloadBlob(blob, `Reignite_Narudzbe_${this.exportStartDate}_${this.exportEndDate}.pdf`);
+        this.isExporting.set(false);
+      },
+      error: () => {
+        this.error.set('Greška pri generiranju PDF izvještaja.');
+        this.isExporting.set(false);
+      }
+    });
+  }
+
+  protected exportRevenuePdf(): void {
+    if (!this.exportStartDate || !this.exportEndDate) return;
+    this.isExporting.set(true);
+    this.reportService.exportRevenueReport(this.exportStartDate, this.exportEndDate).subscribe({
+      next: (blob) => {
+        this.downloadBlob(blob, `Reignite_Prihodi_${this.exportStartDate}_${this.exportEndDate}.pdf`);
+        this.isExporting.set(false);
+      },
+      error: () => {
+        this.error.set('Greška pri generiranju PDF izvještaja.');
+        this.isExporting.set(false);
+      }
+    });
+  }
+
+  private downloadBlob(blob: Blob, filename: string): void {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 }
