@@ -1,9 +1,11 @@
 using DotNetEnv;
+using QuestPDF.Infrastructure;
 using Reignite.API.Extensions;
 using Reignite.API.Middleware;
 using Reignite.Infrastructure.Data;
 
 Env.Load();
+QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
 
