@@ -54,6 +54,7 @@ namespace Reignite.Infrastructure.Services
                 TotalAmount = totalAmount,
                 PurchaseDate = DateTime.UtcNow,
                 Status = OrderStatus.Processing,
+                StripePaymentId = request.StripePaymentIntentId,
                 OrderItems = orderItems
             };
 
@@ -158,6 +159,7 @@ namespace Reignite.Infrastructure.Services
                 TotalAmount = order.TotalAmount,
                 PurchaseDate = order.PurchaseDate,
                 Status = order.Status,
+                StripePaymentId = order.StripePaymentId,
                 ItemCount = order.OrderItems?.Sum(oi => oi.Quantity) ?? 0,
                 Items = order.OrderItems?.Select(oi => new OrderItemResponse
                 {
