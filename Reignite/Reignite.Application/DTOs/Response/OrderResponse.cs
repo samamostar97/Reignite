@@ -17,6 +17,7 @@ namespace Reignite.Application.DTOs.Response
         public DateTime PurchaseDate { get; set; }
         public OrderStatus Status { get; set; }
         public string StatusName => Status.ToString();
+        public string? StripePaymentId { get; set; }
         public int ItemCount { get; set; }
         public List<OrderItemResponse> Items { get; set; } = new();
     }

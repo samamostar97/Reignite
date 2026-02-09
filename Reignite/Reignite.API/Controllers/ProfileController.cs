@@ -17,12 +17,14 @@ namespace Reignite.API.Controllers
         private readonly IUserService _userService;
         private readonly IOrderService _orderService;
         private readonly IWishlistService _wishlistService;
+        private readonly IPaymentService _paymentService;
 
-        public ProfileController(IUserService userService, IOrderService orderService, IWishlistService wishlistService)
+        public ProfileController(IUserService userService, IOrderService orderService, IWishlistService wishlistService, IPaymentService paymentService)
         {
             _userService = userService;
             _orderService = orderService;
             _wishlistService = wishlistService;
+            _paymentService = paymentService;
         }
 
         private int GetCurrentUserId() =>
@@ -208,10 +210,17 @@ namespace Reignite.API.Controllers
         public async Task<ActionResult<OrderResponse>> Checkout([FromBody] CheckoutRequest request)
         {
             var userId = GetCurrentUserId();
+
+            // Verify Stripe payment before creating order
+            var paymentVerified = await _paymentService.VerifyPaymentAsync(request.StripePaymentIntentId);
+            if (!paymentVerified)
+                return BadRequest("Plaćanje nije uspjelo. Molimo pokušajte ponovo.");
+
             var createOrderRequest = new CreateOrderRequest
             {
                 UserId = userId,
-                Items = request.Items
+                Items = request.Items,
+                StripePaymentIntentId = request.StripePaymentIntentId
             };
             var order = await _orderService.CreateAsync(createOrderRequest);
             return Created($"/api/profile/orders", order);
