@@ -26,6 +26,7 @@ export interface OrderResponse {
   purchaseDate: string;
   status: OrderStatus;
   statusName: string;
+  stripePaymentId?: string;
   itemCount: number;
   items: OrderItemResponse[];
 }
@@ -53,4 +54,5 @@ export interface UpdateOrderRequest {
 
 export interface CheckoutRequest {
   items: CreateOrderItemRequest[];
+  stripePaymentIntentId: string;
 }
