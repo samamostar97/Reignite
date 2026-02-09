@@ -23,13 +23,13 @@ namespace Reignite.Infrastructure.Services
             _productRepository = productRepository;
         }
 
-        public override async Task<OrderResponse> CreateAsync(CreateOrderRequest request)
+        public override async Task<OrderResponse> CreateAsync(CreateOrderRequest request, CancellationToken cancellationToken = default)
         {
             // Get product prices for calculating total
             var productIds = request.Items.Select(i => i.ProductId).Distinct().ToList();
             var products = await _productRepository.AsQueryable()
                 .Where(p => productIds.Contains(p.Id))
-                .ToDictionaryAsync(p => p.Id, p => p.Price);
+                .ToDictionaryAsync(p => p.Id, p => p.Price, cancellationToken);
 
             // Validate all products exist
             var missingProducts = productIds.Where(id => !products.ContainsKey(id)).ToList();
@@ -58,19 +58,19 @@ namespace Reignite.Infrastructure.Services
                 OrderItems = orderItems
             };
 
-            await _repository.AddAsync(order);
+            await _repository.AddAsync(order, cancellationToken);
 
             // Reload with navigation properties
-            return await GetByIdAsync(order.Id);
+            return await GetByIdAsync(order.Id, cancellationToken);
         }
 
-        public override async Task<OrderResponse> GetByIdAsync(int id)
+        public override async Task<OrderResponse> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             var order = await _repository.AsQueryable()
                 .Include(o => o.User)
                 .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.Product)
-                .FirstOrDefaultAsync(o => o.Id == id);
+                .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
 
             if (order == null)
                 throw new KeyNotFoundException("Narudžba nije pronađena");
@@ -78,7 +78,7 @@ namespace Reignite.Infrastructure.Services
             return MapToResponse(order);
         }
 
-        public override async Task<PagedResult<OrderResponse>> GetPagedAsync(OrderQueryFilter filter)
+        public override async Task<PagedResult<OrderResponse>> GetPagedAsync(OrderQueryFilter filter, CancellationToken cancellationToken = default)
         {
             IQueryable<Order> query = _repository.AsQueryable()
                 .Include(o => o.User)
@@ -87,11 +87,11 @@ namespace Reignite.Infrastructure.Services
 
             query = ApplyFilter(query, filter);
 
-            var totalCount = await query.CountAsync();
+            var totalCount = await query.CountAsync(cancellationToken);
             var items = await query
                 .Skip((filter.PageNumber - 1) * filter.PageSize)
                 .Take(filter.PageSize)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return new PagedResult<OrderResponse>
             {
@@ -137,13 +137,14 @@ namespace Reignite.Infrastructure.Services
             return query;
         }
 
-        protected override async Task BeforeUpdateAsync(Order entity, UpdateOrderRequest dto)
+        protected override async Task BeforeUpdateAsync(Order entity, UpdateOrderRequest dto, CancellationToken cancellationToken = default)
         {
             // Validate status transition if needed
             if (entity.Status == OrderStatus.Cancelled && dto.Status != OrderStatus.Cancelled)
             {
                 throw new InvalidOperationException("Otkazane narudžbe ne mogu biti vraćene.");
             }
+            await Task.CompletedTask;
         }
 
         private OrderResponse MapToResponse(Order order)

@@ -21,10 +21,10 @@ namespace Reignite.API.Controllers
         }
         [AllowAnonymous]
         [HttpGet]
-        public override Task<ActionResult<PagedResult<ProductCategoryResponse>>> GetAllPagedAsync([FromQuery] ProductCategoryQueryFilter filter) => base.GetAllPagedAsync(filter);
+        public override Task<ActionResult<PagedResult<ProductCategoryResponse>>> GetAllPagedAsync([FromQuery] ProductCategoryQueryFilter filter, CancellationToken cancellationToken = default) => base.GetAllPagedAsync(filter, cancellationToken);
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public override Task<ActionResult<ProductCategoryResponse>> GetById(int id) => base.GetById(id);
+        public override Task<ActionResult<ProductCategoryResponse>> GetById(int id, CancellationToken cancellationToken = default) => base.GetById(id, cancellationToken);
 
     }
 }

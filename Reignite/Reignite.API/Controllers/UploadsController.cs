@@ -29,22 +29,22 @@ namespace Reignite.API.Controllers
         [Authorize(Roles = "Admin")]
         [RequestSizeLimit(MaxImageBytes)]
         [RequestFormLimits(MultipartBodyLengthLimit = MaxImageBytes)]
-        public async Task<IActionResult> UploadProductImage(int productId, IFormFile file)
+        public async Task<IActionResult> UploadProductImage(int productId, IFormFile file, CancellationToken cancellationToken = default)
         {
             var validationResult = ValidateFile(file);
             if (validationResult != null)
                 return validationResult;
 
             var fileRequest = CreateFileRequest(file);
-            var result = await _productService.UploadImageAsync(productId, fileRequest);
+            var result = await _productService.UploadImageAsync(productId, fileRequest, cancellationToken);
             return Ok(new { fileUrl = result.ProductImageUrl });
         }
 
         [HttpDelete("products/{productId:int}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteProductImage(int productId)
+        public async Task<IActionResult> DeleteProductImage(int productId, CancellationToken cancellationToken = default)
         {
-            await _productService.DeleteImageAsync(productId);
+            await _productService.DeleteImageAsync(productId, cancellationToken);
             return NoContent();
         }
 
@@ -52,9 +52,9 @@ namespace Reignite.API.Controllers
         [Authorize(Roles = "Admin,AppUser")]
         [RequestSizeLimit(MaxImageBytes)]
         [RequestFormLimits(MultipartBodyLengthLimit = MaxImageBytes)]
-        public async Task<IActionResult> UploadProjectImage(int projectId, IFormFile file)
+        public async Task<IActionResult> UploadProjectImage(int projectId, IFormFile file, CancellationToken cancellationToken = default)
         {
-            if (!await IsProjectOwnerOrAdmin(projectId))
+            if (!await IsProjectOwnerOrAdmin(projectId, cancellationToken))
                 return Forbid();
 
             var validationResult = ValidateFile(file);
@@ -62,18 +62,18 @@ namespace Reignite.API.Controllers
                 return validationResult;
 
             var fileRequest = CreateFileRequest(file);
-            var result = await _projectService.UploadImageAsync(projectId, fileRequest);
+            var result = await _projectService.UploadImageAsync(projectId, fileRequest, cancellationToken);
             return Ok(new { fileUrl = result.ImageUrl });
         }
 
         [HttpDelete("projects/{projectId:int}")]
         [Authorize(Roles = "Admin,AppUser")]
-        public async Task<IActionResult> DeleteProjectImage(int projectId)
+        public async Task<IActionResult> DeleteProjectImage(int projectId, CancellationToken cancellationToken = default)
         {
-            if (!await IsProjectOwnerOrAdmin(projectId))
+            if (!await IsProjectOwnerOrAdmin(projectId, cancellationToken))
                 return Forbid();
 
-            await _projectService.DeleteImageAsync(projectId);
+            await _projectService.DeleteImageAsync(projectId, cancellationToken);
             return NoContent();
         }
 
@@ -81,22 +81,22 @@ namespace Reignite.API.Controllers
         [Authorize(Roles = "Admin")]
         [RequestSizeLimit(MaxImageBytes)]
         [RequestFormLimits(MultipartBodyLengthLimit = MaxImageBytes)]
-        public async Task<IActionResult> UploadUserImage(int userId, IFormFile file)
+        public async Task<IActionResult> UploadUserImage(int userId, IFormFile file, CancellationToken cancellationToken = default)
         {
             var validationResult = ValidateFile(file);
             if (validationResult != null)
                 return validationResult;
 
             var fileRequest = CreateFileRequest(file);
-            var result = await _userService.UploadImageAsync(userId, fileRequest);
+            var result = await _userService.UploadImageAsync(userId, fileRequest, cancellationToken);
             return Ok(new { fileUrl = result.ProfileImageUrl });
         }
 
         [HttpDelete("users/{userId:int}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteUserImage(int userId)
+        public async Task<IActionResult> DeleteUserImage(int userId, CancellationToken cancellationToken = default)
         {
-            await _userService.DeleteImageAsync(userId);
+            await _userService.DeleteImageAsync(userId, cancellationToken);
             return NoContent();
         }
 
@@ -125,7 +125,7 @@ namespace Reignite.API.Controllers
             };
         }
 
-        private async Task<bool> IsProjectOwnerOrAdmin(int projectId)
+        private async Task<bool> IsProjectOwnerOrAdmin(int projectId, CancellationToken cancellationToken = default)
         {
             if (User.IsInRole("Admin"))
                 return true;
@@ -134,7 +134,7 @@ namespace Reignite.API.Controllers
             if (string.IsNullOrEmpty(currentUserId))
                 return false;
 
-            var project = await _projectService.GetByIdAsync(projectId);
+            var project = await _projectService.GetByIdAsync(projectId, cancellationToken);
             return project != null && project.UserId.ToString() == currentUserId;
         }
     }

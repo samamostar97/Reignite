@@ -32,13 +32,13 @@ namespace Reignite.Infrastructure.Services
             _jwtSettings = jwtSettings.Value;
         }
 
-        public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
+        public async Task<AuthResponse> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default)
         {
-            var emailExists = await _context.Users.AnyAsync(x => x.Email.ToLower() == request.Email.ToLower());
+            var emailExists = await _context.Users.AnyAsync(x => x.Email.ToLower() == request.Email.ToLower(), cancellationToken);
             if (emailExists) throw new ConflictException("Email je zauzet");
-            var usernameExists = await _context.Users.AnyAsync(x => x.Username.ToLower() == request.Username.ToLower());
+            var usernameExists = await _context.Users.AnyAsync(x => x.Username.ToLower() == request.Username.ToLower(), cancellationToken);
             if (usernameExists) throw new ConflictException("Username je zauzet");
-            var phoneNumberExists = await _context.Users.AnyAsync(x => x.PhoneNumber == request.PhoneNumber);
+            var phoneNumberExists = await _context.Users.AnyAsync(x => x.PhoneNumber == request.PhoneNumber, cancellationToken);
             if (phoneNumberExists) throw new ConflictException("Broj telefona je zauzet");
 
             // Create new user
@@ -55,38 +55,38 @@ namespace Reignite.Infrastructure.Services
             };
 
             _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
 
             // Generate tokens
-            return await GenerateAuthResponse(user);
+            return await GenerateAuthResponse(user, cancellationToken);
         }
 
-        public async Task<AuthResponse> LoginAsync(LoginRequest request)
+        public async Task<AuthResponse> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default)
         {
             var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == request.Email && !u.IsDeleted);
+                .FirstOrDefaultAsync(u => u.Email == request.Email && !u.IsDeleted, cancellationToken);
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
                 throw new UnauthorizedAccessException("Neispravan email ili lozinka.");
             }
 
-            return await GenerateAuthResponse(user);
+            return await GenerateAuthResponse(user, cancellationToken);
         }
 
-        public async Task<AuthResponse> RefreshTokenAsync(RefreshRequest request)
+        public async Task<AuthResponse> RefreshTokenAsync(RefreshRequest request, CancellationToken cancellationToken = default)
         {
             var refreshTokenHash = HashRefreshToken(request.RefreshToken);
             var refreshToken = await _refreshTokenRepository.AsQueryable()
                 .Include(rt => rt.User)
-                .FirstOrDefaultAsync(rt => rt.Token == refreshTokenHash);
+                .FirstOrDefaultAsync(rt => rt.Token == refreshTokenHash, cancellationToken);
 
             // Fallback for unhashed tokens (migration support)
             if (refreshToken == null)
             {
                 refreshToken = await _refreshTokenRepository.AsQueryable()
                     .Include(rt => rt.User)
-                    .FirstOrDefaultAsync(rt => rt.Token == request.RefreshToken);
+                    .FirstOrDefaultAsync(rt => rt.Token == request.RefreshToken, cancellationToken);
             }
 
             if (refreshToken == null)
@@ -100,17 +100,17 @@ namespace Reignite.Infrastructure.Services
             }
 
             refreshToken.RevokedAt = DateTime.UtcNow;
-            await _refreshTokenRepository.UpdateAsync(refreshToken);
+            await _refreshTokenRepository.UpdateAsync(refreshToken, cancellationToken);
 
-            return await GenerateAuthResponse(refreshToken.User);
+            return await GenerateAuthResponse(refreshToken.User, cancellationToken);
         }
 
-        private async Task<AuthResponse> GenerateAuthResponse(User user)
+        private async Task<AuthResponse> GenerateAuthResponse(User user, CancellationToken cancellationToken = default)
         {
             var accessToken = GenerateAccessToken(user);
             var rawRefreshToken = GenerateRefreshTokenValue();
 
-            await SaveRefreshTokenAsync(user.Id, rawRefreshToken);
+            await SaveRefreshTokenAsync(user.Id, rawRefreshToken, cancellationToken);
 
             return new AuthResponse
             {
@@ -165,7 +165,7 @@ namespace Reignite.Infrastructure.Services
             return Convert.ToBase64String(hashBytes);
         }
 
-        private async Task SaveRefreshTokenAsync(int userId, string rawToken)
+        private async Task SaveRefreshTokenAsync(int userId, string rawToken, CancellationToken cancellationToken = default)
         {
             var refreshToken = new RefreshToken
             {
@@ -175,7 +175,7 @@ namespace Reignite.Infrastructure.Services
                 CreatedAt = DateTime.UtcNow
             };
 
-            await _refreshTokenRepository.AddAsync(refreshToken);
+            await _refreshTokenRepository.AddAsync(refreshToken, cancellationToken);
         }
     }
 }

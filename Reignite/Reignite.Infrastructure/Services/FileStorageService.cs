@@ -14,7 +14,7 @@ namespace Reignite.Infrastructure.Services
             _webRootPath = webRootPath;
         }
 
-        public async Task<FileUploadResponse> UploadAsync(FileUploadRequest request, string category, string uniqueId)
+        public async Task<FileUploadResponse> UploadAsync(FileUploadRequest request, string category, string uniqueId, CancellationToken cancellationToken = default)
         {
             if (request.FileStream == null || request.FileSize == 0)
             {
@@ -43,7 +43,7 @@ namespace Reignite.Infrastructure.Services
             }
 
             // Validate file signature (magic bytes)
-            if (!await IsValidImageFileAsync(request.FileStream))
+            if (!await IsValidImageFileAsync(request.FileStream, cancellationToken))
             {
                 return new FileUploadResponse
                 {
@@ -60,7 +60,7 @@ namespace Reignite.Infrastructure.Services
 
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
-                await request.FileStream.CopyToAsync(fileStream);
+                await request.FileStream.CopyToAsync(fileStream, cancellationToken);
             }
 
             var fileUrl = $"/uploads/{category}/{fileName}";
@@ -72,7 +72,7 @@ namespace Reignite.Infrastructure.Services
             };
         }
 
-        private async Task<bool> IsValidImageFileAsync(Stream fileStream)
+        private async Task<bool> IsValidImageFileAsync(Stream fileStream, CancellationToken cancellationToken = default)
         {
             if (!fileStream.CanSeek)
             {
@@ -81,7 +81,7 @@ namespace Reignite.Infrastructure.Services
 
             var buffer = new byte[8];
             fileStream.Position = 0;
-            await fileStream.ReadAsync(buffer, 0, buffer.Length);
+            await fileStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken);
             fileStream.Position = 0; // Reset position for later use
 
             // JPEG: FF D8 FF
@@ -99,7 +99,7 @@ namespace Reignite.Infrastructure.Services
             return false;
         }
 
-        public Task<bool> DeleteAsync(string? fileUrl)
+        public Task<bool> DeleteAsync(string? fileUrl, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(fileUrl))
             {

@@ -6,6 +6,6 @@ namespace Reignite.Application.IServices
 {
     public interface IActivityService
     {
-        Task<PagedResult<ActivityResponse>> GetPagedAsync(ActivityQueryFilter filter);
+        Task<PagedResult<ActivityResponse>> GetPagedAsync(ActivityQueryFilter filter, CancellationToken cancellationToken = default);
     }
 }

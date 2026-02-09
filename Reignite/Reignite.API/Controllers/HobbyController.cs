@@ -23,17 +23,17 @@ namespace Reignite.API.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public override Task<ActionResult<PagedResult<HobbyResponse>>> GetAllPagedAsync([FromQuery] HobbyQueryFilter filter) => base.GetAllPagedAsync(filter);
+        public override Task<ActionResult<PagedResult<HobbyResponse>>> GetAllPagedAsync([FromQuery] HobbyQueryFilter filter, CancellationToken cancellationToken = default) => base.GetAllPagedAsync(filter, cancellationToken);
 
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public override Task<ActionResult<HobbyResponse>> GetById(int id) => base.GetById(id);
+        public override Task<ActionResult<HobbyResponse>> GetById(int id, CancellationToken cancellationToken = default) => base.GetById(id, cancellationToken);
 
         [AllowAnonymous]
         [HttpGet("all")]
-        public async Task<ActionResult<List<HobbyResponse>>> GetAll()
+        public async Task<ActionResult<List<HobbyResponse>>> GetAll(CancellationToken cancellationToken = default)
         {
-            var hobbies = await _hobbyService.GetAllAsync();
+            var hobbies = await _hobbyService.GetAllAsync(cancellationToken);
             return Ok(hobbies);
         }
     }

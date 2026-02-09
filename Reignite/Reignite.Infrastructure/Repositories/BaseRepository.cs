@@ -23,11 +23,11 @@ namespace Reignite.Infrastructure.Repositories
             _dbSet = context.Set<T>();
         }
 
-        public virtual async Task AddAsync(T entity)
+        public virtual async Task AddAsync(T entity, CancellationToken cancellationToken = default)
         {
             entity.CreatedAt = DateTime.UtcNow;
-            await _dbSet.AddAsync(entity);
-            await _context.SaveChangesAsync();
+            await _dbSet.AddAsync(entity, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
         public virtual IQueryable<T> AsQueryable()
@@ -35,17 +35,17 @@ namespace Reignite.Infrastructure.Repositories
             return _dbSet.Where(e => !e.IsDeleted);
         }
 
-        public virtual async Task DeleteAsync(T entity)
+        public virtual async Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
         {
             entity.IsDeleted = true;
             _dbSet.Update(entity);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
 
-        public virtual async Task<T> GetByIdAsync(TKey id)
+        public virtual async Task<T> GetByIdAsync(TKey id, CancellationToken cancellationToken = default)
         {
-            var entity = await _dbSet.FindAsync(id);
+            var entity = await _dbSet.FindAsync(new object?[] { id }, cancellationToken);
 
             if (entity is null || entity.IsDeleted)
                 throw new KeyNotFoundException($"Entity tipa {typeof(T).Name} sa id '{id}' ne postoji.");
@@ -53,13 +53,13 @@ namespace Reignite.Infrastructure.Repositories
             return entity;
         }
 
-        public virtual async Task<PagedResult<T>> GetPagedAsync(IQueryable<T> query, PaginationRequest request)
+        public virtual async Task<PagedResult<T>> GetPagedAsync(IQueryable<T> query, PaginationRequest request, CancellationToken cancellationToken = default)
         {
-            var totalCount = await query.CountAsync();
+            var totalCount = await query.CountAsync(cancellationToken);
             var items = await query
                .Skip((request.PageNumber - 1) * request.PageSize)
                .Take(request.PageSize)
-               .ToListAsync();
+               .ToListAsync(cancellationToken);
 
             return new PagedResult<T>
             {
@@ -69,10 +69,10 @@ namespace Reignite.Infrastructure.Repositories
             };
         }
 
-        public virtual async Task UpdateAsync(T entity)
+        public virtual async Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
         {
             _dbSet.Update(entity);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

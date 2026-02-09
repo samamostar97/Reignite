@@ -23,17 +23,17 @@ namespace Reignite.API.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public override Task<ActionResult<PagedResult<SupplierResponse>>> GetAllPagedAsync([FromQuery] SupplierQueryFilter filter) => base.GetAllPagedAsync(filter);
+        public override Task<ActionResult<PagedResult<SupplierResponse>>> GetAllPagedAsync([FromQuery] SupplierQueryFilter filter, CancellationToken cancellationToken = default) => base.GetAllPagedAsync(filter, cancellationToken);
 
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public override Task<ActionResult<SupplierResponse>> GetById(int id) => base.GetById(id);
+        public override Task<ActionResult<SupplierResponse>> GetById(int id, CancellationToken cancellationToken = default) => base.GetById(id, cancellationToken);
 
         [AllowAnonymous]
         [HttpGet("all")]
-        public async Task<ActionResult<List<SupplierResponse>>> GetAll()
+        public async Task<ActionResult<List<SupplierResponse>>> GetAll(CancellationToken cancellationToken = default)
         {
-            var suppliers = await _supplierService.GetAllAsync();
+            var suppliers = await _supplierService.GetAllAsync(cancellationToken);
             return Ok(suppliers);
         }
     }

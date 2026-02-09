@@ -24,17 +24,17 @@ namespace Reignite.API.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public override Task<ActionResult<PagedResult<ProjectResponse>>> GetAllPagedAsync([FromQuery] ProjectQueryFilter filter)
-            => base.GetAllPagedAsync(filter);
+        public override Task<ActionResult<PagedResult<ProjectResponse>>> GetAllPagedAsync([FromQuery] ProjectQueryFilter filter, CancellationToken cancellationToken = default)
+            => base.GetAllPagedAsync(filter, cancellationToken);
 
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public override Task<ActionResult<ProjectResponse>> GetById(int id)
-            => base.GetById(id);
+        public override Task<ActionResult<ProjectResponse>> GetById(int id, CancellationToken cancellationToken = default)
+            => base.GetById(id, cancellationToken);
 
         [Authorize(Roles = "Admin,AppUser")]
         [HttpPost]
-        public override async Task<ActionResult<ProjectResponse>> Create([FromBody] CreateProjectRequest dto)
+        public override async Task<ActionResult<ProjectResponse>> Create([FromBody] CreateProjectRequest dto, CancellationToken cancellationToken = default)
         {
             // For regular users, force UserId from authenticated user (security)
             // Admins can create projects on behalf of users using the UserId from request
@@ -44,36 +44,36 @@ namespace Reignite.API.Controllers
                 dto.UserId = currentUserId;
             }
 
-            return await base.Create(dto);
+            return await base.Create(dto, cancellationToken);
         }
         [Authorize(Roles = "Admin,AppUser")]
         [HttpPut("{id}")]
-        public override async Task<ActionResult<ProjectResponse>> Update(int id, [FromBody] UpdateProjectRequest dto)
+        public override async Task<ActionResult<ProjectResponse>> Update(int id, [FromBody] UpdateProjectRequest dto, CancellationToken cancellationToken = default)
         {
-            if (!await IsOwnerOrAdmin(id))
+            if (!await IsOwnerOrAdmin(id, cancellationToken))
                 return Forbid();
 
-            return await base.Update(id, dto);
+            return await base.Update(id, dto, cancellationToken);
         }
         [Authorize(Roles = "Admin,AppUser")]
         [HttpDelete("{id}")]
-        public override async Task<ActionResult> Delete(int id)
+        public override async Task<ActionResult> Delete(int id, CancellationToken cancellationToken = default)
         {
-            if (!await IsOwnerOrAdmin(id))
+            if (!await IsOwnerOrAdmin(id, cancellationToken))
                 return Forbid();
 
-            return await base.Delete(id);
+            return await base.Delete(id, cancellationToken);
         }
 
         [AllowAnonymous]
         [HttpGet("top-rated")]
-        public async Task<ActionResult<PagedResult<ProjectResponse>>> GetTopRated([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 3)
+        public async Task<ActionResult<PagedResult<ProjectResponse>>> GetTopRated([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 3, CancellationToken cancellationToken = default)
         {
-            var result = await _projectService.GetTopRatedProjectsAsync(pageNumber, pageSize);
+            var result = await _projectService.GetTopRatedProjectsAsync(pageNumber, pageSize, cancellationToken);
             return Ok(result);
         }
 
-        private async Task<bool> IsOwnerOrAdmin(int projectId)
+        private async Task<bool> IsOwnerOrAdmin(int projectId, CancellationToken cancellationToken = default)
         {
             if (User.IsInRole("Admin"))
                 return true;
@@ -83,7 +83,7 @@ namespace Reignite.API.Controllers
                 return false;
 
             // Efficient ownership check without loading the full project
-            return await _projectService.IsOwnerAsync(projectId, userId);
+            return await _projectService.IsOwnerAsync(projectId, userId, cancellationToken);
         }
 
         private int GetCurrentUserId()

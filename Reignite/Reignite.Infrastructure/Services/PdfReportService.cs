@@ -24,7 +24,7 @@ namespace Reignite.Infrastructure.Services
             _orderItemRepository = orderItemRepository;
         }
 
-        public async Task<byte[]> GenerateOrdersReportAsync(DateTime startDate, DateTime endDate)
+        public async Task<byte[]> GenerateOrdersReportAsync(DateTime startDate, DateTime endDate, CancellationToken cancellationToken = default)
         {
             var orders = await _orderRepository.AsQueryable()
                 .AsNoTracking()
@@ -33,7 +33,7 @@ namespace Reignite.Infrastructure.Services
                     .ThenInclude(oi => oi.Product)
                 .Where(o => o.PurchaseDate >= startDate && o.PurchaseDate <= endDate)
                 .OrderByDescending(o => o.PurchaseDate)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             var totalRevenue = orders.Sum(o => o.TotalAmount);
             var avgOrderValue = orders.Count > 0 ? totalRevenue / orders.Count : 0;
@@ -150,7 +150,7 @@ namespace Reignite.Infrastructure.Services
             return document.GeneratePdf();
         }
 
-        public async Task<byte[]> GenerateRevenueReportAsync(DateTime startDate, DateTime endDate)
+        public async Task<byte[]> GenerateRevenueReportAsync(DateTime startDate, DateTime endDate, CancellationToken cancellationToken = default)
         {
             var orders = await _orderRepository.AsQueryable()
                 .AsNoTracking()
@@ -159,7 +159,7 @@ namespace Reignite.Infrastructure.Services
                         .ThenInclude(p => p.ProductCategory)
                 .Where(o => o.PurchaseDate >= startDate && o.PurchaseDate <= endDate)
                 .OrderBy(o => o.PurchaseDate)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             var totalRevenue = orders.Sum(o => o.TotalAmount);
             var totalOrders = orders.Count;

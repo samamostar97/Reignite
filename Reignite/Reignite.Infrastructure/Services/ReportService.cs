@@ -31,14 +31,14 @@ namespace Reignite.Infrastructure.Services
             _projectReviewRepository = projectReviewRepository;
         }
 
-        public async Task<DashboardReportResponse> GetDashboardReportAsync()
+        public async Task<DashboardReportResponse> GetDashboardReportAsync(CancellationToken cancellationToken = default)
         {
-            var revenueSummary = await GetRevenueSummaryAsync();
-            var salesChart = await GetSalesChartAsync(30);
-            var topProducts = await GetTopProductsAsync(5);
-            var recentOrders = await GetRecentOrdersAsync(10);
-            var userGrowth = await GetUserGrowthAsync(30);
-            var ratingOverview = await GetRatingOverviewAsync();
+            var revenueSummary = await GetRevenueSummaryAsync(cancellationToken);
+            var salesChart = await GetSalesChartAsync(30, cancellationToken);
+            var topProducts = await GetTopProductsAsync(5, cancellationToken);
+            var recentOrders = await GetRecentOrdersAsync(10, cancellationToken);
+            var userGrowth = await GetUserGrowthAsync(30, cancellationToken);
+            var ratingOverview = await GetRatingOverviewAsync(cancellationToken);
 
             return new DashboardReportResponse
             {
@@ -51,7 +51,7 @@ namespace Reignite.Infrastructure.Services
             };
         }
 
-        public async Task<RevenueSummaryResponse> GetRevenueSummaryAsync()
+        public async Task<RevenueSummaryResponse> GetRevenueSummaryAsync(CancellationToken cancellationToken = default)
         {
             var now = DateTime.UtcNow;
             var todayStart = now.Date;
@@ -63,15 +63,15 @@ namespace Reignite.Infrastructure.Services
             var query = _orderRepository.AsQueryable().AsNoTracking();
 
             // Execute aggregations in the database
-            var totalRevenue = await query.SumAsync(o => o.TotalAmount);
-            var totalOrders = await query.CountAsync();
-            var todayRevenue = await query.Where(o => o.PurchaseDate >= todayStart).SumAsync(o => o.TotalAmount);
-            var todayOrders = await query.Where(o => o.PurchaseDate >= todayStart).CountAsync();
-            var weekRevenue = await query.Where(o => o.PurchaseDate >= weekStart).SumAsync(o => o.TotalAmount);
-            var monthRevenue = await query.Where(o => o.PurchaseDate >= monthStart).SumAsync(o => o.TotalAmount);
+            var totalRevenue = await query.SumAsync(o => o.TotalAmount, cancellationToken);
+            var totalOrders = await query.CountAsync(cancellationToken);
+            var todayRevenue = await query.Where(o => o.PurchaseDate >= todayStart).SumAsync(o => o.TotalAmount, cancellationToken);
+            var todayOrders = await query.Where(o => o.PurchaseDate >= todayStart).CountAsync(cancellationToken);
+            var weekRevenue = await query.Where(o => o.PurchaseDate >= weekStart).SumAsync(o => o.TotalAmount, cancellationToken);
+            var monthRevenue = await query.Where(o => o.PurchaseDate >= monthStart).SumAsync(o => o.TotalAmount, cancellationToken);
             var lastMonthRevenue = await query
                 .Where(o => o.PurchaseDate >= lastMonthStart && o.PurchaseDate <= lastMonthEnd)
-                .SumAsync(o => o.TotalAmount);
+                .SumAsync(o => o.TotalAmount, cancellationToken);
 
             var revenueChangePercent = lastMonthRevenue > 0
                 ? ((monthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100
@@ -90,7 +90,7 @@ namespace Reignite.Infrastructure.Services
             };
         }
 
-        public async Task<List<SalesChartDataPoint>> GetSalesChartAsync(int days = 30)
+        public async Task<List<SalesChartDataPoint>> GetSalesChartAsync(int days = 30, CancellationToken cancellationToken = default)
         {
             var startDate = DateTime.UtcNow.Date.AddDays(-days + 1);
 
@@ -100,7 +100,7 @@ namespace Reignite.Infrastructure.Services
                 .Where(o => o.PurchaseDate >= startDate)
                 .GroupBy(o => o.PurchaseDate.Date)
                 .Select(g => new { Date = g.Key, Revenue = g.Sum(o => o.TotalAmount), OrderCount = g.Count() })
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             var lookup = dailyData.ToDictionary(d => d.Date, d => d);
 
@@ -119,7 +119,7 @@ namespace Reignite.Infrastructure.Services
             return result;
         }
 
-        public async Task<List<TopProductResponse>> GetTopProductsAsync(int count = 5)
+        public async Task<List<TopProductResponse>> GetTopProductsAsync(int count = 5, CancellationToken cancellationToken = default)
         {
             // Do aggregation in database, then fetch product details
             var topProductIds = await _orderItemRepository.AsQueryable()
@@ -133,7 +133,7 @@ namespace Reignite.Infrastructure.Services
                 })
                 .OrderByDescending(x => x.TotalRevenue)
                 .Take(count)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             var productIds = topProductIds.Select(x => x.ProductId).ToList();
 
@@ -141,7 +141,7 @@ namespace Reignite.Infrastructure.Services
                 .AsNoTracking()
                 .Include(p => p.ProductCategory)
                 .Where(p => productIds.Contains(p.Id))
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             var productLookup = products.ToDictionary(p => p.Id);
 
@@ -156,7 +156,7 @@ namespace Reignite.Infrastructure.Services
             }).ToList();
         }
 
-        public async Task<List<RecentOrderResponse>> GetRecentOrdersAsync(int count = 10)
+        public async Task<List<RecentOrderResponse>> GetRecentOrdersAsync(int count = 10, CancellationToken cancellationToken = default)
         {
             var orders = await _orderRepository.AsQueryable()
                 .AsNoTracking()
@@ -164,7 +164,7 @@ namespace Reignite.Infrastructure.Services
                 .Include(o => o.OrderItems)
                 .OrderByDescending(o => o.PurchaseDate)
                 .Take(count)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return orders.Select(o => new RecentOrderResponse
             {
@@ -178,7 +178,7 @@ namespace Reignite.Infrastructure.Services
             }).ToList();
         }
 
-        public async Task<UserGrowthResponse> GetUserGrowthAsync(int days = 30)
+        public async Task<UserGrowthResponse> GetUserGrowthAsync(int days = 30, CancellationToken cancellationToken = default)
         {
             var now = DateTime.UtcNow;
             var todayStart = now.Date;
@@ -191,12 +191,12 @@ namespace Reignite.Infrastructure.Services
             var query = _userRepository.AsQueryable().AsNoTracking();
 
             // Execute counts in database
-            var totalUsers = await query.CountAsync();
-            var newUsersToday = await query.CountAsync(u => u.CreatedAt >= todayStart);
-            var newUsersThisWeek = await query.CountAsync(u => u.CreatedAt >= weekStart);
-            var newUsersThisMonth = await query.CountAsync(u => u.CreatedAt >= monthStart);
-            var lastMonthUsers = await query.CountAsync(u => u.CreatedAt >= lastMonthStart && u.CreatedAt <= lastMonthEnd);
-            var usersBeforeStartDate = await query.CountAsync(u => u.CreatedAt < startDate);
+            var totalUsers = await query.CountAsync(cancellationToken);
+            var newUsersToday = await query.CountAsync(u => u.CreatedAt >= todayStart, cancellationToken);
+            var newUsersThisWeek = await query.CountAsync(u => u.CreatedAt >= weekStart, cancellationToken);
+            var newUsersThisMonth = await query.CountAsync(u => u.CreatedAt >= monthStart, cancellationToken);
+            var lastMonthUsers = await query.CountAsync(u => u.CreatedAt >= lastMonthStart && u.CreatedAt <= lastMonthEnd, cancellationToken);
+            var usersBeforeStartDate = await query.CountAsync(u => u.CreatedAt < startDate, cancellationToken);
 
             var growthPercent = lastMonthUsers > 0
                 ? ((double)(newUsersThisMonth - lastMonthUsers) / lastMonthUsers) * 100
@@ -207,7 +207,7 @@ namespace Reignite.Infrastructure.Services
                 .Where(u => u.CreatedAt >= startDate)
                 .GroupBy(u => u.CreatedAt.Date)
                 .Select(g => new { Date = g.Key, Count = g.Count() })
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             var dailyLookup = dailyCounts.ToDictionary(d => d.Date, d => d.Count);
 
@@ -239,28 +239,28 @@ namespace Reignite.Infrastructure.Services
             };
         }
 
-        public async Task<RatingOverviewResponse> GetRatingOverviewAsync()
+        public async Task<RatingOverviewResponse> GetRatingOverviewAsync(CancellationToken cancellationToken = default)
         {
             var productQuery = _productReviewRepository.AsQueryable().AsNoTracking();
             var projectQuery = _projectReviewRepository.AsQueryable().AsNoTracking();
 
             // Execute aggregations in database
-            var totalProductReviews = await productQuery.CountAsync();
-            var avgProductRating = totalProductReviews > 0 ? await productQuery.AverageAsync(r => r.Rating) : 0;
+            var totalProductReviews = await productQuery.CountAsync(cancellationToken);
+            var avgProductRating = totalProductReviews > 0 ? await productQuery.AverageAsync(r => r.Rating, cancellationToken) : 0;
 
-            var totalProjectReviews = await projectQuery.CountAsync();
-            var avgProjectRating = totalProjectReviews > 0 ? await projectQuery.AverageAsync(r => r.Rating) : 0;
+            var totalProjectReviews = await projectQuery.CountAsync(cancellationToken);
+            var avgProjectRating = totalProjectReviews > 0 ? await projectQuery.AverageAsync(r => r.Rating, cancellationToken) : 0;
 
             // Get rating distributions with single queries
             var productRatingDist = await productQuery
                 .GroupBy(r => r.Rating)
                 .Select(g => new { Rating = g.Key, Count = g.Count() })
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             var projectRatingDist = await projectQuery
                 .GroupBy(r => r.Rating)
                 .Select(g => new { Rating = g.Key, Count = g.Count() })
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             var productDistLookup = productRatingDist.ToDictionary(r => r.Rating, r => r.Count);
             var projectDistLookup = projectRatingDist.ToDictionary(r => r.Rating, r => r.Count);

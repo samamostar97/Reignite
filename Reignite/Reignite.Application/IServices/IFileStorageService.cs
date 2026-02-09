@@ -9,8 +9,8 @@ namespace Reignite.Application.IServices
 {
     public interface IFileStorageService
     {
-        Task<FileUploadResponse> UploadAsync(FileUploadRequest request, string category, string uniqueId);
-        Task<bool> DeleteAsync(string? fileUrl);
+        Task<FileUploadResponse> UploadAsync(FileUploadRequest request, string category, string uniqueId, CancellationToken cancellationToken = default);
+        Task<bool> DeleteAsync(string? fileUrl, CancellationToken cancellationToken = default);
         string[] AllowedExtensions { get; }
         long MaxFileSizeBytes { get; }
     }
