@@ -50,6 +50,7 @@ namespace Reignite.API.Extensions
             services.AddScoped<IWishlistService, WishlistService>();
             services.AddScoped<IProjectReviewService, ProjectReviewService>();
             services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IPdfReportService, PdfReportService>();
             services.AddScoped<IFileStorageService>(sp =>
             {
                 var env = sp.GetRequiredService<IWebHostEnvironment>();
