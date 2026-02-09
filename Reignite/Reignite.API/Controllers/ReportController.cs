@@ -11,10 +11,12 @@ namespace Reignite.API.Controllers
     public class ReportController : ControllerBase
     {
         private readonly IReportService _reportService;
+        private readonly IPdfReportService _pdfReportService;
 
-        public ReportController(IReportService reportService)
+        public ReportController(IReportService reportService, IPdfReportService pdfReportService)
         {
             _reportService = reportService;
+            _pdfReportService = pdfReportService;
         }
 
         [HttpGet("dashboard")]
@@ -64,6 +66,20 @@ namespace Reignite.API.Controllers
         {
             var ratings = await _reportService.GetRatingOverviewAsync();
             return Ok(ratings);
+        }
+
+        [HttpGet("export/orders")]
+        public async Task<IActionResult> ExportOrdersReport([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+        {
+            var pdf = await _pdfReportService.GenerateOrdersReportAsync(startDate, endDate.Date.AddDays(1).AddSeconds(-1));
+            return File(pdf, "application/pdf", $"Reignite_Narudzbe_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}.pdf");
+        }
+
+        [HttpGet("export/revenue")]
+        public async Task<IActionResult> ExportRevenueReport([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+        {
+            var pdf = await _pdfReportService.GenerateRevenueReportAsync(startDate, endDate.Date.AddDays(1).AddSeconds(-1));
+            return File(pdf, "application/pdf", $"Reignite_Prihodi_{startDate:yyyyMMdd}_{endDate:yyyyMMdd}.pdf");
         }
     }
 }

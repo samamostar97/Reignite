@@ -54,4 +54,18 @@ export class ReportService {
   getRatingOverview(): Observable<RatingOverviewResponse> {
     return this.http.get<RatingOverviewResponse>(`${this.baseUrl}/ratings`);
   }
+
+  exportOrdersReport(startDate: string, endDate: string): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/export/orders`, {
+      params: { startDate, endDate },
+      responseType: 'blob'
+    });
+  }
+
+  exportRevenueReport(startDate: string, endDate: string): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/export/revenue`, {
+      params: { startDate, endDate },
+      responseType: 'blob'
+    });
+  }
 }

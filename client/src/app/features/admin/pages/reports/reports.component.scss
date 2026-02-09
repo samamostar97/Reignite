@@ -612,3 +612,124 @@ $smoke: #5a3a2a;
     }
   }
 }
+
+// PDF Export Section
+.export-section {
+  background: #1A1410;
+  border-radius: 12px;
+  border: 1px solid rgba($ember, 0.15);
+  padding: 28px;
+  margin-top: 24px;
+}
+
+.export-header {
+  margin-bottom: 20px;
+
+  h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.25rem;
+    color: #FAF5F0;
+    margin-bottom: 4px;
+  }
+
+  p {
+    color: #7A6B59;
+    font-size: 0.85rem;
+  }
+}
+
+.export-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.date-inputs {
+  display: flex;
+  gap: 16px;
+}
+
+.date-field {
+  flex: 1;
+
+  label {
+    display: block;
+    color: #C4B5A3;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+  }
+
+  input[type="date"] {
+    width: 100%;
+    padding: 10px 14px;
+    background: #231C15;
+    border: 1px solid rgba($ember, 0.2);
+    border-radius: 8px;
+    color: #FAF5F0;
+    font-size: 0.9rem;
+    font-family: 'Space Grotesk', sans-serif;
+    transition: all 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: $ember;
+      box-shadow: 0 0 0 3px rgba($ember, 0.1);
+    }
+
+    &::-webkit-calendar-picker-indicator {
+      filter: invert(0.6);
+      cursor: pointer;
+    }
+  }
+}
+
+.export-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-export {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, $ember, $flame);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 8px rgba($ember, 0.3);
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba($ember, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+@media (max-width: 640px) {
+  .date-inputs {
+    flex-direction: column;
+  }
+
+  .export-buttons {
+    flex-direction: column;
+  }
+}
