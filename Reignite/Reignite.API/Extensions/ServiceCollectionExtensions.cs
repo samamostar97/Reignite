@@ -49,6 +49,7 @@ namespace Reignite.API.Extensions
             services.AddScoped<IFaqService, FaqService>();
             services.AddScoped<IWishlistService, WishlistService>();
             services.AddScoped<IProjectReviewService, ProjectReviewService>();
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IFileStorageService>(sp =>
             {
                 var env = sp.GetRequiredService<IWebHostEnvironment>();
@@ -91,6 +92,24 @@ namespace Reignite.API.Extensions
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
                 };
             });
+
+            return services;
+        }
+
+        public static IServiceCollection AddStripePayment(this IServiceCollection services)
+        {
+            var secretKey = Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY")
+                ?? throw new InvalidOperationException("STRIPE_SECRET_KEY not configured");
+            var publishableKey = Environment.GetEnvironmentVariable("STRIPE_PUBLISHABLE_KEY")
+                ?? throw new InvalidOperationException("STRIPE_PUBLISHABLE_KEY not configured");
+
+            services.Configure<StripeSettings>(options =>
+            {
+                options.SecretKey = secretKey;
+                options.PublishableKey = publishableKey;
+            });
+
+            Stripe.StripeConfiguration.ApiKey = secretKey;
 
             return services;
         }

@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddInfrastructure()
     .AddJwtAuthentication()
+    .AddStripePayment()
     .AddSwaggerWithAuth()
     .AddCorsPolicy(builder.Environment)
     .AddControllers();
