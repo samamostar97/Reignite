@@ -14,17 +14,6 @@ namespace Reignite.Infrastructure.Data.Configurations
             builder.Property(h => h.Description).HasMaxLength(500);
 
             builder.HasIndex(h => h.Name).IsUnique().HasFilter("[IsDeleted] = 0");
-
-            var seedDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
-            builder.HasData(
-                new Hobby { Id = 1, Name = "Stolarija", Description = "Umjetnost izrade predmeta od drveta, od namještaja do dekorativnih komada.", CreatedAt = seedDate },
-                new Hobby { Id = 2, Name = "Obrada kože", Description = "Izrada novčanika, remena, torbi i drugih predmeta od kože.", CreatedAt = seedDate },
-                new Hobby { Id = 3, Name = "Obrada metala", Description = "Oblikovanje i kovanje metala u alate i funkcionalne predmete.", CreatedAt = seedDate },
-                new Hobby { Id = 4, Name = "Keramika", Description = "Oblikovanje gline u keramičke predmete, od posuda do skulptura.", CreatedAt = seedDate },
-                new Hobby { Id = 5, Name = "Izrada svijeća", Description = "Izrada jedinstvenih svijeća sa posebnim mirisima i dizajnom.", CreatedAt = seedDate },
-                new Hobby { Id = 6, Name = "Rezbarenje", Description = "Umjetnost oblikovanja drveta ručnim alatima.", CreatedAt = seedDate }
-            );
         }
     }
 }
