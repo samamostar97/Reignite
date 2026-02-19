@@ -12,7 +12,10 @@ public static class DatabaseSeeder
     {
         await context.Database.MigrateAsync();
 
-        if (await context.Users.IgnoreQueryFilters().AnyAsync(u => u.Email == "admin@reignite.ba"))
+        var hasAdmin = await context.Users.IgnoreQueryFilters().AnyAsync(u => u.Email == "admin@reignite.ba");
+        var hasProducts = await context.Products.AnyAsync();
+
+        if (hasAdmin && hasProducts)
         {
             Console.WriteLine("[Seeder] Baza vec popunjena.");
             return;
