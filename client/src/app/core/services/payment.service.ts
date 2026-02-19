@@ -14,7 +14,7 @@ export class PaymentService {
     return this.http.get<PaymentConfigResponse>(`${this.baseUrl}/config`);
   }
 
-  createPaymentIntent(items: CreateOrderItemRequest[]): Observable<PaymentIntentResponse> {
-    return this.http.post<PaymentIntentResponse>(`${this.baseUrl}/create-intent`, { items });
+  createPaymentIntent(items: CreateOrderItemRequest[], couponCode?: string): Observable<PaymentIntentResponse> {
+    return this.http.post<PaymentIntentResponse>(`${this.baseUrl}/create-intent`, { items, couponCode });
   }
 }

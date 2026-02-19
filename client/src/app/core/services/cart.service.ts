@@ -1,4 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core';
+import { CouponResponse } from '../models/coupon.model';
 
 export interface CartItem {
   productId: number;
@@ -13,11 +14,29 @@ const CART_KEY = 'reignite_cart';
 @Injectable({ providedIn: 'root' })
 export class CartService {
   private readonly _items = signal<CartItem[]>(this.loadFromStorage());
+  private readonly _appliedCoupon = signal<CouponResponse | null>(null);
 
   readonly items = this._items.asReadonly();
   readonly count = computed(() => this._items().reduce((sum, item) => sum + item.quantity, 0));
   readonly total = computed(() => this._items().reduce((sum, item) => sum + item.unitPrice * item.quantity, 0));
   readonly isEmpty = computed(() => this._items().length === 0);
+
+  readonly appliedCoupon = this._appliedCoupon.asReadonly();
+
+  readonly discountAmount = computed(() => {
+    const coupon = this._appliedCoupon();
+    if (!coupon) return 0;
+    const subtotal = this.total();
+    if (coupon.discountType === 'Percentage') {
+      return Math.min(subtotal, subtotal * coupon.discountValue / 100);
+    }
+    return Math.min(subtotal, coupon.discountValue);
+  });
+
+  readonly discountedTotal = computed(() => {
+    const result = this.total() - this.discountAmount();
+    return result < 0 ? 0 : result;
+  });
 
   addItem(product: { id: number; name: string; productImageUrl?: string; price: number }, quantity = 1): void {
     const items = [...this._items()];
@@ -57,8 +76,17 @@ export class CartService {
     this.saveToStorage(items);
   }
 
+  applyCoupon(coupon: CouponResponse): void {
+    this._appliedCoupon.set(coupon);
+  }
+
+  removeCoupon(): void {
+    this._appliedCoupon.set(null);
+  }
+
   clear(): void {
     this._items.set([]);
+    this._appliedCoupon.set(null);
     localStorage.removeItem(CART_KEY);
   }
 

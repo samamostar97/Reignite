@@ -13,6 +13,8 @@ namespace Reignite.Application.DTOs.Request
         public List<CreateOrderItemRequest> Items { get; set; } = new();
 
         public string? StripePaymentIntentId { get; set; }
+        public string? CouponCode { get; set; }
+        public decimal DiscountAmount { get; set; }
     }
 
     public class CreateOrderItemRequest

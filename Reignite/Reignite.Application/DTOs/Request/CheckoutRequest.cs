@@ -10,5 +10,7 @@ namespace Reignite.Application.DTOs.Request
 
         [Required(ErrorMessage = "Stripe PaymentIntent ID je obavezan.")]
         public string StripePaymentIntentId { get; set; } = string.Empty;
+
+        public string? CouponCode { get; set; }
     }
 }

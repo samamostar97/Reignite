@@ -15,6 +15,8 @@ namespace Reignite.Core.Entities
         public DateTime PurchaseDate { get; set; }
         public OrderStatus Status { get; set; } = OrderStatus.Processing;
         public string? StripePaymentId { get; set; }
+        public string? CouponCode { get; set; }
+        public decimal DiscountAmount { get; set; }
 
         // Navigation properties
         public User User { get; set; } = null!;

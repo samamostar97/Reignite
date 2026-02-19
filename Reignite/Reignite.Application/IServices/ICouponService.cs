@@ -7,5 +7,7 @@ namespace Reignite.Application.IServices
 {
     public interface ICouponService : IService<Coupon, CouponResponse, CreateCouponRequest, UpdateCouponRequest, CouponQueryFilter, int>
     {
+        Task<CouponResponse> ValidateCouponAsync(string code, decimal orderTotal, CancellationToken cancellationToken = default);
+        Task IncrementUsageAsync(string code, CancellationToken cancellationToken = default);
     }
 }

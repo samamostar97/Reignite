@@ -18,13 +18,15 @@ namespace Reignite.API.Controllers
         private readonly IOrderService _orderService;
         private readonly IWishlistService _wishlistService;
         private readonly IPaymentService _paymentService;
+        private readonly ICouponService _couponService;
 
-        public ProfileController(IUserService userService, IOrderService orderService, IWishlistService wishlistService, IPaymentService paymentService)
+        public ProfileController(IUserService userService, IOrderService orderService, IWishlistService wishlistService, IPaymentService paymentService, ICouponService couponService)
         {
             _userService = userService;
             _orderService = orderService;
             _wishlistService = wishlistService;
             _paymentService = paymentService;
+            _couponService = couponService;
         }
 
         private int GetCurrentUserId() =>
@@ -217,11 +219,42 @@ namespace Reignite.API.Controllers
             if (!paymentVerified)
                 return BadRequest("Plaćanje nije uspjelo. Molimo pokušajte ponovo.");
 
+            // Calculate discount if coupon is provided
+            decimal discountAmount = 0;
+            if (!string.IsNullOrEmpty(request.CouponCode))
+            {
+                try
+                {
+                    var coupon = await _couponService.ValidateCouponAsync(request.CouponCode, 0, cancellationToken);
+
+                    // Calculate subtotal from items to determine discount
+                    var subtotal = await _paymentService.CalculateSubtotalAsync(request.Items, cancellationToken);
+
+                    if (coupon.DiscountType == "Percentage")
+                        discountAmount = subtotal * coupon.DiscountValue / 100;
+                    else
+                        discountAmount = coupon.DiscountValue;
+
+                    if (discountAmount > subtotal) discountAmount = subtotal;
+
+                    // Increment coupon usage
+                    await _couponService.IncrementUsageAsync(request.CouponCode, cancellationToken);
+                }
+                catch
+                {
+                    // If coupon validation fails at checkout, proceed without discount
+                    discountAmount = 0;
+                    request.CouponCode = null;
+                }
+            }
+
             var createOrderRequest = new CreateOrderRequest
             {
                 UserId = userId,
                 Items = request.Items,
-                StripePaymentIntentId = request.StripePaymentIntentId
+                StripePaymentIntentId = request.StripePaymentIntentId,
+                CouponCode = request.CouponCode,
+                DiscountAmount = discountAmount
             };
             var order = await _orderService.CreateAsync(createOrderRequest, cancellationToken);
             return Created($"/api/profile/orders", order);

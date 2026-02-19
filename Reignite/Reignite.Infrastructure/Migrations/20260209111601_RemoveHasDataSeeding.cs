@@ -13,6 +13,21 @@ namespace Reignite.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            // Clear all dependent records that may reference seeded data (runtime seeder re-creates them)
+            migrationBuilder.Sql("DELETE FROM [ProjectReviews]");
+            migrationBuilder.Sql("DELETE FROM [ProductReviews]");
+            migrationBuilder.Sql("DELETE FROM [OrderItems]");
+            migrationBuilder.Sql("DELETE FROM [Orders]");
+            migrationBuilder.Sql("DELETE FROM [WishlistItems]");
+            migrationBuilder.Sql("DELETE FROM [Wishlist]");
+            migrationBuilder.Sql("DELETE FROM [UserHobbies]");
+            migrationBuilder.Sql("DELETE FROM [Projects]");
+            migrationBuilder.Sql("DELETE FROM [Products]");
+            migrationBuilder.Sql("DELETE FROM [ProductCategories]");
+            migrationBuilder.Sql("DELETE FROM [Hobbies]");
+            migrationBuilder.Sql("DELETE FROM [Coupons]");
+            migrationBuilder.Sql("DELETE FROM [Faqs]");
+
             migrationBuilder.DeleteData(
                 table: "Coupons",
                 keyColumn: "Id",

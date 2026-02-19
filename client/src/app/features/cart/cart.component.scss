@@ -299,6 +299,126 @@ $flame: #f7931e;
   font-weight: 500;
 }
 
+// Coupon section
+.coupon-input-section {
+  margin-top: 12px;
+}
+
+.coupon-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.coupon-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 107, 53, 0.2);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: #2c1810;
+  background: #faf8f5;
+  transition: border-color 0.2s;
+
+  &::placeholder {
+    color: #a08070;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $ember;
+    box-shadow: 0 0 0 3px rgba($ember, 0.1);
+  }
+}
+
+.coupon-btn {
+  padding: 10px 16px;
+  background: rgba(44, 24, 16, 0.08);
+  border: 1px solid rgba(255, 107, 53, 0.15);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #5a3a2a;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    background: rgba($ember, 0.1);
+    color: $ember;
+    border-color: $ember;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.coupon-error {
+  color: #ef4444;
+  font-size: 0.8rem;
+  margin: 6px 0 0;
+}
+
+.coupon-applied {
+  margin-top: 12px;
+}
+
+.coupon-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(5, 150, 105, 0.08);
+  border: 1px solid rgba(5, 150, 105, 0.2);
+  border-radius: 6px;
+  margin-bottom: 8px;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    color: #059669;
+    flex-shrink: 0;
+  }
+}
+
+.coupon-code-text {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #059669;
+  flex: 1;
+}
+
+.coupon-remove {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #a08070;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  &:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.08);
+  }
+}
+
+.summary-row.discount {
+  color: #059669;
+  font-weight: 500;
+}
+
 .summary-divider {
   height: 1px;
   background: rgba(255, 107, 53, 0.12);

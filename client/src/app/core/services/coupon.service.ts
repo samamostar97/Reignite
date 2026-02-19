@@ -7,7 +7,8 @@ import {
   CouponResponse,
   CouponQueryFilter,
   CreateCouponRequest,
-  UpdateCouponRequest
+  UpdateCouponRequest,
+  ValidateCouponRequest
 } from '../models/coupon.model';
 
 @Injectable({
@@ -44,5 +45,9 @@ export class CouponService {
 
   deleteCoupon(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  validateCoupon(request: ValidateCouponRequest): Observable<CouponResponse> {
+    return this.http.post<CouponResponse>(`${this.apiUrl}/validate`, request);
   }
 }

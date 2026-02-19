@@ -12,6 +12,8 @@ namespace Reignite.Infrastructure.Data.Configurations
             builder.Property(o => o.TotalAmount).HasPrecision(18, 2).IsRequired();
             builder.Property(o => o.PurchaseDate).IsRequired();
             builder.Property(o => o.StripePaymentId).HasMaxLength(255);
+            builder.Property(o => o.CouponCode).HasMaxLength(50);
+            builder.Property(o => o.DiscountAmount).HasPrecision(18, 2);
 
             builder.HasOne(o => o.User)
                 .WithMany(u => u.Orders)

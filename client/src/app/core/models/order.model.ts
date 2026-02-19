@@ -27,6 +27,8 @@ export interface OrderResponse {
   status: OrderStatus;
   statusName: string;
   stripePaymentId?: string;
+  couponCode?: string;
+  discountAmount: number;
   itemCount: number;
   items: OrderItemResponse[];
 }
@@ -55,4 +57,5 @@ export interface UpdateOrderRequest {
 export interface CheckoutRequest {
   items: CreateOrderItemRequest[];
   stripePaymentIntentId: string;
+  couponCode?: string;
 }

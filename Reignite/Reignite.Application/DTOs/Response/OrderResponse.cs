@@ -18,6 +18,8 @@ namespace Reignite.Application.DTOs.Response
         public OrderStatus Status { get; set; }
         public string StatusName => Status.ToString();
         public string? StripePaymentId { get; set; }
+        public string? CouponCode { get; set; }
+        public decimal DiscountAmount { get; set; }
         public int ItemCount { get; set; }
         public List<OrderItemResponse> Items { get; set; } = new();
     }

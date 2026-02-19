@@ -100,5 +100,40 @@ namespace Reignite.Infrastructure.Services
 
             return query;
         }
+
+        public async Task<CouponResponse> ValidateCouponAsync(string code, decimal orderTotal, CancellationToken cancellationToken = default)
+        {
+            var coupon = await _repository.AsQueryable()
+                .FirstOrDefaultAsync(c => c.Code.ToLower() == code.ToLower(), cancellationToken);
+
+            if (coupon == null)
+                throw new KeyNotFoundException("Kupon nije pronađen.");
+
+            if (!coupon.IsActive)
+                throw new InvalidOperationException("Ovaj kupon nije aktivan.");
+
+            if (coupon.ExpiryDate.HasValue && coupon.ExpiryDate.Value < DateTime.UtcNow)
+                throw new InvalidOperationException("Ovaj kupon je istekao.");
+
+            if (coupon.MaxUses.HasValue && coupon.TimesUsed >= coupon.MaxUses.Value)
+                throw new InvalidOperationException("Ovaj kupon je iskorišten maksimalan broj puta.");
+
+            if (coupon.MinimumOrderAmount.HasValue && orderTotal < coupon.MinimumOrderAmount.Value)
+                throw new InvalidOperationException($"Minimalan iznos narudžbe za ovaj kupon je {coupon.MinimumOrderAmount.Value:F2} KM.");
+
+            return _mapper.Map<CouponResponse>(coupon);
+        }
+
+        public async Task IncrementUsageAsync(string code, CancellationToken cancellationToken = default)
+        {
+            var coupon = await _repository.AsQueryable()
+                .FirstOrDefaultAsync(c => c.Code.ToLower() == code.ToLower(), cancellationToken);
+
+            if (coupon != null)
+            {
+                coupon.TimesUsed++;
+                await _repository.UpdateAsync(coupon, cancellationToken);
+            }
+        }
     }
 }

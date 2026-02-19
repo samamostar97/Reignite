@@ -11,15 +11,16 @@ namespace Reignite.Infrastructure.Services
     public class PaymentService : IPaymentService
     {
         private readonly IRepository<Core.Entities.Product, int> _productRepository;
+        private readonly ICouponService _couponService;
 
-        public PaymentService(IRepository<Core.Entities.Product, int> productRepository)
+        public PaymentService(IRepository<Core.Entities.Product, int> productRepository, ICouponService couponService)
         {
             _productRepository = productRepository;
+            _couponService = couponService;
         }
 
-        public async Task<PaymentIntentResponse> CreatePaymentIntentAsync(List<CreateOrderItemRequest> items, CancellationToken cancellationToken = default)
+        public async Task<decimal> CalculateSubtotalAsync(List<CreateOrderItemRequest> items, CancellationToken cancellationToken = default)
         {
-            // Validate and calculate total from actual DB prices
             var productIds = items.Select(i => i.ProductId).Distinct().ToList();
             var products = await _productRepository.AsQueryable()
                 .Where(p => productIds.Contains(p.Id))
@@ -29,11 +30,42 @@ namespace Reignite.Infrastructure.Services
             if (missingProducts.Any())
                 throw new KeyNotFoundException($"Proizvodi nisu pronađeni: {string.Join(", ", missingProducts)}");
 
-            var totalAmount = items.Sum(item => item.Quantity * products[item.ProductId]);
+            return items.Sum(item => item.Quantity * products[item.ProductId]);
+        }
+
+        public async Task<PaymentIntentResponse> CreatePaymentIntentAsync(List<CreateOrderItemRequest> items, string? couponCode = null, CancellationToken cancellationToken = default)
+        {
+            var subtotal = await CalculateSubtotalAsync(items, cancellationToken);
+            var totalAmount = subtotal;
+
+            // Apply coupon discount if provided
+            if (!string.IsNullOrEmpty(couponCode))
+            {
+                try
+                {
+                    var coupon = await _couponService.ValidateCouponAsync(couponCode, subtotal, cancellationToken);
+
+                    decimal discountAmount;
+                    if (coupon.DiscountType == "Percentage")
+                        discountAmount = subtotal * coupon.DiscountValue / 100;
+                    else
+                        discountAmount = coupon.DiscountValue;
+
+                    if (discountAmount > subtotal) discountAmount = subtotal;
+                    totalAmount = subtotal - discountAmount;
+                }
+                catch
+                {
+                    // If coupon validation fails, charge full amount
+                }
+            }
+
+            if (totalAmount < 0.50m) totalAmount = 0.50m; // Stripe minimum
 
             // Stripe expects amount in smallest currency unit (cents for EUR)
             var amountInCents = (long)(totalAmount * 100);
 
+            var productIds = items.Select(i => i.ProductId).Distinct().ToList();
             var options = new PaymentIntentCreateOptions
             {
                 Amount = amountInCents,

@@ -57,9 +57,21 @@
             </div>
           }
         </div>
+        @if (cartService.appliedCoupon()) {
+          <div class="review-discount">
+            <div class="discount-line">
+              <span>Međuzbir:</span>
+              <span>{{ formatPrice(cartService.total()) }} KM</span>
+            </div>
+            <div class="discount-line coupon-line">
+              <span>Kupon ({{ cartService.appliedCoupon()!.code }})</span>
+              <span>-{{ formatPrice(cartService.discountAmount()) }} KM</span>
+            </div>
+          </div>
+        }
         <div class="review-total">
           <span>Ukupno:</span>
-          <span>{{ formatPrice(cartService.total()) }} KM</span>
+          <span>{{ formatPrice(cartService.discountedTotal()) }} KM</span>
         </div>
         <div class="step-actions">
           <a routerLink="/cart" class="btn-secondary">Nazad na Korpu</a>
@@ -159,10 +171,16 @@
                 <span>Dostava</span>
                 <span class="free">Besplatna</span>
               </div>
+              @if (cartService.appliedCoupon()) {
+                <div class="summary-line discount">
+                  <span>Popust ({{ cartService.appliedCoupon()!.code }})</span>
+                  <span>-{{ formatPrice(cartService.discountAmount()) }} KM</span>
+                </div>
+              }
               <div class="summary-divider"></div>
               <div class="summary-line total">
                 <span>Ukupno za platiti</span>
-                <span>{{ formatPrice(cartService.total()) }} KM</span>
+                <span>{{ formatPrice(cartService.discountedTotal()) }} KM</span>
               </div>
             </div>
 
@@ -181,7 +199,7 @@
             @if (isSubmitting()) {
               Obrađujem plaćanje...
             } @else {
-              Plati {{ formatPrice(cartService.total()) }} KM
+              Plati {{ formatPrice(cartService.discountedTotal()) }} KM
             }
           </button>
         </div>

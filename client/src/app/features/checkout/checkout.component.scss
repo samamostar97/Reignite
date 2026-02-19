@@ -209,6 +209,24 @@ $flame: #f7931e;
   white-space: nowrap;
 }
 
+.review-discount {
+  padding: 8px 0;
+
+  .discount-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    font-size: 0.95rem;
+    color: #5a3a2a;
+  }
+
+  .coupon-line {
+    color: #059669;
+    font-weight: 500;
+  }
+}
+
 .review-total {
   display: flex;
   justify-content: space-between;

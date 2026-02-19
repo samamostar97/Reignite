@@ -122,7 +122,8 @@ export class CheckoutComponent implements OnInit, OnDestroy, AfterViewChecked {
       quantity: item.quantity
     }));
 
-    this.paymentService.createPaymentIntent(items).subscribe({
+    const couponCode = this.cartService.appliedCoupon()?.code;
+    this.paymentService.createPaymentIntent(items, couponCode).subscribe({
       next: (response) => {
         this.clientSecret = response.clientSecret;
         this.paymentIntentId = response.paymentIntentId;
@@ -270,7 +271,8 @@ export class CheckoutComponent implements OnInit, OnDestroy, AfterViewChecked {
         productId: item.productId,
         quantity: item.quantity
       })),
-      stripePaymentIntentId: this.paymentIntentId!
+      stripePaymentIntentId: this.paymentIntentId!,
+      couponCode: this.cartService.appliedCoupon()?.code
     };
 
     this.profileService.checkout(request).subscribe({

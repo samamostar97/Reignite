@@ -40,3 +40,8 @@ export interface CouponQueryFilter extends PaginationRequest {
   isExpired?: boolean;
   orderBy?: string;
 }
+
+export interface ValidateCouponRequest {
+  code: string;
+  orderTotal: number;
+}

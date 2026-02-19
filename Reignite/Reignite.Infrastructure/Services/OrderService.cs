@@ -45,7 +45,9 @@ namespace Reignite.Infrastructure.Services
             }).ToList();
 
             // Calculate total amount
-            var totalAmount = orderItems.Sum(oi => oi.Quantity * oi.UnitPrice);
+            var subtotal = orderItems.Sum(oi => oi.Quantity * oi.UnitPrice);
+            var totalAmount = subtotal - request.DiscountAmount;
+            if (totalAmount < 0) totalAmount = 0;
 
             // Create order
             var order = new Order
@@ -55,6 +57,8 @@ namespace Reignite.Infrastructure.Services
                 PurchaseDate = DateTime.UtcNow,
                 Status = OrderStatus.Processing,
                 StripePaymentId = request.StripePaymentIntentId,
+                CouponCode = request.CouponCode,
+                DiscountAmount = request.DiscountAmount,
                 OrderItems = orderItems
             };
 
@@ -161,6 +165,8 @@ namespace Reignite.Infrastructure.Services
                 PurchaseDate = order.PurchaseDate,
                 Status = order.Status,
                 StripePaymentId = order.StripePaymentId,
+                CouponCode = order.CouponCode,
+                DiscountAmount = order.DiscountAmount,
                 ItemCount = order.OrderItems?.Sum(oi => oi.Quantity) ?? 0,
                 Items = order.OrderItems?.Select(oi => new OrderItemResponse
                 {

@@ -14,8 +14,31 @@ namespace Reignite.API.Controllers
     [Authorize(Roles = "Admin")]
     public class CouponController : BaseController<Coupon, CouponResponse, CreateCouponRequest, UpdateCouponRequest, CouponQueryFilter, int>
     {
+        private readonly ICouponService _couponService;
+
         public CouponController(ICouponService service) : base(service)
         {
+            _couponService = service;
+        }
+
+        // POST api/coupons/validate - accessible to any authenticated user
+        [HttpPost("validate")]
+        [Authorize]
+        public async Task<ActionResult<CouponResponse>> ValidateCoupon([FromBody] ValidateCouponRequest request, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var coupon = await _couponService.ValidateCouponAsync(request.Code, request.OrderTotal, cancellationToken);
+                return Ok(coupon);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { error = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
     }
 }
