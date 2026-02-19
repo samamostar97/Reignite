@@ -10,6 +10,10 @@ public static class DatabaseSeeder
 
     public static async Task SeedAsync(ReigniteDbContext context, string webRootPath)
     {
+        // InMemory provider doesn't support migrations, transactions, or raw SQL
+        if (context.Database.ProviderName == "Microsoft.EntityFrameworkCore.InMemory")
+            return;
+
         await context.Database.MigrateAsync();
 
         var hasAdmin = await context.Users.IgnoreQueryFilters().AnyAsync(u => u.Email == "admin@reignite.ba");
