@@ -1,6 +1,20 @@
 <div class="review-list">
   <div class="page-header">
     <div class="header-left">
+      <div class="tab-switcher">
+        <button
+          class="tab-btn"
+          [class.active]="activeTab() === 'product'"
+          (click)="switchTab('product')">
+          Recenzije Proizvoda
+        </button>
+        <button
+          class="tab-btn"
+          [class.active]="activeTab() === 'project'"
+          (click)="switchTab('project')">
+          Recenzije Projekata
+        </button>
+      </div>
       <p class="total-count">Ukupno: <strong>{{ totalCount() }}</strong> recenzija</p>
     </div>
     <div class="header-actions">
@@ -57,7 +71,7 @@
           <tr>
             <th>ID</th>
             <th>Korisnik</th>
-            <th>Proizvod</th>
+            <th>{{ targetLabel() }}</th>
             <th>Ocjena</th>
             <th>Komentar</th>
             <th>Datum</th>
@@ -79,7 +93,7 @@
                 <span class="user-name">{{ review.userName }}</span>
               </td>
               <td class="cell-product">
-                {{ review.productName }}
+                {{ review.targetName }}
               </td>
               <td class="cell-rating">
                 <div class="rating-display">
@@ -164,7 +178,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
             </svg>
           </div>
-          <p>Jeste li sigurni da želite obrisati recenziju korisnika <strong>{{ reviewToDelete()?.userName }}</strong> za proizvod <strong>{{ reviewToDelete()?.productName }}</strong>?</p>
+          <p>Jeste li sigurni da želite obrisati recenziju korisnika <strong>{{ reviewToDelete()?.userName }}</strong> za {{ activeTab() === 'product' ? 'proizvod' : 'projekat' }} <strong>{{ reviewToDelete()?.targetName }}</strong>?</p>
           <p class="warning-note">Ova akcija se ne može poništiti.</p>
         </div>
       </div>

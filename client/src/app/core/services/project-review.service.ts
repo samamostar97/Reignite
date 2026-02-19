@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { ProjectReviewResponse } from '../models/project.model';
+import { ProjectReviewResponse, ProjectReviewQueryFilter } from '../models/project.model';
 import { PagedResult } from '../models/common.model';
 
 export interface CreateProjectReviewRequest {
@@ -20,6 +20,18 @@ export interface UpdateProjectReviewRequest {
 export class ProjectReviewService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/project-reviews`;
+
+  getReviews(filter: ProjectReviewQueryFilter): Observable<PagedResult<ProjectReviewResponse>> {
+    let params = new HttpParams()
+      .set('pageNumber', (filter.pageNumber ?? 1).toString())
+      .set('pageSize', (filter.pageSize ?? 10).toString());
+
+    if (filter.minRating !== undefined) params = params.set('minRating', filter.minRating.toString());
+    if (filter.maxRating !== undefined) params = params.set('maxRating', filter.maxRating.toString());
+    if (filter.orderBy) params = params.set('orderBy', filter.orderBy);
+
+    return this.http.get<PagedResult<ProjectReviewResponse>>(this.apiUrl, { params });
+  }
 
   getByProjectId(projectId: number, pageNumber = 1, pageSize = 20): Observable<PagedResult<ProjectReviewResponse>> {
     const params = new HttpParams()

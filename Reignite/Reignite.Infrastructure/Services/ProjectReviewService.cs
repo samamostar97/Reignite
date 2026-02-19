@@ -194,6 +194,9 @@ namespace Reignite.Infrastructure.Services
                 Id = review.Id,
                 UserId = review.UserId,
                 UserName = review.User != null ? $"{review.User.FirstName} {review.User.LastName}" : "Nepoznat korisnik",
+                UserProfileImageUrl = review.User?.ProfileImageUrl,
+                ProjectId = review.ProjectId,
+                ProjectName = review.Project?.Title ?? "Nepoznat projekat",
                 Rating = review.Rating,
                 Comment = review.Comment,
                 CreatedAt = review.CreatedAt

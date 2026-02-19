@@ -28,6 +28,37 @@ $smoke: #5a3a2a;
   flex-wrap: wrap;
 }
 
+// Tab switcher
+.tab-switcher {
+  display: flex;
+  gap: 0.25rem;
+  background: rgba(44, 24, 16, 0.06);
+  padding: 0.25rem;
+  border-radius: 10px;
+}
+
+.tab-btn {
+  padding: 0.55rem 1rem;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #5a3a2a;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #2c1810;
+  }
+
+  &.active {
+    background: #fff;
+    color: #2c1810;
+    box-shadow: 0 1px 3px rgba(44, 24, 16, 0.1);
+  }
+}
+
 .header-left {
   display: flex;
   align-items: center;

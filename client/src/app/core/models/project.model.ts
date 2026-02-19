@@ -5,9 +5,22 @@ export interface ProjectReviewResponse {
   id: number;
   userId: number;
   userName: string;
+  userProfileImageUrl?: string;
+  projectId: number;
+  projectName: string;
   rating: number;
   comment?: string;
   createdAt: string;
+}
+
+export interface ProjectReviewQueryFilter {
+  pageNumber?: number;
+  pageSize?: number;
+  projectId?: number;
+  userId?: number;
+  minRating?: number;
+  maxRating?: number;
+  orderBy?: string;
 }
 
 // Response DTO - matches backend ProjectResponse
