@@ -23,10 +23,19 @@ public static class DatabaseSeeder
 
         Console.WriteLine("[Seeder] Popunjavam bazu podataka...");
 
-        await DownloadImagesAsync(webRootPath);
+        // Seed data FIRST — database must always be populated even if images fail
         await ClearAndSeedAsync(context);
-
         Console.WriteLine("[Seeder] Baza uspjesno popunjena!");
+
+        // Download images AFTER seeding — non-fatal if it fails
+        try
+        {
+            await DownloadImagesAsync(webRootPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Seeder] Upozorenje: Slike nisu preuzete ({ex.Message}). Aplikacija ce raditi bez slika.");
+        }
     }
 
     private static async Task DownloadImagesAsync(string webRootPath)
@@ -78,25 +87,26 @@ public static class DatabaseSeeder
 
     private static async Task ClearAndSeedAsync(ReigniteDbContext context)
     {
-        // Delete in FK-safe order (children before parents)
-        var tablesToClear = new[]
-        {
-            "WishlistItems", "Wishlist", "OrderItems", "ProjectReviews",
-            "ProductReviews", "Projects", "UserHobbies", "UserAddresses",
-            "RefreshTokens", "Orders", "Products", "ProductCategories",
-            "Suppliers", "Hobbies", "Coupons", "Faqs", "Users"
-        };
-
-        foreach (var table in tablesToClear)
-        {
-            await context.Database.ExecuteSqlRawAsync($"DELETE FROM [{table}]");
-            try { await context.Database.ExecuteSqlRawAsync($"DBCC CHECKIDENT ('[{table}]', RESEED, 0)"); }
-            catch { /* Table might not have identity column */ }
-        }
-
+        // Everything inside a single transaction — atomic clear + seed
         using var transaction = await context.Database.BeginTransactionAsync();
         try
         {
+            // Delete in FK-safe order (children before parents)
+            var tablesToClear = new[]
+            {
+                "WishlistItems", "Wishlist", "OrderItems", "ProjectReviews",
+                "ProductReviews", "Projects", "UserHobbies", "UserAddresses",
+                "RefreshTokens", "Orders", "Products", "ProductCategories",
+                "Suppliers", "Hobbies", "Coupons", "Faqs", "Users"
+            };
+
+            foreach (var table in tablesToClear)
+            {
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [" + table + "]");
+                try { await context.Database.ExecuteSqlRawAsync("DBCC CHECKIDENT ('[" + table + "]', RESEED, 0)"); }
+                catch { /* Table might not have identity column */ }
+            }
+
             var adminHash = BCrypt.Net.BCrypt.HashPassword("test");
             var userHash = BCrypt.Net.BCrypt.HashPassword("test123");
 
@@ -444,9 +454,12 @@ public static class DatabaseSeeder
 
             await transaction.CommitAsync();
         }
-        catch
+        catch (Exception ex)
         {
             await transaction.RollbackAsync();
+            Console.WriteLine($"[Seeder] GRESKA pri seedanju: {ex.Message}");
+            if (ex.InnerException != null)
+                Console.WriteLine($"[Seeder] Detalji: {ex.InnerException.Message}");
             throw;
         }
     }
@@ -454,11 +467,11 @@ public static class DatabaseSeeder
     private static async Task InsertWithIdentityAsync<T>(
         ReigniteDbContext context, string tableName, IEnumerable<T> entities, int maxId) where T : class
     {
-        await context.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT [{tableName}] ON");
+        await context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT [" + tableName + "] ON");
         context.Set<T>().AddRange(entities);
         await context.SaveChangesAsync();
-        await context.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT [{tableName}] OFF");
-        await context.Database.ExecuteSqlRawAsync($"DBCC CHECKIDENT ('[{tableName}]', RESEED, {maxId})");
+        await context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT [" + tableName + "] OFF");
+        await context.Database.ExecuteSqlRawAsync("DBCC CHECKIDENT ('[" + tableName + "]', RESEED, " + maxId + ")");
         context.ChangeTracker.Clear();
     }
 }
