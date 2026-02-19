@@ -10,6 +10,7 @@
 *.userosscache
 *.sln.docstates
 *.env
+!.env
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -424,3 +425,4 @@ client/PROJECT_STRUCTURE.md
 client/.claude/settings.local.json
 Reignite/Reignite.API/nul
 nul
+.claude/
