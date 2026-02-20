@@ -34,59 +34,77 @@ public static class DatabaseSeeder
         // Download images AFTER seeding — non-fatal if it fails
         try
         {
-            await DownloadImagesAsync(webRootPath);
+            await CopySeedImagesAsync(webRootPath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Seeder] Upozorenje: Slike nisu preuzete ({ex.Message}). Aplikacija ce raditi bez slika.");
+            Console.WriteLine($"[Seeder] Upozorenje: Slike nisu kopirane ({ex.Message}). Aplikacija ce raditi bez slika.");
         }
     }
 
-    private static async Task DownloadImagesAsync(string webRootPath)
+    private static Task CopySeedImagesAsync(string webRootPath)
     {
-        Console.WriteLine("[Seeder] Preuzimam slike...");
-
-        using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
-        var semaphore = new SemaphoreSlim(5);
+        Console.WriteLine("[Seeder] Kopiram slike...");
 
         foreach (var dir in new[] { "users", "products", "projects" })
             Directory.CreateDirectory(Path.Combine(webRootPath, "uploads", "seed", dir));
 
-        var downloads = new List<(string relativePath, string url)>();
+        // Locate bundled seed images relative to the executing assembly
+        var assemblyDir = Path.GetDirectoryName(typeof(DatabaseSeeder).Assembly.Location)!;
+        var seedImagesDir = Path.Combine(assemblyDir, "Data", "SeedImages");
 
-        for (int i = 1; i <= 7; i++)
-            downloads.Add(($"uploads/seed/users/user{i}.jpg", $"https://picsum.photos/seed/reignite-u{i}/200/200"));
+        var copies = new List<(string source, string destination)>();
 
+        // Product images (bundled)
         for (int i = 1; i <= 18; i++)
-            downloads.Add(($"uploads/seed/products/product{i}.jpg", $"https://picsum.photos/seed/reignite-p{i}/400/400"));
+            copies.Add((
+                Path.Combine(seedImagesDir, "products", $"product{i}.jpg"),
+                Path.Combine(webRootPath, "uploads", "seed", "products", $"product{i}.jpg")));
 
+        // Project images (bundled)
         for (int i = 1; i <= 8; i++)
-            downloads.Add(($"uploads/seed/projects/project{i}.jpg", $"https://picsum.photos/seed/reignite-pr{i}/600/400"));
+            copies.Add((
+                Path.Combine(seedImagesDir, "projects", $"project{i}.jpg"),
+                Path.Combine(webRootPath, "uploads", "seed", "projects", $"project{i}.jpg")));
 
-        var tasks = downloads.Select(async d =>
+        // User images — still download from picsum.photos (no bundled images)
+        var userDownloads = new List<(string url, string destination)>();
+        for (int i = 1; i <= 7; i++)
+            userDownloads.Add((
+                $"https://picsum.photos/seed/reignite-u{i}/200/200",
+                Path.Combine(webRootPath, "uploads", "seed", "users", $"user{i}.jpg")));
+
+        int copied = 0;
+        foreach (var (source, destination) in copies)
         {
-            var filePath = Path.Combine(webRootPath, d.relativePath.Replace('/', Path.DirectorySeparatorChar));
-            if (File.Exists(filePath)) return;
+            if (File.Exists(destination)) continue;
+            if (!File.Exists(source))
+            {
+                Console.WriteLine($"  Nedostaje: {source}");
+                continue;
+            }
+            File.Copy(source, destination, overwrite: false);
+            copied++;
+        }
+        Console.WriteLine($"[Seeder] Kopirano {copied} slika.");
 
-            await semaphore.WaitAsync();
-            try
+        // Download user avatars from picsum (still placeholder — no real user photos)
+        _ = Task.Run(async () =>
+        {
+            using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
+            foreach (var (url, destination) in userDownloads)
             {
-                var bytes = await http.GetByteArrayAsync(d.url);
-                await File.WriteAllBytesAsync(filePath, bytes);
-                Console.WriteLine($"  Preuzeto: {d.relativePath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"  Greska: {d.relativePath} - {ex.Message}");
-            }
-            finally
-            {
-                semaphore.Release();
+                if (File.Exists(destination)) continue;
+                try
+                {
+                    var bytes = await http.GetByteArrayAsync(url);
+                    await File.WriteAllBytesAsync(destination, bytes);
+                }
+                catch { /* Non-critical */ }
             }
         });
 
-        await Task.WhenAll(tasks);
-        Console.WriteLine("[Seeder] Slike preuzete.");
+        return Task.CompletedTask;
     }
 
     private static async Task ClearAndSeedAsync(ReigniteDbContext context)

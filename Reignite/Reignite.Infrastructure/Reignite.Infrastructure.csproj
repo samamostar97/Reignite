@@ -28,4 +28,8 @@
     <ProjectReference Include="..\Reignite.Core\Reignite.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="Data\SeedImages\**\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
