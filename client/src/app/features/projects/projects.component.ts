@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { ProjectService } from '../../core/services/project.service';
 import { HobbyService } from '../../core/services/hobby.service';
+import { AuthService } from '../../core/services/auth.service';
 import { ProjectResponse } from '../../core/models/project.model';
 import { HobbyResponse } from '../../core/models/hobby.model';
 import { HeaderComponent } from '../../shared/components/header/header.component';
@@ -22,6 +23,7 @@ import { getImageUrl } from '../../shared/utils/image.utils';
 export class ProjectsComponent implements OnInit, OnDestroy {
   private readonly projectService = inject(ProjectService);
   private readonly hobbyService = inject(HobbyService);
+  private readonly authService = inject(AuthService);
   private readonly sanitizer = inject(DomSanitizer);
   private readonly destroy$ = new Subject<void>();
   private readonly searchSubject = new Subject<string>();
@@ -31,6 +33,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   protected readonly hobbies = signal<HobbyResponse[]>([]);
   protected readonly isLoading = signal(true);
   protected readonly isLoadingHobbies = signal(true);
+  protected readonly isAuthenticated = this.authService.isAuthenticated;
 
   // Pagination
   protected readonly totalCount = signal(0);

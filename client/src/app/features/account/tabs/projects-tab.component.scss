@@ -1,0 +1,423 @@
+$ember: #ff6b35;
+$flame: #f7931e;
+$ash: #2c1810;
+$smoke: #5a3a2a;
+
+.tab-panel {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid rgba($ember, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  padding: 2rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// Header with title + add button
+.tab-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.tab-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: $ash;
+  margin: 0 0 0.25rem 0;
+}
+
+.tab-description {
+  color: #8b4513;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.btn-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  background: linear-gradient(135deg, $ember, $flame);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba($ember, 0.25);
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba($ember, 0.35);
+  }
+}
+
+// Loading
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4rem 2rem;
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba($ember, 0.15);
+    border-top-color: $ember;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  p {
+    color: $smoke;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Empty state
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 2rem;
+  text-align: center;
+
+  .empty-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: rgba($ember, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+
+    svg {
+      width: 36px;
+      height: 36px;
+      color: $ember;
+    }
+  }
+
+  h4 {
+    font-size: 1.1rem;
+    color: $ash;
+    margin: 0 0 0.5rem 0;
+    font-weight: 600;
+  }
+
+  > p {
+    color: #8b4513;
+    font-size: 0.9rem;
+    margin: 0 0 1.5rem 0;
+  }
+}
+
+.btn-add-empty {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.5rem;
+  background: linear-gradient(135deg, $ember, $flame);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba($ember, 0.25);
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba($ember, 0.35);
+  }
+}
+
+// Projects grid
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+// Project card
+.project-card {
+  background: #FFF8F0;
+  border-radius: 14px;
+  border: 1px solid rgba($ash, 0.06);
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: rgba($ember, 0.2);
+    box-shadow: 0 6px 20px rgba($ember, 0.08);
+  }
+}
+
+.project-image-link {
+  display: block;
+  text-decoration: none;
+}
+
+.project-image {
+  width: 100%;
+  height: 160px;
+  background-size: cover;
+  background-position: center;
+  background-color: #FAEBD7;
+  transition: opacity 0.2s ease;
+
+  .project-image-link:hover & {
+    opacity: 0.9;
+  }
+}
+
+.project-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 40px;
+    height: 40px;
+    color: #c4a882;
+  }
+}
+
+.project-body {
+  padding: 1rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+// Meta row: hobby badge + date
+.project-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.hobby-badge {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  background: linear-gradient(135deg, $ember, $flame);
+  color: #fff;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.project-date {
+  color: #8b4513;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+// Title
+.project-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: $ash;
+  text-decoration: none;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: $ember;
+  }
+}
+
+// Description
+.project-desc {
+  color: $smoke;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Stats row
+.project-stats {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.25rem;
+}
+
+.stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: $smoke;
+  font-size: 0.82rem;
+
+  svg {
+    width: 15px;
+    height: 15px;
+    color: $flame;
+    flex-shrink: 0;
+  }
+
+  span {
+    white-space: nowrap;
+  }
+}
+
+// Action buttons
+.project-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba($ash, 0.06);
+}
+
+.btn-edit,
+.btn-delete {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+
+  svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+.btn-edit {
+  background: rgba($ember, 0.08);
+  color: $ember;
+  border: 1px solid rgba($ember, 0.15);
+
+  &:hover {
+    background: $ember;
+    color: #fff;
+    border-color: $ember;
+  }
+}
+
+.btn-delete {
+  background: rgba(#dc2626, 0.06);
+  color: #dc2626;
+  border: 1px solid rgba(#dc2626, 0.15);
+
+  &:hover {
+    background: #dc2626;
+    color: #fff;
+    border-color: #dc2626;
+  }
+}
+
+// Pagination
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.pagination-btn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #faf8f5;
+  border: 1px solid rgba($ember, 0.15);
+  border-radius: 8px;
+  color: $smoke;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: $ember;
+    border-color: $ember;
+    color: #fff;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.pagination-info {
+  font-size: 0.85rem;
+  color: $smoke;
+  font-weight: 500;
+}
+
+// Responsive
+@media (max-width: 640px) {
+  .tab-panel {
+    padding: 1.25rem;
+  }
+
+  .tab-header {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .btn-add {
+    align-self: flex-start;
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-image {
+    height: 140px;
+  }
+
+  .project-actions {
+    flex-wrap: wrap;
+  }
+}

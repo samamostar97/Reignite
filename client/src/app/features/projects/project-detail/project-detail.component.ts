@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -8,6 +8,9 @@ import { takeUntil } from 'rxjs/operators';
 import { ProjectService } from '../../../core/services/project.service';
 import { ProjectReviewService } from '../../../core/services/project-review.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { NotificationService } from '../../../core/services/notification.service';
+import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { ProjectResponse, ProjectReviewResponse } from '../../../core/models/project.model';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { EmberBackgroundComponent } from '../../../shared/components/ember-background/ember-background.component';
@@ -16,7 +19,7 @@ import { getImageUrl, getInitials } from '../../../shared/utils/image.utils';
 @Component({
   selector: 'app-project-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, HeaderComponent, EmberBackgroundComponent],
+  imports: [CommonModule, RouterLink, FormsModule, HeaderComponent, EmberBackgroundComponent, ConfirmDialogComponent],
   templateUrl: './project-detail.component.html',
   styleUrl: './project-detail.component.scss'
 })
@@ -26,10 +29,17 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   private readonly projectService = inject(ProjectService);
   private readonly reviewService = inject(ProjectReviewService);
   private readonly authService = inject(AuthService);
+  private readonly notification = inject(NotificationService);
+  private readonly confirmDialog = inject(ConfirmDialogService);
   private readonly sanitizer = inject(DomSanitizer);
   private readonly destroy$ = new Subject<void>();
 
   protected readonly isAuthenticated = this.authService.isAuthenticated;
+  protected readonly isOwner = computed(() => {
+    const p = this.project();
+    const user = this.authService.currentUser();
+    return !!(p && user && p.userId === user.id);
+  });
 
   protected readonly project = signal<ProjectResponse | null>(null);
   protected readonly reviews = signal<ProjectReviewResponse[]>([]);
@@ -120,6 +130,32 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
         error: (err) => {
           this.reviewError.set(err?.error?.message || 'Greška pri slanju recenzije.');
           this.isSubmittingReview.set(false);
+        }
+      });
+  }
+
+  protected async deleteProject(): Promise<void> {
+    const p = this.project();
+    if (!p) return;
+
+    const confirmed = await this.confirmDialog.open({
+      title: 'Brisanje projekta',
+      message: `Da li ste sigurni da želite obrisati projekat "${p.title}"?`,
+      confirmText: 'Obriši',
+      cancelText: 'Otkaži'
+    });
+
+    if (!confirmed) return;
+
+    this.projectService.deleteProject(p.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.notification.success({ title: 'Uspjeh', message: 'Projekat je obrisan.' });
+          this.router.navigate(['/projects']);
+        },
+        error: () => {
+          this.notification.error({ title: 'Greška', message: 'Greška prilikom brisanja projekta.' });
         }
       });
   }

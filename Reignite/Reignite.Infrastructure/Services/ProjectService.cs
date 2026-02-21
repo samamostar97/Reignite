@@ -150,6 +150,9 @@ namespace Reignite.Infrastructure.Services
             if (filter.HobbyId.HasValue)
                 query = query.Where(x => x.HobbyId == filter.HobbyId.Value);
 
+            if (filter.UserId.HasValue)
+                query = query.Where(x => x.UserId == filter.UserId.Value);
+
             if (!string.IsNullOrEmpty(filter.OrderBy))
             {
                 query = filter.OrderBy.ToLower() switch

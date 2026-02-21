@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { PagedResult } from '../models/common.model';
-import { ProjectResponse, ProjectQueryFilter, CreateProjectRequest } from '../models/project.model';
+import { ProjectResponse, ProjectQueryFilter, CreateProjectRequest, UpdateProjectRequest } from '../models/project.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +21,7 @@ export class ProjectService {
       if (filter.search) params = params.set('search', filter.search);
       if (filter.orderBy) params = params.set('orderBy', filter.orderBy);
       if (filter.hobbyId) params = params.set('hobbyId', filter.hobbyId.toString());
+      if (filter.userId) params = params.set('userId', filter.userId.toString());
     }
 
     return this.http.get<PagedResult<ProjectResponse>>(this.apiUrl, { params });
@@ -42,6 +43,10 @@ export class ProjectService {
 
   createProject(request: CreateProjectRequest): Observable<ProjectResponse> {
     return this.http.post<ProjectResponse>(this.apiUrl, request);
+  }
+
+  updateProject(id: number, request: UpdateProjectRequest): Observable<ProjectResponse> {
+    return this.http.put<ProjectResponse>(`${this.apiUrl}/${id}`, request);
   }
 
   uploadProjectImage(id: number, file: File): Observable<{ fileUrl: string }> {

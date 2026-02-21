@@ -12,7 +12,6 @@ namespace Reignite.API.Controllers
 {
     [ApiController]
     [Route("api/projects")]
-    [Authorize(Roles = "Admin")]
     public class ProjectController : BaseController<Project, ProjectResponse, CreateProjectRequest, UpdateProjectRequest, ProjectQueryFilter, int>
     {
         private readonly IProjectService _projectService;

@@ -10,6 +10,14 @@
     <div class="hero-content">
       <h1 class="page-title">Projekti Zajednice</h1>
       <p class="page-subtitle">Pogledajte šta naša zajednica stvara</p>
+      @if (isAuthenticated()) {
+        <a routerLink="/projects/new" class="hero-cta">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          Dodaj Projekat
+        </a>
+      }
     </div>
   </section>
 

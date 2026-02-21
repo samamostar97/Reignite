@@ -12,5 +12,6 @@ namespace Reignite.Application.Filters
         public string? Search { get; set; }
         public string? OrderBy { get; set; }
         public int? HobbyId { get; set; }
+        public int? UserId { get; set; }
     }
 }
