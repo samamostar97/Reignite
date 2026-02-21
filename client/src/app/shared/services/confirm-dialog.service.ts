@@ -55,6 +55,7 @@ export class ConfirmDialogService {
   }
 
   confirm(): void {
+    this._state.update(state => ({ ...state, isOpen: false, error: null, isLoading: false }));
     this.confirmSubject.next(true);
   }
 
