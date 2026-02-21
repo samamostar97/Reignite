@@ -9,7 +9,7 @@ export class WishlistStateService {
   private readonly authService = inject(AuthService);
 
   private readonly _items = signal<WishlistItemResponse[]>([]);
-  private _loaded = false;
+  private _loadedForUserId: number | null = null;
 
   readonly items = this._items.asReadonly();
   readonly count = computed(() => this._items().length);
@@ -19,8 +19,14 @@ export class WishlistStateService {
   }
 
   loadWishlist(): void {
-    if (this._loaded || !this.authService.isAuthenticated()) return;
-    this._loaded = true;
+    if (!this.authService.isAuthenticated()) return;
+
+    const currentUserId = this.authService.currentUser()?.id ?? null;
+
+    // If already loaded for this user, skip
+    if (this._loadedForUserId === currentUserId && currentUserId !== null) return;
+
+    this._loadedForUserId = currentUserId;
 
     this.profileService.getWishlist().subscribe({
       next: (wishlist) => {
@@ -58,6 +64,6 @@ export class WishlistStateService {
 
   reset(): void {
     this._items.set([]);
-    this._loaded = false;
+    this._loadedForUserId = null;
   }
 }

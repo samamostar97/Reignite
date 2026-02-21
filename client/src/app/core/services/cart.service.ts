@@ -1,5 +1,6 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject, effect } from '@angular/core';
 import { CouponResponse } from '../models/coupon.model';
+import { AuthService } from './auth.service';
 
 export interface CartItem {
   productId: number;
@@ -9,12 +10,25 @@ export interface CartItem {
   quantity: number;
 }
 
-const CART_KEY = 'reignite_cart';
-
 @Injectable({ providedIn: 'root' })
 export class CartService {
-  private readonly _items = signal<CartItem[]>(this.loadFromStorage());
+  private readonly authService = inject(AuthService);
+
+  private readonly _items = signal<CartItem[]>([]);
   private readonly _appliedCoupon = signal<CouponResponse | null>(null);
+  private _loadedForUserId: number | null = null;
+
+  constructor() {
+    this.ensureCorrectUser();
+    effect(() => {
+      const userId = this.authService.currentUser()?.id ?? null;
+      if (this._loadedForUserId !== userId) {
+        this._loadedForUserId = userId;
+        this._items.set(this.loadFromStorage());
+        this._appliedCoupon.set(null);
+      }
+    });
+  }
 
   readonly items = this._items.asReadonly();
   readonly count = computed(() => this._items().reduce((sum, item) => sum + item.quantity, 0));
@@ -38,7 +52,22 @@ export class CartService {
     return result < 0 ? 0 : result;
   });
 
+  private get cartKey(): string {
+    const userId = this.authService.currentUser()?.id;
+    return userId ? `reignite_cart_${userId}` : 'reignite_cart_guest';
+  }
+
+  private ensureCorrectUser(): void {
+    const currentUserId = this.authService.currentUser()?.id ?? null;
+    if (this._loadedForUserId !== currentUserId) {
+      this._loadedForUserId = currentUserId;
+      this._items.set(this.loadFromStorage());
+      this._appliedCoupon.set(null);
+    }
+  }
+
   addItem(product: { id: number; name: string; productImageUrl?: string; price: number }, quantity = 1): void {
+    this.ensureCorrectUser();
     const items = [...this._items()];
     const existing = items.find(i => i.productId === product.id);
 
@@ -59,6 +88,7 @@ export class CartService {
   }
 
   removeItem(productId: number): void {
+    this.ensureCorrectUser();
     const items = this._items().filter(i => i.productId !== productId);
     this._items.set(items);
     this.saveToStorage(items);
@@ -69,6 +99,7 @@ export class CartService {
       this.removeItem(productId);
       return;
     }
+    this.ensureCorrectUser();
     const items = this._items().map(i =>
       i.productId === productId ? { ...i, quantity } : i
     );
@@ -87,12 +118,12 @@ export class CartService {
   clear(): void {
     this._items.set([]);
     this._appliedCoupon.set(null);
-    localStorage.removeItem(CART_KEY);
+    localStorage.removeItem(this.cartKey);
   }
 
   private loadFromStorage(): CartItem[] {
     try {
-      const data = localStorage.getItem(CART_KEY);
+      const data = localStorage.getItem(this.cartKey);
       return data ? JSON.parse(data) : [];
     } catch {
       return [];
@@ -100,6 +131,6 @@ export class CartService {
   }
 
   private saveToStorage(items: CartItem[]): void {
-    localStorage.setItem(CART_KEY, JSON.stringify(items));
+    localStorage.setItem(this.cartKey, JSON.stringify(items));
   }
 }
