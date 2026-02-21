@@ -6,7 +6,15 @@ namespace Reignite.Infrastructure.Data;
 
 public static class DatabaseSeeder
 {
-    private static readonly DateTime SeedDate = new(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+    // All seed dates are relative to "now" so the data always looks fresh
+    private static readonly DateTime Now = DateTime.UtcNow;
+    private static readonly DateTime SeedDate = Ago(90);
+
+    private static DateTime Ago(int days, int hour = 0, int minute = 0)
+        => Now.AddDays(-days).Date.AddHours(hour).AddMinutes(minute);
+
+    private static DateTime FromNow(int days)
+        => Now.AddDays(days).Date;
 
     public static async Task SeedAsync(ReigniteDbContext context, string webRootPath)
     {
@@ -251,37 +259,35 @@ public static class DatabaseSeeder
             await InsertWithIdentityAsync(context, "UserHobbies", userHobbies, 15);
 
             // ==================== ORDERS (20) ====================
-            // Nov 2025: 3 orders (~331 KM) | Dec 2025: 7 orders (~931 KM)
-            // Jan 2026: 4 orders (~379 KM) | Feb 2026: 6 orders (~943 KM)
             var orders = new[]
             {
-                // November 2025 - early adoption
-                new Order { Id = 1, UserId = 3, TotalAmount = 64.90m, PurchaseDate = new DateTime(2025, 11, 5, 14, 30, 0, DateTimeKind.Utc), Status = OrderStatus.Delivered, CreatedAt = new DateTime(2025, 11, 5, 14, 30, 0, DateTimeKind.Utc) },
-                new Order { Id = 2, UserId = 4, TotalAmount = 149.99m, PurchaseDate = new DateTime(2025, 11, 12, 10, 15, 0, DateTimeKind.Utc), Status = OrderStatus.Delivered, CreatedAt = new DateTime(2025, 11, 12, 10, 15, 0, DateTimeKind.Utc) },
-                new Order { Id = 3, UserId = 2, TotalAmount = 116.50m, PurchaseDate = new DateTime(2025, 11, 20, 16, 45, 0, DateTimeKind.Utc), Status = OrderStatus.Delivered, CreatedAt = new DateTime(2025, 11, 20, 16, 45, 0, DateTimeKind.Utc) },
+                // ~3.5 months ago - early adoption
+                new Order { Id = 1, UserId = 3, TotalAmount = 64.90m, PurchaseDate = Ago(108, 14, 30), Status = OrderStatus.Delivered, CreatedAt = Ago(108, 14, 30) },
+                new Order { Id = 2, UserId = 4, TotalAmount = 149.99m, PurchaseDate = Ago(101, 10, 15), Status = OrderStatus.Delivered, CreatedAt = Ago(101, 10, 15) },
+                new Order { Id = 3, UserId = 2, TotalAmount = 116.50m, PurchaseDate = Ago(93, 16, 45), Status = OrderStatus.Delivered, CreatedAt = Ago(93, 16, 45) },
 
-                // December 2025 - holiday peak
-                new Order { Id = 4, UserId = 5, TotalAmount = 274.00m, PurchaseDate = new DateTime(2025, 12, 3, 9, 20, 0, DateTimeKind.Utc), Status = OrderStatus.Delivered, CreatedAt = new DateTime(2025, 12, 3, 9, 20, 0, DateTimeKind.Utc) },
-                new Order { Id = 5, UserId = 3, TotalAmount = 86.15m, PurchaseDate = new DateTime(2025, 12, 8, 11, 0, 0, DateTimeKind.Utc), Status = OrderStatus.Delivered, CreatedAt = new DateTime(2025, 12, 8, 11, 0, 0, DateTimeKind.Utc) },
-                new Order { Id = 6, UserId = 6, TotalAmount = 165.00m, PurchaseDate = new DateTime(2025, 12, 12, 13, 30, 0, DateTimeKind.Utc), Status = OrderStatus.Delivered, CreatedAt = new DateTime(2025, 12, 12, 13, 30, 0, DateTimeKind.Utc) },
-                new Order { Id = 7, UserId = 2, TotalAmount = 102.90m, PurchaseDate = new DateTime(2025, 12, 15, 17, 0, 0, DateTimeKind.Utc), Status = OrderStatus.Delivered, CreatedAt = new DateTime(2025, 12, 15, 17, 0, 0, DateTimeKind.Utc) },
-                new Order { Id = 8, UserId = 7, TotalAmount = 144.90m, PurchaseDate = new DateTime(2025, 12, 18, 15, 15, 0, DateTimeKind.Utc), Status = OrderStatus.Delivered, CreatedAt = new DateTime(2025, 12, 18, 15, 15, 0, DateTimeKind.Utc) },
-                new Order { Id = 9, UserId = 4, TotalAmount = 55.90m, PurchaseDate = new DateTime(2025, 12, 22, 12, 0, 0, DateTimeKind.Utc), Status = OrderStatus.Cancelled, CreatedAt = new DateTime(2025, 12, 22, 12, 0, 0, DateTimeKind.Utc) },
-                new Order { Id = 10, UserId = 5, TotalAmount = 102.00m, PurchaseDate = new DateTime(2025, 12, 28, 10, 45, 0, DateTimeKind.Utc), Status = OrderStatus.Delivered, CreatedAt = new DateTime(2025, 12, 28, 10, 45, 0, DateTimeKind.Utc) },
+                // ~2-2.5 months ago - peak period
+                new Order { Id = 4, UserId = 5, TotalAmount = 274.00m, PurchaseDate = Ago(80, 9, 20), Status = OrderStatus.Delivered, CreatedAt = Ago(80, 9, 20) },
+                new Order { Id = 5, UserId = 3, TotalAmount = 86.15m, PurchaseDate = Ago(75, 11, 0), Status = OrderStatus.Delivered, CreatedAt = Ago(75, 11, 0) },
+                new Order { Id = 6, UserId = 6, TotalAmount = 165.00m, PurchaseDate = Ago(71, 13, 30), Status = OrderStatus.Delivered, CreatedAt = Ago(71, 13, 30) },
+                new Order { Id = 7, UserId = 2, TotalAmount = 102.90m, PurchaseDate = Ago(68, 17, 0), Status = OrderStatus.Delivered, CreatedAt = Ago(68, 17, 0) },
+                new Order { Id = 8, UserId = 7, TotalAmount = 144.90m, PurchaseDate = Ago(65, 15, 15), Status = OrderStatus.Delivered, CreatedAt = Ago(65, 15, 15) },
+                new Order { Id = 9, UserId = 4, TotalAmount = 55.90m, PurchaseDate = Ago(61, 12, 0), Status = OrderStatus.Cancelled, CreatedAt = Ago(61, 12, 0) },
+                new Order { Id = 10, UserId = 5, TotalAmount = 102.00m, PurchaseDate = Ago(55, 10, 45), Status = OrderStatus.Delivered, CreatedAt = Ago(55, 10, 45) },
 
-                // January 2026 - post-holiday dip
-                new Order { Id = 11, UserId = 3, TotalAmount = 48.65m, PurchaseDate = new DateTime(2026, 1, 5, 11, 30, 0, DateTimeKind.Utc), Status = OrderStatus.Delivered, CreatedAt = new DateTime(2026, 1, 5, 11, 30, 0, DateTimeKind.Utc) },
-                new Order { Id = 12, UserId = 6, TotalAmount = 42.00m, PurchaseDate = new DateTime(2026, 1, 12, 14, 0, 0, DateTimeKind.Utc), Status = OrderStatus.Delivered, CreatedAt = new DateTime(2026, 1, 12, 14, 0, 0, DateTimeKind.Utc) },
-                new Order { Id = 13, UserId = 2, TotalAmount = 174.89m, PurchaseDate = new DateTime(2026, 1, 18, 16, 30, 0, DateTimeKind.Utc), Status = OrderStatus.Cancelled, CreatedAt = new DateTime(2026, 1, 18, 16, 30, 0, DateTimeKind.Utc) },
-                new Order { Id = 14, UserId = 7, TotalAmount = 113.00m, PurchaseDate = new DateTime(2026, 1, 25, 9, 45, 0, DateTimeKind.Utc), Status = OrderStatus.Delivered, CreatedAt = new DateTime(2026, 1, 25, 9, 45, 0, DateTimeKind.Utc) },
+                // ~1-1.5 months ago - slower period
+                new Order { Id = 11, UserId = 3, TotalAmount = 48.65m, PurchaseDate = Ago(47, 11, 30), Status = OrderStatus.Delivered, CreatedAt = Ago(47, 11, 30) },
+                new Order { Id = 12, UserId = 6, TotalAmount = 42.00m, PurchaseDate = Ago(40, 14, 0), Status = OrderStatus.Delivered, CreatedAt = Ago(40, 14, 0) },
+                new Order { Id = 13, UserId = 2, TotalAmount = 174.89m, PurchaseDate = Ago(34, 16, 30), Status = OrderStatus.Cancelled, CreatedAt = Ago(34, 16, 30) },
+                new Order { Id = 14, UserId = 7, TotalAmount = 113.00m, PurchaseDate = Ago(27, 9, 45), Status = OrderStatus.Delivered, CreatedAt = Ago(27, 9, 45) },
 
-                // February 2026 - recovery, mixed statuses
-                new Order { Id = 15, UserId = 4, TotalAmount = 246.40m, PurchaseDate = new DateTime(2026, 2, 1, 10, 0, 0, DateTimeKind.Utc), Status = OrderStatus.Delivered, CreatedAt = new DateTime(2026, 2, 1, 10, 0, 0, DateTimeKind.Utc) },
-                new Order { Id = 16, UserId = 3, TotalAmount = 150.00m, PurchaseDate = new DateTime(2026, 2, 3, 13, 15, 0, DateTimeKind.Utc), Status = OrderStatus.OnDelivery, CreatedAt = new DateTime(2026, 2, 3, 13, 15, 0, DateTimeKind.Utc) },
-                new Order { Id = 17, UserId = 5, TotalAmount = 165.00m, PurchaseDate = new DateTime(2026, 2, 5, 15, 0, 0, DateTimeKind.Utc), Status = OrderStatus.Processing, CreatedAt = new DateTime(2026, 2, 5, 15, 0, 0, DateTimeKind.Utc) },
-                new Order { Id = 18, UserId = 2, TotalAmount = 147.80m, PurchaseDate = new DateTime(2026, 2, 6, 11, 30, 0, DateTimeKind.Utc), Status = OrderStatus.OnDelivery, CreatedAt = new DateTime(2026, 2, 6, 11, 30, 0, DateTimeKind.Utc) },
-                new Order { Id = 19, UserId = 6, TotalAmount = 83.50m, PurchaseDate = new DateTime(2026, 2, 7, 14, 45, 0, DateTimeKind.Utc), Status = OrderStatus.Processing, CreatedAt = new DateTime(2026, 2, 7, 14, 45, 0, DateTimeKind.Utc) },
-                new Order { Id = 20, UserId = 7, TotalAmount = 149.99m, PurchaseDate = new DateTime(2026, 2, 8, 8, 0, 0, DateTimeKind.Utc), Status = OrderStatus.Processing, CreatedAt = new DateTime(2026, 2, 8, 8, 0, 0, DateTimeKind.Utc) },
+                // ~2-3 weeks ago - recent, mixed statuses
+                new Order { Id = 15, UserId = 4, TotalAmount = 246.40m, PurchaseDate = Ago(20, 10, 0), Status = OrderStatus.Delivered, CreatedAt = Ago(20, 10, 0) },
+                new Order { Id = 16, UserId = 3, TotalAmount = 150.00m, PurchaseDate = Ago(18, 13, 15), Status = OrderStatus.OnDelivery, CreatedAt = Ago(18, 13, 15) },
+                new Order { Id = 17, UserId = 5, TotalAmount = 165.00m, PurchaseDate = Ago(16, 15, 0), Status = OrderStatus.Processing, CreatedAt = Ago(16, 15, 0) },
+                new Order { Id = 18, UserId = 2, TotalAmount = 147.80m, PurchaseDate = Ago(15, 11, 30), Status = OrderStatus.OnDelivery, CreatedAt = Ago(15, 11, 30) },
+                new Order { Id = 19, UserId = 6, TotalAmount = 83.50m, PurchaseDate = Ago(14, 14, 45), Status = OrderStatus.Processing, CreatedAt = Ago(14, 14, 45) },
+                new Order { Id = 20, UserId = 7, TotalAmount = 149.99m, PurchaseDate = Ago(13, 8, 0), Status = OrderStatus.Processing, CreatedAt = Ago(13, 8, 0) },
             };
             await InsertWithIdentityAsync(context, "Orders", orders, 20);
 
@@ -351,38 +357,38 @@ public static class DatabaseSeeder
             // ==================== PRODUCT REVIEWS (18) ====================
             var productReviews = new[]
             {
-                new ProductReview { Id = 1, UserId = 3, ProductId = 1, Rating = 5, Comment = "Odlican cekic, savrsen balans. Koristim ga svakodnevno u radionici.", CreatedAt = new DateTime(2025, 11, 10, 0, 0, 0, DateTimeKind.Utc) },
-                new ProductReview { Id = 2, UserId = 4, ProductId = 2, Rating = 4, Comment = "Kvalitetni srafcigeri, samo bi mogao imati vise velicina.", CreatedAt = new DateTime(2025, 11, 15, 0, 0, 0, DateTimeKind.Utc) },
-                new ProductReview { Id = 3, UserId = 5, ProductId = 3, Rating = 5, Comment = "Ostrica drzi dugo, odlicno za precizne radove.", CreatedAt = new DateTime(2025, 11, 20, 0, 0, 0, DateTimeKind.Utc) },
-                new ProductReview { Id = 4, UserId = 2, ProductId = 4, Rating = 4, Comment = "Japanski kvalitet, sjajni rezovi. Malo skuplja ali vrijedi.", CreatedAt = new DateTime(2025, 12, 5, 0, 0, 0, DateTimeKind.Utc) },
-                new ProductReview { Id = 5, UserId = 6, ProductId = 5, Rating = 5, Comment = "Prekrasna daska, bez ikakvih gresaka u drvetu.", CreatedAt = new DateTime(2025, 12, 10, 0, 0, 0, DateTimeKind.Utc) },
-                new ProductReview { Id = 6, UserId = 7, ProductId = 6, Rating = 3, Comment = "Dobar furnir ali pakovanje moglo biti bolje.", CreatedAt = new DateTime(2025, 12, 15, 0, 0, 0, DateTimeKind.Utc) },
-                new ProductReview { Id = 7, UserId = 3, ProductId = 7, Rating = 5, Comment = "Vrhunska koza, idealna za izradu torbi.", CreatedAt = new DateTime(2025, 12, 20, 0, 0, 0, DateTimeKind.Utc) },
-                new ProductReview { Id = 8, UserId = 5, ProductId = 8, Rating = 4, Comment = "Dobar blok za rezbarenje, bez cvorova kao sto stoji u opisu.", CreatedAt = new DateTime(2025, 12, 25, 0, 0, 0, DateTimeKind.Utc) },
-                new ProductReview { Id = 9, UserId = 4, ProductId = 9, Rating = 5, Comment = "Savrsen komplet za pocetnike! Sve sto trebate na jednom mjestu.", CreatedAt = new DateTime(2026, 1, 5, 0, 0, 0, DateTimeKind.Utc) },
-                new ProductReview { Id = 10, UserId = 6, ProductId = 10, Rating = 4, Comment = "Dobar set, nozevi su ostri. Fali mozda bolji prirucnik.", CreatedAt = new DateTime(2026, 1, 10, 0, 0, 0, DateTimeKind.Utc) },
-                new ProductReview { Id = 11, UserId = 2, ProductId = 11, Rating = 5, Comment = "Odlican pocetni set za rezbarenje, napravio sam prvu figuricu!", CreatedAt = new DateTime(2026, 1, 15, 0, 0, 0, DateTimeKind.Utc) },
-                new ProductReview { Id = 12, UserId = 7, ProductId = 12, Rating = 4, Comment = "Kvalitetna glina, lako se modelira. Preporucujem pocetnicima.", CreatedAt = new DateTime(2026, 1, 20, 0, 0, 0, DateTimeKind.Utc) },
-                new ProductReview { Id = 13, UserId = 3, ProductId = 13, Rating = 5, Comment = "Pregaca je jaka i funkcionalna, dzepovi su prakticni.", CreatedAt = new DateTime(2026, 1, 25, 0, 0, 0, DateTimeKind.Utc) },
-                new ProductReview { Id = 14, UserId = 5, ProductId = 14, Rating = 4, Comment = "Stega dobro drzi, laka za upotrebu. Cijena odlicna.", CreatedAt = new DateTime(2026, 1, 30, 0, 0, 0, DateTimeKind.Utc) },
-                new ProductReview { Id = 15, UserId = 4, ProductId = 15, Rating = 3, Comment = "Solidni brusni papiri, ali bi moglo biti vise finijih granulacija.", CreatedAt = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc) },
-                new ProductReview { Id = 16, UserId = 6, ProductId = 16, Rating = 5, Comment = "Lak se lijepo nanosi, bez tragova cetke. Odlican zavrsni sloj.", CreatedAt = new DateTime(2026, 2, 3, 0, 0, 0, DateTimeKind.Utc) },
-                new ProductReview { Id = 17, UserId = 2, ProductId = 17, Rating = 4, Comment = "Prirodno ulje, drvo izgleda prekrasno nakon nanosenja.", CreatedAt = new DateTime(2026, 2, 5, 0, 0, 0, DateTimeKind.Utc) },
-                new ProductReview { Id = 18, UserId = 7, ProductId = 18, Rating = 4, Comment = "Boje su zivopisne i dobro se upijaju u kozu.", CreatedAt = new DateTime(2026, 2, 7, 0, 0, 0, DateTimeKind.Utc) },
+                new ProductReview { Id = 1, UserId = 3, ProductId = 1, Rating = 5, Comment = "Odlican cekic, savrsen balans. Koristim ga svakodnevno u radionici.", CreatedAt = Ago(103) },
+                new ProductReview { Id = 2, UserId = 4, ProductId = 2, Rating = 4, Comment = "Kvalitetni srafcigeri, samo bi mogao imati vise velicina.", CreatedAt = Ago(98) },
+                new ProductReview { Id = 3, UserId = 5, ProductId = 3, Rating = 5, Comment = "Ostrica drzi dugo, odlicno za precizne radove.", CreatedAt = Ago(93) },
+                new ProductReview { Id = 4, UserId = 2, ProductId = 4, Rating = 4, Comment = "Japanski kvalitet, sjajni rezovi. Malo skuplja ali vrijedi.", CreatedAt = Ago(78) },
+                new ProductReview { Id = 5, UserId = 6, ProductId = 5, Rating = 5, Comment = "Prekrasna daska, bez ikakvih gresaka u drvetu.", CreatedAt = Ago(73) },
+                new ProductReview { Id = 6, UserId = 7, ProductId = 6, Rating = 3, Comment = "Dobar furnir ali pakovanje moglo biti bolje.", CreatedAt = Ago(68) },
+                new ProductReview { Id = 7, UserId = 3, ProductId = 7, Rating = 5, Comment = "Vrhunska koza, idealna za izradu torbi.", CreatedAt = Ago(63) },
+                new ProductReview { Id = 8, UserId = 5, ProductId = 8, Rating = 4, Comment = "Dobar blok za rezbarenje, bez cvorova kao sto stoji u opisu.", CreatedAt = Ago(58) },
+                new ProductReview { Id = 9, UserId = 4, ProductId = 9, Rating = 5, Comment = "Savrsen komplet za pocetnike! Sve sto trebate na jednom mjestu.", CreatedAt = Ago(47) },
+                new ProductReview { Id = 10, UserId = 6, ProductId = 10, Rating = 4, Comment = "Dobar set, nozevi su ostri. Fali mozda bolji prirucnik.", CreatedAt = Ago(42) },
+                new ProductReview { Id = 11, UserId = 2, ProductId = 11, Rating = 5, Comment = "Odlican pocetni set za rezbarenje, napravio sam prvu figuricu!", CreatedAt = Ago(37) },
+                new ProductReview { Id = 12, UserId = 7, ProductId = 12, Rating = 4, Comment = "Kvalitetna glina, lako se modelira. Preporucujem pocetnicima.", CreatedAt = Ago(32) },
+                new ProductReview { Id = 13, UserId = 3, ProductId = 13, Rating = 5, Comment = "Pregaca je jaka i funkcionalna, dzepovi su prakticni.", CreatedAt = Ago(27) },
+                new ProductReview { Id = 14, UserId = 5, ProductId = 14, Rating = 4, Comment = "Stega dobro drzi, laka za upotrebu. Cijena odlicna.", CreatedAt = Ago(22) },
+                new ProductReview { Id = 15, UserId = 4, ProductId = 15, Rating = 3, Comment = "Solidni brusni papiri, ali bi moglo biti vise finijih granulacija.", CreatedAt = Ago(20) },
+                new ProductReview { Id = 16, UserId = 6, ProductId = 16, Rating = 5, Comment = "Lak se lijepo nanosi, bez tragova cetke. Odlican zavrsni sloj.", CreatedAt = Ago(18) },
+                new ProductReview { Id = 17, UserId = 2, ProductId = 17, Rating = 4, Comment = "Prirodno ulje, drvo izgleda prekrasno nakon nanosenja.", CreatedAt = Ago(16) },
+                new ProductReview { Id = 18, UserId = 7, ProductId = 18, Rating = 4, Comment = "Boje su zivopisne i dobro se upijaju u kozu.", CreatedAt = Ago(14) },
             };
             await InsertWithIdentityAsync(context, "ProductReviews", productReviews, 18);
 
             // ==================== PROJECTS (8) ====================
             var projects = new[]
             {
-                new Project { Id = 1, Title = "Polica za knjige od hrasta", Description = "Rucno radjena polica od hrastovine sa 4 police. Dimenzije 120x80x25cm. Koristio sam stolarski komplet i hrastovu dasku iz Reignite ponude.", ImageUrl = "/uploads/seed/projects/project1.jpg", HoursSpent = 20, UserId = 3, HobbyId = 1, ProductId = 9, CreatedAt = new DateTime(2025, 12, 1, 0, 0, 0, DateTimeKind.Utc) },
-                new Project { Id = 2, Title = "Rucno radjen novcanik", Description = "Novcanik od premium govedje koze sa rucnim savovima. 6 pretinaca za kartice i odjeljak za novcanice.", ImageUrl = "/uploads/seed/projects/project2.jpg", HoursSpent = 12, UserId = 4, HobbyId = 2, ProductId = 10, CreatedAt = new DateTime(2025, 12, 10, 0, 0, 0, DateTimeKind.Utc) },
-                new Project { Id = 3, Title = "Drvena figura sove", Description = "Figurica sove rezbarena u bukovom drvetu, visina 25cm. Detaljan rad sa finom zavrsnom obradom.", ImageUrl = "/uploads/seed/projects/project3.jpg", HoursSpent = 8, UserId = 5, HobbyId = 6, ProductId = 11, CreatedAt = new DateTime(2025, 12, 20, 0, 0, 0, DateTimeKind.Utc) },
-                new Project { Id = 4, Title = "Stolic za kafu rustikal", Description = "Rustikalni stolic za kafu od hrastovine sa metalnim nogama. Dimenzije 80x50x40cm. Najzahtjevniji projekt do sada!", ImageUrl = "/uploads/seed/projects/project4.jpg", HoursSpent = 30, UserId = 2, HobbyId = 1, ProductId = 5, CreatedAt = new DateTime(2026, 1, 5, 0, 0, 0, DateTimeKind.Utc) },
-                new Project { Id = 5, Title = "Set keramickih solja", Description = "Set od 4 keramicke solje sa glazurom u toplim tonovima. Svaka solja je unikatna.", ImageUrl = "/uploads/seed/projects/project5.jpg", HoursSpent = 15, UserId = 6, HobbyId = 4, ProductId = 12, CreatedAt = new DateTime(2026, 1, 15, 0, 0, 0, DateTimeKind.Utc) },
-                new Project { Id = 6, Title = "Kovani drzac za svijece", Description = "Drzac za 3 svijece od kovanog zeljeza. Rustikalni dizajn sa spiralnim detaljima.", ImageUrl = "/uploads/seed/projects/project6.jpg", HoursSpent = 10, UserId = 7, HobbyId = 3, ProductId = null, CreatedAt = new DateTime(2026, 1, 25, 0, 0, 0, DateTimeKind.Utc) },
-                new Project { Id = 7, Title = "Ukrasna kutija od bukve", Description = "Rucno rezbarena kutija za nakit od bukovog drveta. Poklopac sa floralnim motivom.", ImageUrl = "/uploads/seed/projects/project7.jpg", HoursSpent = 18, UserId = 3, HobbyId = 6, ProductId = 8, CreatedAt = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc) },
-                new Project { Id = 8, Title = "Mirisne svijece od pcelinjeg voska", Description = "Set od 6 rucno radjenih svijeca od pcelinjeg voska sa esencijalnim uljima lavande i ruzmarina.", ImageUrl = "/uploads/seed/projects/project8.jpg", HoursSpent = 5, UserId = 5, HobbyId = 5, ProductId = null, CreatedAt = new DateTime(2026, 2, 5, 0, 0, 0, DateTimeKind.Utc) },
+                new Project { Id = 1, Title = "Polica za knjige od hrasta", Description = "Rucno radjena polica od hrastovine sa 4 police. Dimenzije 120x80x25cm. Koristio sam stolarski komplet i hrastovu dasku iz Reignite ponude.", ImageUrl = "/uploads/seed/projects/project1.jpg", HoursSpent = 20, UserId = 3, HobbyId = 1, ProductId = 9, CreatedAt = Ago(82) },
+                new Project { Id = 2, Title = "Rucno radjen novcanik", Description = "Novcanik od premium govedje koze sa rucnim savovima. 6 pretinaca za kartice i odjeljak za novcanice.", ImageUrl = "/uploads/seed/projects/project2.jpg", HoursSpent = 12, UserId = 4, HobbyId = 2, ProductId = 10, CreatedAt = Ago(73) },
+                new Project { Id = 3, Title = "Drvena figura sove", Description = "Figurica sove rezbarena u bukovom drvetu, visina 25cm. Detaljan rad sa finom zavrsnom obradom.", ImageUrl = "/uploads/seed/projects/project3.jpg", HoursSpent = 8, UserId = 5, HobbyId = 6, ProductId = 11, CreatedAt = Ago(63) },
+                new Project { Id = 4, Title = "Stolic za kafu rustikal", Description = "Rustikalni stolic za kafu od hrastovine sa metalnim nogama. Dimenzije 80x50x40cm. Najzahtjevniji projekt do sada!", ImageUrl = "/uploads/seed/projects/project4.jpg", HoursSpent = 30, UserId = 2, HobbyId = 1, ProductId = 5, CreatedAt = Ago(47) },
+                new Project { Id = 5, Title = "Set keramickih solja", Description = "Set od 4 keramicke solje sa glazurom u toplim tonovima. Svaka solja je unikatna.", ImageUrl = "/uploads/seed/projects/project5.jpg", HoursSpent = 15, UserId = 6, HobbyId = 4, ProductId = 12, CreatedAt = Ago(37) },
+                new Project { Id = 6, Title = "Kovani drzac za svijece", Description = "Drzac za 3 svijece od kovanog zeljeza. Rustikalni dizajn sa spiralnim detaljima.", ImageUrl = "/uploads/seed/projects/project6.jpg", HoursSpent = 10, UserId = 7, HobbyId = 3, ProductId = null, CreatedAt = Ago(27) },
+                new Project { Id = 7, Title = "Ukrasna kutija od bukve", Description = "Rucno rezbarena kutija za nakit od bukovog drveta. Poklopac sa floralnim motivom.", ImageUrl = "/uploads/seed/projects/project7.jpg", HoursSpent = 18, UserId = 3, HobbyId = 6, ProductId = 8, CreatedAt = Ago(20) },
+                new Project { Id = 8, Title = "Mirisne svijece od pcelinjeg voska", Description = "Set od 6 rucno radjenih svijeca od pcelinjeg voska sa esencijalnim uljima lavande i ruzmarina.", ImageUrl = "/uploads/seed/projects/project8.jpg", HoursSpent = 5, UserId = 5, HobbyId = 5, ProductId = null, CreatedAt = Ago(16) },
             };
             await InsertWithIdentityAsync(context, "Projects", projects, 8);
 
@@ -390,29 +396,29 @@ public static class DatabaseSeeder
             var projectReviews = new[]
             {
                 // Project 1 - Polica (Amir)
-                new ProjectReview { Id = 1, UserId = 4, ProjectId = 1, Rating = 5, Comment = "Prekrasna polica! Hrastovina izgleda fenomenalno.", CreatedAt = new DateTime(2025, 12, 5, 0, 0, 0, DateTimeKind.Utc) },
-                new ProjectReview { Id = 2, UserId = 5, ProjectId = 1, Rating = 4, Comment = "Odlican rad, vidi se iskustvo. Svaka cast!", CreatedAt = new DateTime(2025, 12, 8, 0, 0, 0, DateTimeKind.Utc) },
+                new ProjectReview { Id = 1, UserId = 4, ProjectId = 1, Rating = 5, Comment = "Prekrasna polica! Hrastovina izgleda fenomenalno.", CreatedAt = Ago(78) },
+                new ProjectReview { Id = 2, UserId = 5, ProjectId = 1, Rating = 4, Comment = "Odlican rad, vidi se iskustvo. Svaka cast!", CreatedAt = Ago(75) },
                 // Project 2 - Novcanik (Lejla)
-                new ProjectReview { Id = 3, UserId = 3, ProjectId = 2, Rating = 5, Comment = "Novcanik izgleda profesionalno! Savovi su savrseni.", CreatedAt = new DateTime(2025, 12, 15, 0, 0, 0, DateTimeKind.Utc) },
-                new ProjectReview { Id = 4, UserId = 6, ProjectId = 2, Rating = 5, Comment = "Inspirativno! I ja zelim nauciti raditi sa kozom.", CreatedAt = new DateTime(2025, 12, 18, 0, 0, 0, DateTimeKind.Utc) },
+                new ProjectReview { Id = 3, UserId = 3, ProjectId = 2, Rating = 5, Comment = "Novcanik izgleda profesionalno! Savovi su savrseni.", CreatedAt = Ago(68) },
+                new ProjectReview { Id = 4, UserId = 6, ProjectId = 2, Rating = 5, Comment = "Inspirativno! I ja zelim nauciti raditi sa kozom.", CreatedAt = Ago(65) },
                 // Project 3 - Sova (Tarik)
-                new ProjectReview { Id = 5, UserId = 2, ProjectId = 3, Rating = 4, Comment = "Detalji na sovi su nevjerovatni za samo 8 sati rada.", CreatedAt = new DateTime(2025, 12, 25, 0, 0, 0, DateTimeKind.Utc) },
-                new ProjectReview { Id = 6, UserId = 7, ProjectId = 3, Rating = 5, Comment = "Kao iz trgovine! Talent za rezbarenje.", CreatedAt = new DateTime(2025, 12, 28, 0, 0, 0, DateTimeKind.Utc) },
+                new ProjectReview { Id = 5, UserId = 2, ProjectId = 3, Rating = 4, Comment = "Detalji na sovi su nevjerovatni za samo 8 sati rada.", CreatedAt = Ago(58) },
+                new ProjectReview { Id = 6, UserId = 7, ProjectId = 3, Rating = 5, Comment = "Kao iz trgovine! Talent za rezbarenje.", CreatedAt = Ago(55) },
                 // Project 4 - Stolic (Test user)
-                new ProjectReview { Id = 7, UserId = 3, ProjectId = 4, Rating = 5, Comment = "Stolic je brutalan! Rustikalni stil savrseno pogodjen.", CreatedAt = new DateTime(2026, 1, 10, 0, 0, 0, DateTimeKind.Utc) },
-                new ProjectReview { Id = 8, UserId = 4, ProjectId = 4, Rating = 4, Comment = "Hrastovina i metal se odlicno kombiniraju. Bravo!", CreatedAt = new DateTime(2026, 1, 12, 0, 0, 0, DateTimeKind.Utc) },
+                new ProjectReview { Id = 7, UserId = 3, ProjectId = 4, Rating = 5, Comment = "Stolic je brutalan! Rustikalni stil savrseno pogodjen.", CreatedAt = Ago(42) },
+                new ProjectReview { Id = 8, UserId = 4, ProjectId = 4, Rating = 4, Comment = "Hrastovina i metal se odlicno kombiniraju. Bravo!", CreatedAt = Ago(40) },
                 // Project 5 - Solje (Amina)
-                new ProjectReview { Id = 9, UserId = 5, ProjectId = 5, Rating = 5, Comment = "Svaka solja je djelo za sebe. Glazura je prelijepa.", CreatedAt = new DateTime(2026, 1, 20, 0, 0, 0, DateTimeKind.Utc) },
-                new ProjectReview { Id = 10, UserId = 2, ProjectId = 5, Rating = 4, Comment = "Topli tonovi glazure daju poseban sarm.", CreatedAt = new DateTime(2026, 1, 22, 0, 0, 0, DateTimeKind.Utc) },
+                new ProjectReview { Id = 9, UserId = 5, ProjectId = 5, Rating = 5, Comment = "Svaka solja je djelo za sebe. Glazura je prelijepa.", CreatedAt = Ago(32) },
+                new ProjectReview { Id = 10, UserId = 2, ProjectId = 5, Rating = 4, Comment = "Topli tonovi glazure daju poseban sarm.", CreatedAt = Ago(30) },
                 // Project 6 - Drzac (Kenan)
-                new ProjectReview { Id = 11, UserId = 6, ProjectId = 6, Rating = 4, Comment = "Kovano zeljezo daje rustikalni ugodjaj. Lijepo!", CreatedAt = new DateTime(2026, 1, 28, 0, 0, 0, DateTimeKind.Utc) },
-                new ProjectReview { Id = 12, UserId = 3, ProjectId = 6, Rating = 5, Comment = "Spiralni detalji su fenomenalni. Zelim naruciti!", CreatedAt = new DateTime(2026, 1, 30, 0, 0, 0, DateTimeKind.Utc) },
+                new ProjectReview { Id = 11, UserId = 6, ProjectId = 6, Rating = 4, Comment = "Kovano zeljezo daje rustikalni ugodjaj. Lijepo!", CreatedAt = Ago(24) },
+                new ProjectReview { Id = 12, UserId = 3, ProjectId = 6, Rating = 5, Comment = "Spiralni detalji su fenomenalni. Zelim naruciti!", CreatedAt = Ago(22) },
                 // Project 7 - Kutija (Amir)
-                new ProjectReview { Id = 13, UserId = 7, ProjectId = 7, Rating = 5, Comment = "Floralni motiv na poklopcu je zadivljujuci.", CreatedAt = new DateTime(2026, 2, 3, 0, 0, 0, DateTimeKind.Utc) },
-                new ProjectReview { Id = 14, UserId = 4, ProjectId = 7, Rating = 4, Comment = "Amir uvijek odusevljava sa svojim projektima!", CreatedAt = new DateTime(2026, 2, 5, 0, 0, 0, DateTimeKind.Utc) },
+                new ProjectReview { Id = 13, UserId = 7, ProjectId = 7, Rating = 5, Comment = "Floralni motiv na poklopcu je zadivljujuci.", CreatedAt = Ago(18) },
+                new ProjectReview { Id = 14, UserId = 4, ProjectId = 7, Rating = 4, Comment = "Amir uvijek odusevljava sa svojim projektima!", CreatedAt = Ago(16) },
                 // Project 8 - Svijece (Tarik)
-                new ProjectReview { Id = 15, UserId = 6, ProjectId = 8, Rating = 5, Comment = "Miris lavande je prelep! Zelim recept.", CreatedAt = new DateTime(2026, 2, 7, 0, 0, 0, DateTimeKind.Utc) },
-                new ProjectReview { Id = 16, UserId = 2, ProjectId = 8, Rating = 4, Comment = "Pcelinji vosak daje posebnu toplinu svijecama.", CreatedAt = new DateTime(2026, 2, 8, 0, 0, 0, DateTimeKind.Utc) },
+                new ProjectReview { Id = 15, UserId = 6, ProjectId = 8, Rating = 5, Comment = "Miris lavande je prelep! Zelim recept.", CreatedAt = Ago(14) },
+                new ProjectReview { Id = 16, UserId = 2, ProjectId = 8, Rating = 4, Comment = "Pcelinji vosak daje posebnu toplinu svijecama.", CreatedAt = Ago(13) },
             };
             await InsertWithIdentityAsync(context, "ProjectReviews", projectReviews, 16);
 
@@ -455,10 +461,10 @@ public static class DatabaseSeeder
             // ==================== COUPONS (4) ====================
             var coupons = new[]
             {
-                new Coupon { Id = 1, Code = "DOBRODOSLI", DiscountType = "Percentage", DiscountValue = 10m, MinimumOrderAmount = 50m, ExpiryDate = new DateTime(2026, 6, 30, 0, 0, 0, DateTimeKind.Utc), MaxUses = 100, TimesUsed = 12, IsActive = true, CreatedAt = SeedDate },
-                new Coupon { Id = 2, Code = "ZIMA2026", DiscountType = "Percentage", DiscountValue = 15m, MinimumOrderAmount = 100m, ExpiryDate = new DateTime(2026, 3, 31, 0, 0, 0, DateTimeKind.Utc), MaxUses = 50, TimesUsed = 8, IsActive = true, CreatedAt = SeedDate },
+                new Coupon { Id = 1, Code = "DOBRODOSLI", DiscountType = "Percentage", DiscountValue = 10m, MinimumOrderAmount = 50m, ExpiryDate = FromNow(130), MaxUses = 100, TimesUsed = 12, IsActive = true, CreatedAt = SeedDate },
+                new Coupon { Id = 2, Code = "SEZONA", DiscountType = "Percentage", DiscountValue = 15m, MinimumOrderAmount = 100m, ExpiryDate = FromNow(38), MaxUses = 50, TimesUsed = 8, IsActive = true, CreatedAt = SeedDate },
                 new Coupon { Id = 3, Code = "PRVIPUT", DiscountType = "Fixed", DiscountValue = 20m, MinimumOrderAmount = 80m, ExpiryDate = null, MaxUses = 200, TimesUsed = 35, IsActive = true, CreatedAt = SeedDate },
-                new Coupon { Id = 4, Code = "LJETO2025", DiscountType = "Percentage", DiscountValue = 20m, MinimumOrderAmount = 50m, ExpiryDate = new DateTime(2025, 7, 31, 0, 0, 0, DateTimeKind.Utc), MaxUses = 100, TimesUsed = 67, IsActive = false, CreatedAt = new DateTime(2025, 5, 1, 0, 0, 0, DateTimeKind.Utc) },
+                new Coupon { Id = 4, Code = "STARI2024", DiscountType = "Percentage", DiscountValue = 20m, MinimumOrderAmount = 50m, ExpiryDate = Ago(205), MaxUses = 100, TimesUsed = 67, IsActive = false, CreatedAt = Ago(296) },
             };
             await InsertWithIdentityAsync(context, "Coupons", coupons, 4);
 
