@@ -30,6 +30,7 @@ export class WishlistComponent {
       price,
       productImageUrl: imageUrl ?? undefined
     });
+    this.wishlistService.removeItem(productId);
   }
 
   protected formatPrice(price: number): string {
