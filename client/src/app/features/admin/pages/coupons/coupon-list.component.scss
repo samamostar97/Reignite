@@ -417,6 +417,20 @@ $smoke: #5a3a2a;
   font-weight: 500;
 }
 
+// Featured badge
+.featured-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.4rem;
+  color: $flame;
+  vertical-align: middle;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
 // Responsive
 @media (max-width: 768px) {
   .page-header {

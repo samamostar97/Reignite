@@ -24,5 +24,7 @@ namespace Reignite.Application.DTOs.Request
         public int? MaxUses { get; set; }
 
         public bool IsActive { get; set; } = true;
+
+        public bool IsFeatured { get; set; }
     }
 }

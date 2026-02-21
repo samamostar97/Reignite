@@ -17,6 +17,7 @@ namespace Reignite.Core.Entities
         public int? MaxUses { get; set; }
         public int TimesUsed { get; set; }
         public bool IsActive { get; set; }
+        public bool IsFeatured { get; set; }
     }
 }
 

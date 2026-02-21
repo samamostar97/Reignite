@@ -10,6 +10,7 @@ export interface CouponResponse {
   maxUses?: number;
   timesUsed: number;
   isActive: boolean;
+  isFeatured: boolean;
   isExpired: boolean;
   isMaxedOut: boolean;
 }
@@ -22,6 +23,7 @@ export interface CreateCouponRequest {
   expiryDate?: string;
   maxUses?: number;
   isActive: boolean;
+  isFeatured: boolean;
 }
 
 export interface UpdateCouponRequest {
@@ -32,6 +34,7 @@ export interface UpdateCouponRequest {
   expiryDate?: string;
   maxUses?: number;
   isActive: boolean;
+  isFeatured: boolean;
 }
 
 export interface CouponQueryFilter extends PaginationRequest {

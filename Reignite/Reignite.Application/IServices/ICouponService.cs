@@ -9,5 +9,6 @@ namespace Reignite.Application.IServices
     {
         Task<CouponResponse> ValidateCouponAsync(string code, decimal orderTotal, CancellationToken cancellationToken = default);
         Task IncrementUsageAsync(string code, CancellationToken cancellationToken = default);
+        Task<List<CouponResponse>> GetFeaturedCouponsAsync(CancellationToken cancellationToken = default);
     }
 }

@@ -32,6 +32,7 @@ export class CouponFormComponent implements OnInit {
   protected expiryDate = '';
   protected maxUses: number | null = null;
   protected isActive = true;
+  protected isFeatured = false;
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -54,6 +55,7 @@ export class CouponFormComponent implements OnInit {
         this.expiryDate = coupon.expiryDate ? coupon.expiryDate.split('T')[0] : '';
         this.maxUses = coupon.maxUses ?? null;
         this.isActive = coupon.isActive;
+        this.isFeatured = coupon.isFeatured;
         this.isLoading.set(false);
       },
       error: () => {
@@ -75,7 +77,8 @@ export class CouponFormComponent implements OnInit {
       minimumOrderAmount: this.minimumOrderAmount ?? undefined,
       expiryDate: this.expiryDate || undefined,
       maxUses: this.maxUses ?? undefined,
-      isActive: this.isActive
+      isActive: this.isActive,
+      isFeatured: this.isFeatured
     };
 
     const operation = this.isEditMode()

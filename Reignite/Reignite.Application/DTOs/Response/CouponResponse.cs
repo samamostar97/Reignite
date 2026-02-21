@@ -11,6 +11,7 @@ namespace Reignite.Application.DTOs.Response
         public int? MaxUses { get; set; }
         public int TimesUsed { get; set; }
         public bool IsActive { get; set; }
+        public bool IsFeatured { get; set; }
         public bool IsExpired => ExpiryDate.HasValue && ExpiryDate.Value < DateTime.UtcNow;
         public bool IsMaxedOut => MaxUses.HasValue && TimesUsed >= MaxUses.Value;
     }

@@ -206,6 +206,205 @@
   }
 }
 
+// Promo Banner Section
+.promo-banner-section {
+  max-width: 900px;
+  margin: 0 auto 3rem;
+  padding: 0 2rem;
+  animation: promo-fade-in 0.6s ease-out both;
+  animation-delay: 0.3s;
+}
+
+@keyframes promo-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.promo-banner {
+  position: relative;
+  background: rgba(255, 248, 240, 0.95);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 4px 20px rgba(249, 115, 22, 0.12),
+    0 1px 4px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+  & + .promo-banner {
+    margin-top: 1.5rem;
+  }
+
+  &:hover {
+    box-shadow:
+      0 8px 30px rgba(249, 115, 22, 0.2),
+      0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+}
+
+.promo-ember-accent {
+  height: 3px;
+  background: linear-gradient(90deg, #F97316, #F59E0B, #F97316);
+  background-size: 200% 100%;
+  animation: ember-shimmer 3s ease-in-out infinite;
+
+  &.bottom {
+    margin-top: 0;
+  }
+}
+
+@keyframes ember-shimmer {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.promo-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.8rem 2.2rem;
+  gap: 2rem;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem;
+    gap: 1.2rem;
+  }
+}
+
+.promo-left {
+  flex: 1;
+}
+
+.promo-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.12), rgba(245, 158, 11, 0.1));
+  color: #c2410c;
+  padding: 0.35rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 0.7rem;
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.promo-discount {
+  font-family: var(--font-display, 'Cinzel', Georgia, serif);
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  font-weight: 700;
+  color: #2c1810;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.promo-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.2rem;
+
+  @media (max-width: 640px) {
+    justify-content: center;
+  }
+}
+
+.promo-detail {
+  font-size: 0.85rem;
+  color: #5a3a2a;
+
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    background: #F97316;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+  }
+}
+
+.promo-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  flex-shrink: 0;
+}
+
+.promo-code-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.promo-code-label {
+  font-size: 0.7rem;
+  color: #7A6B59;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+}
+
+.promo-code {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2c1810;
+  background: rgba(249, 115, 22, 0.08);
+  border: 2px dashed rgba(249, 115, 22, 0.35);
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  letter-spacing: 0.15em;
+}
+
+.promo-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: linear-gradient(135deg, #2c1810, #3d2415);
+  color: #FAF5F0;
+  border: none;
+  padding: 0.55rem 1.3rem;
+  border-radius: 25px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.02em;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover {
+    background: linear-gradient(135deg, #F97316, #F59E0B);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+  }
+}
+
 // About Section
 .about-section {
   padding: 5rem 0;

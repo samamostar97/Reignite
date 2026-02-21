@@ -3,9 +3,11 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { ProjectService } from '../../core/services/project.service';
+import { CouponService } from '../../core/services/coupon.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ProductResponse } from '../../core/models/product.model';
 import { ProjectResponse } from '../../core/models/project.model';
+import { CouponResponse } from '../../core/models/coupon.model';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { EmberBackgroundComponent } from '../../shared/components/ember-background/ember-background.component';
 import { getImageUrl } from '../../shared/utils/image.utils';
@@ -19,6 +21,7 @@ import { getImageUrl } from '../../shared/utils/image.utils';
 export class LandingComponent implements OnInit, OnDestroy {
   private readonly productService = inject(ProductService);
   private readonly projectService = inject(ProjectService);
+  private readonly couponService = inject(CouponService);
   private readonly authService = inject(AuthService);
 
   protected readonly isAuthenticated = this.authService.isAuthenticated;
@@ -32,6 +35,8 @@ export class LandingComponent implements OnInit, OnDestroy {
   protected readonly topRatedProjects = signal<ProjectResponse[]>([]);
   protected readonly isLoadingProjects = signal(true);
   protected readonly isMobileView = signal(false);
+  protected readonly featuredCoupons = signal<CouponResponse[]>([]);
+  protected readonly copiedCouponId = signal<number | null>(null);
 
   // Computed carousel transform with adjacent items visible
   protected readonly carouselTransform = computed(() => {
@@ -49,9 +54,10 @@ export class LandingComponent implements OnInit, OnDestroy {
   private viewportHeight = 0;
 
   ngOnInit() {
-    // Fetch featured products from API
+    // Fetch data from API
     this.loadFeaturedKits();
     this.loadTopRatedProjects();
+    this.loadFeaturedCoupons();
 
     // Start the animation sequence - faster
     setTimeout(() => {
@@ -140,6 +146,33 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   protected goToKit(index: number) {
     this.currentKitIndex.set(index);
+  }
+
+  private loadFeaturedCoupons() {
+    this.couponService.getFeaturedCoupons().subscribe({
+      next: (coupons) => this.featuredCoupons.set(coupons),
+      error: () => {}
+    });
+  }
+
+  protected formatDiscount(coupon: CouponResponse): string {
+    if (coupon.discountType === 'Percentage') {
+      return `${coupon.discountValue}%`;
+    }
+    return `${coupon.discountValue.toFixed(2)} KM`;
+  }
+
+  protected formatExpiryDate(dateStr?: string): string {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('hr-HR', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  protected copyCode(coupon: CouponResponse) {
+    navigator.clipboard.writeText(coupon.code).then(() => {
+      this.copiedCouponId.set(coupon.id);
+      setTimeout(() => this.copiedCouponId.set(null), 2000);
+    });
   }
 
   protected getImageUrl = getImageUrl;

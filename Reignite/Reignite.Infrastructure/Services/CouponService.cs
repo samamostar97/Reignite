@@ -135,5 +135,18 @@ namespace Reignite.Infrastructure.Services
                 await _repository.UpdateAsync(coupon, cancellationToken);
             }
         }
+
+        public async Task<List<CouponResponse>> GetFeaturedCouponsAsync(CancellationToken cancellationToken = default)
+        {
+            var now = DateTime.UtcNow;
+            var coupons = await _repository.AsQueryable()
+                .Where(c => c.IsFeatured && c.IsActive
+                    && (!c.ExpiryDate.HasValue || c.ExpiryDate.Value >= now)
+                    && (!c.MaxUses.HasValue || c.TimesUsed < c.MaxUses.Value))
+                .OrderByDescending(c => c.CreatedAt)
+                .ToListAsync(cancellationToken);
+
+            return _mapper.Map<List<CouponResponse>>(coupons);
+        }
     }
 }

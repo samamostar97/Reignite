@@ -21,9 +21,18 @@ namespace Reignite.API.Controllers
             _couponService = service;
         }
 
+        // GET api/coupons/featured - public endpoint for landing page promo banner
+        [HttpGet("featured")]
+        [AllowAnonymous]
+        public async Task<ActionResult<List<CouponResponse>>> GetFeaturedCoupons(CancellationToken cancellationToken = default)
+        {
+            var coupons = await _couponService.GetFeaturedCouponsAsync(cancellationToken);
+            return Ok(coupons);
+        }
+
         // POST api/coupons/validate - accessible to any authenticated user
         [HttpPost("validate")]
-        [Authorize]
+        [AllowAnonymous]
         public async Task<ActionResult<CouponResponse>> ValidateCoupon([FromBody] ValidateCouponRequest request, CancellationToken cancellationToken = default)
         {
             try

@@ -50,4 +50,8 @@ export class CouponService {
   validateCoupon(request: ValidateCouponRequest): Observable<CouponResponse> {
     return this.http.post<CouponResponse>(`${this.apiUrl}/validate`, request);
   }
+
+  getFeaturedCoupons(): Observable<CouponResponse[]> {
+    return this.http.get<CouponResponse[]>(`${this.apiUrl}/featured`);
+  }
 }
