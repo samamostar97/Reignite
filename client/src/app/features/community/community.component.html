@@ -1,0 +1,133 @@
+<div class="community-page">
+  <!-- Embers Background -->
+  <app-ember-background density="full" />
+
+  <!-- Header -->
+  <app-header [visible]="true" [activePath]="'/community'" />
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1 class="page-title">Zajednica</h1>
+      <p class="page-subtitle">Razgovarajte, dijelite iskustva i upoznajte druge kreativce.</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Chat Rooms Section -->
+    <section class="section">
+      <h2 class="section-title">Chat Sobe</h2>
+      <p class="section-desc">Pridružite se razgovoru u sobi vašeg hobija.</p>
+      <div class="rooms-grid">
+        @for (hobby of hobbies(); track hobby.id) {
+          <a [routerLink]="['/community/chat', hobby.id]" class="room-card">
+            <div class="room-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+              </svg>
+            </div>
+            <h3 class="room-name">{{ hobby.name }}</h3>
+            @if (hobby.description) {
+              <p class="room-desc">{{ hobby.description }}</p>
+            }
+            <span class="room-cta">Uđi u sobu &rarr;</span>
+          </a>
+        }
+      </div>
+    </section>
+
+    <!-- Members Section -->
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Članovi Zajednice</h2>
+          <p class="section-desc">Upoznajte kreativce i pogledajte njihove projekte.</p>
+        </div>
+      </div>
+
+      <!-- Hobby Filter Chips -->
+      <div class="filter-chips">
+        <button
+          class="chip"
+          [class.active]="selectedHobbyId() === null"
+          (click)="selectHobby(null)">
+          Svi
+        </button>
+        @for (hobby of hobbies(); track hobby.id) {
+          <button
+            class="chip"
+            [class.active]="selectedHobbyId() === hobby.id"
+            (click)="selectHobby(hobby.id)">
+            {{ hobby.name }}
+          </button>
+        }
+      </div>
+
+      @if (isLoading()) {
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Učitavanje...</p>
+        </div>
+      } @else if (users().length === 0) {
+        <div class="empty-state">
+          <p>Nema pronađenih članova.</p>
+        </div>
+      } @else {
+        <div class="members-grid">
+          @for (user of users(); track user.id) {
+            <a [routerLink]="['/community/users', user.id]" class="member-card">
+              <div class="member-avatar">
+                @if (user.profileImageUrl) {
+                  <img [src]="getImageUrl(user.profileImageUrl)" [alt]="user.firstName" />
+                } @else {
+                  <span class="avatar-initials">{{ getInitials(user.firstName, user.lastName) }}</span>
+                }
+              </div>
+              <h3 class="member-name">{{ user.firstName }} {{ user.lastName }}</h3>
+              <p class="member-username">&#64;{{ user.username }}</p>
+              <div class="member-hobbies">
+                @for (hobby of user.hobbyNames; track hobby) {
+                  <span class="hobby-chip">{{ hobby }}</span>
+                }
+              </div>
+              <div class="member-stats">
+                <span>{{ user.projectCount }} projekata</span>
+              </div>
+            </a>
+          }
+        </div>
+
+        <!-- Pagination -->
+        @if (totalPages() > 1) {
+          <div class="pagination">
+            <button
+              class="pagination-btn"
+              [disabled]="currentPage() === 1"
+              (click)="goToPage(currentPage() - 1)">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+              </svg>
+            </button>
+            <span class="pagination-info">
+              {{ currentPage() }} / {{ totalPages() }}
+            </span>
+            <button
+              class="pagination-btn"
+              [disabled]="currentPage() >= totalPages()"
+              (click)="goToPage(currentPage() + 1)">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+              </svg>
+            </button>
+          </div>
+        }
+      }
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+    <p class="footer-tagline">Nije bitno šta praviš. Bitno je da praviš.</p>
+  </footer>
+</div>

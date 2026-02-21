@@ -54,6 +54,7 @@ app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHub<Reignite.API.Hubs.ChatHub>("/hub/chat");
 
 await app.RunAsync();
 

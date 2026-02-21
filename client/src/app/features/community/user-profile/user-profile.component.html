@@ -1,0 +1,106 @@
+<div class="profile-page">
+  <app-ember-background density="sparse" [maxOpacity]="0.4" />
+  <app-header [visible]="true" [activePath]="'/community'" />
+
+  <main class="main-content">
+    <a routerLink="/community" class="back-link">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+      </svg>
+      Nazad na zajednicu
+    </a>
+
+    @if (isLoading()) {
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Učitavanje profila...</p>
+      </div>
+    } @else if (error()) {
+      <div class="error-state">
+        <div class="error-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+          </svg>
+        </div>
+        <h3>{{ error() }}</h3>
+        <a routerLink="/community" class="back-button">Povratak</a>
+      </div>
+    } @else if (profile()) {
+      <!-- Profile Card -->
+      <div class="profile-card">
+        <div class="profile-header">
+          <div class="profile-avatar">
+            @if (profile()!.profileImageUrl) {
+              <img [src]="getImageUrl(profile()!.profileImageUrl!)" [alt]="profile()!.firstName" />
+            } @else {
+              <span class="avatar-initials">{{ getInitials(profile()!.firstName, profile()!.lastName) }}</span>
+            }
+          </div>
+          <div class="profile-info">
+            <h1>{{ profile()!.firstName }} {{ profile()!.lastName }}</h1>
+            <p class="username">&#64;{{ profile()!.username }}</p>
+            <p class="member-since">Član od {{ formatDate(profile()!.createdAt) }}</p>
+          </div>
+        </div>
+
+        <!-- Hobbies -->
+        @if (profile()!.hobbies.length > 0) {
+          <div class="hobbies-section">
+            <h2>Hobiji</h2>
+            <div class="hobbies-list">
+              @for (hobby of profile()!.hobbies; track hobby.id) {
+                <div class="hobby-item">
+                  <span class="hobby-name">{{ hobby.hobbyName }}</span>
+                  <span class="skill-badge" [attr.data-level]="hobby.skillLevel">{{ getSkillLevelLabel(hobby.skillLevel) }}</span>
+                  @if (hobby.bio) {
+                    <p class="hobby-bio">{{ hobby.bio }}</p>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Projects -->
+      @if (profile()!.projects.length > 0) {
+        <div class="projects-section">
+          <h2>Projekti ({{ profile()!.projects.length }})</h2>
+          <div class="projects-grid">
+            @for (project of profile()!.projects; track project.id) {
+              <a [routerLink]="['/projects', project.id]" class="project-card">
+                @if (project.imageUrl) {
+                  <div class="project-image" [style.background-image]="'url(' + getImageUrl(project.imageUrl) + ')'"></div>
+                } @else {
+                  <div class="project-image project-placeholder">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3 3h18a1.5 1.5 0 0 1 1.5 1.5v15a1.5 1.5 0 0 1-1.5 1.5H3a1.5 1.5 0 0 1-1.5-1.5v-15A1.5 1.5 0 0 1 3 3Zm12.75 5.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                    </svg>
+                  </div>
+                }
+                <div class="project-body">
+                  <span class="hobby-badge">{{ project.hobbyName }}</span>
+                  <h3>{{ project.title }}</h3>
+                  <div class="project-rating">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                      <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+                    </svg>
+                    <span>{{ project.averageRating.toFixed(1) }} ({{ project.reviewCount }})</span>
+                  </div>
+                </div>
+              </a>
+            }
+          </div>
+        </div>
+      } @else {
+        <div class="no-projects">
+          <p>Korisnik još nema objavljenih projekata.</p>
+        </div>
+      }
+    }
+  </main>
+
+  <footer class="page-footer">
+    <p class="footer-tagline">Nije bitno šta praviš. Bitno je da praviš.</p>
+  </footer>
+</div>

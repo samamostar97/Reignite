@@ -51,11 +51,15 @@ namespace Reignite.API.Extensions
             services.AddScoped<IProjectReviewService, ProjectReviewService>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IPdfReportService, PdfReportService>();
+            services.AddScoped<ICommunityService, CommunityService>();
             services.AddScoped<IFileStorageService>(sp =>
             {
                 var env = sp.GetRequiredService<IWebHostEnvironment>();
                 return new FileStorageService(env.WebRootPath ?? Path.Combine(env.ContentRootPath, "wwwroot"));
             });
+
+            // SignalR
+            services.AddSignalR();
 
             return services;
         }
@@ -91,6 +95,21 @@ namespace Reignite.API.Extensions
                     ValidIssuer = jwtIssuer,
                     ValidAudience = jwtAudience,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
+                };
+
+                // Allow SignalR to read JWT from query string (WebSockets can't send headers)
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hub"))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
 
@@ -157,9 +176,10 @@ namespace Reignite.API.Extensions
                 {
                     if (environment.IsDevelopment())
                     {
-                        policy.AllowAnyOrigin()
+                        policy.WithOrigins("http://localhost:4200")
                               .AllowAnyMethod()
-                              .AllowAnyHeader();
+                              .AllowAnyHeader()
+                              .AllowCredentials();
                     }
                     else
                     {

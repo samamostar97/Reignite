@@ -1,0 +1,124 @@
+<div class="chat-page">
+  <app-ember-background density="sparse" [maxOpacity]="0.3" />
+  <app-header [visible]="true" [activePath]="'/community'" />
+
+  <div class="chat-layout">
+    <main class="chat-container">
+      <!-- Chat Header -->
+      <div class="chat-header">
+        <a routerLink="/community" class="back-link">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+          </svg>
+          Nazad
+        </a>
+        <div class="header-info">
+          <h2>{{ hobby()?.name }}</h2>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      @if (isLoading()) {
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Ucitavanje poruka...</p>
+        </div>
+      } @else {
+        <div class="message-list" #messageContainer>
+          @if (chatService.messages().length === 0) {
+            <div class="empty-chat">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="48" height="48">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+              </svg>
+              <p>Jos nema poruka. Budite prvi!</p>
+            </div>
+          } @else {
+            @for (msg of chatService.messages(); track msg.id) {
+              <div class="message" [class.own]="msg.userId === currentUserId">
+                <div class="message-avatar">
+                  @if (msg.userProfileImageUrl) {
+                    <img [src]="getImageUrl(msg.userProfileImageUrl)" [alt]="msg.userName" />
+                  } @else {
+                    <span>{{ getInitialsFromName(msg.userName) }}</span>
+                  }
+                </div>
+                <div class="message-body">
+                  <div class="message-meta">
+                    <span class="message-author">{{ msg.userName }}</span>
+                    <span class="message-time">{{ formatTime(msg.createdAt) }}</span>
+                  </div>
+                  <p class="message-content">{{ msg.content }}</p>
+                </div>
+              </div>
+            }
+          }
+        </div>
+      }
+
+      <!-- Input Area -->
+      <div class="message-input-area">
+        <input
+          type="text"
+          [(ngModel)]="messageText"
+          (keyup.enter)="sendMessage()"
+          placeholder="Napisite poruku..."
+          maxlength="500"
+          [disabled]="chatService.connectionStatus() !== 'connected'"
+        />
+        <button
+          class="send-btn"
+          (click)="sendMessage()"
+          [disabled]="!messageText.trim() || chatService.connectionStatus() !== 'connected'"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="22" height="22">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+          </svg>
+        </button>
+      </div>
+    </main>
+
+    <!-- Sidebar -->
+    <aside class="room-sidebar">
+      <div class="sidebar-card room-info">
+        <div class="room-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" d="M12.963 2.286a.75.75 0 0 0-1.071-.136 9.742 9.742 0 0 0-3.539 6.176 7.547 7.547 0 0 1-1.705-1.715.75.75 0 0 0-1.152-.082A9 9 0 1 0 15.68 4.534a7.46 7.46 0 0 1-2.717-2.248ZM15.75 14.25a3.75 3.75 0 1 1-7.313-1.172c.628.465 1.35.81 2.133 1a5.99 5.99 0 0 1 1.925-3.546 3.75 3.75 0 0 1 3.255 3.718Z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <h3>{{ hobby()?.name }}</h3>
+        <p>Razgovarajte sa ostalim clanovima zajednice o iskustvima i projektima.</p>
+      </div>
+
+      <div class="sidebar-card connection-card">
+        <div class="connection-dot" [class]="chatService.connectionStatus()"></div>
+        <span>
+          @switch (chatService.connectionStatus()) {
+            @case ('connected') { Povezani ste }
+            @case ('connecting') { Povezivanje... }
+            @case ('disconnected') { Niste povezani }
+          }
+        </span>
+      </div>
+
+      <div class="sidebar-card tips-card">
+        <h4>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="18" height="18">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 0 0-2.455 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+          </svg>
+          Savjeti
+        </h4>
+        <ul>
+          <li>Budite ljubazni i postujte ostale clanove</li>
+          <li>Dijelite svoja iskustva i projekte</li>
+          <li>Pomozite pocetnicima u zajednici</li>
+          <li>Svako pitanje je dobrodoslo</li>
+        </ul>
+      </div>
+
+      <div class="sidebar-decor" aria-hidden="true">
+        <div class="decor-ring"></div>
+        <div class="decor-ring ring-sm"></div>
+      </div>
+    </aside>
+  </div>
+</div>

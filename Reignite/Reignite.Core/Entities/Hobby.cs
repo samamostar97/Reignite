@@ -8,5 +8,6 @@ namespace Reignite.Core.Entities
         // Navigation properties
         public ICollection<UserHobby> UserHobbies { get; set; } = new List<UserHobby>();
         public ICollection<Project> Projects { get; set; } = new List<Project>();
+        public ICollection<ChatMessage> ChatMessages { get; set; } = new List<ChatMessage>();
     }
 }

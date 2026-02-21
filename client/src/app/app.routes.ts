@@ -20,6 +20,16 @@ export const routes: Routes = [
     loadComponent: () => import('./features/projects/projects.component').then(m => m.ProjectsComponent)
   },
   {
+    path: 'projects/new',
+    loadComponent: () => import('./features/projects/project-form/project-form.component').then(m => m.ProjectFormComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'projects/:id/edit',
+    loadComponent: () => import('./features/projects/project-form/project-form.component').then(m => m.ProjectFormComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'projects/:id',
     loadComponent: () => import('./features/projects/project-detail/project-detail.component').then(m => m.ProjectDetailComponent)
   },
@@ -34,6 +44,19 @@ export const routes: Routes = [
   {
     path: 'faqs',
     loadComponent: () => import('./features/faqs/faqs.component').then(m => m.FaqsComponent)
+  },
+  {
+    path: 'community',
+    loadComponent: () => import('./features/community/community.component').then(m => m.CommunityComponent)
+  },
+  {
+    path: 'community/chat/:hobbyId',
+    loadComponent: () => import('./features/community/chat-room/chat-room.component').then(m => m.ChatRoomComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'community/users/:id',
+    loadComponent: () => import('./features/community/user-profile/user-profile.component').then(m => m.UserProfileComponent)
   },
   {
     path: 'cart',

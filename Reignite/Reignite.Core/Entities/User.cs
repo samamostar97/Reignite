@@ -20,6 +20,7 @@ namespace Reignite.Core.Entities
         public ICollection<UserHobby> UserHobbies { get; set; } = new List<UserHobby>();
         public ICollection<Project> Projects { get; set; } = new List<Project>();
         public ICollection<ProjectReview> ProjectReviews { get; set; } = new List<ProjectReview>();
+        public ICollection<ChatMessage> ChatMessages { get; set; } = new List<ChatMessage>();
     }
 }
 
