@@ -141,6 +141,16 @@ namespace Reignite.Infrastructure.Services
             return query;
         }
 
+        public override async Task<OrderResponse> UpdateAsync(int id, UpdateOrderRequest dto, CancellationToken cancellationToken = default)
+        {
+            var entity = await _repository.GetByIdAsync(id, cancellationToken);
+            await BeforeUpdateAsync(entity, dto, cancellationToken);
+            _mapper.Map(dto, entity);
+            await _repository.UpdateAsync(entity, cancellationToken);
+            // Reload with navigation properties so UserName/UserProfileImageUrl are populated
+            return await GetByIdAsync(id, cancellationToken);
+        }
+
         protected override async Task BeforeUpdateAsync(Order entity, UpdateOrderRequest dto, CancellationToken cancellationToken = default)
         {
             // Validate status transition if needed
